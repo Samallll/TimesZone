@@ -1,9 +1,10 @@
 package com.timeszone;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 public class MainController {
 	
 	@GetMapping("/admin")
@@ -19,5 +20,14 @@ public class MainController {
 	@GetMapping("/user_registration")
 	public String userRegistration() {
 		return "In user registration , please register";
+	}
+	
+//	For Login
+	@GetMapping("/login")
+	public String loginPage(Model model) {
+//		To hold the data
+		LoginDTO userLoginAccount = new LoginDTO();
+		model.addAttribute("userLoginAccount", userLoginAccount);
+		return "loginPage.html";
 	}
 }
