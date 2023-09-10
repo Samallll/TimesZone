@@ -26,13 +26,13 @@ public class OtpService {
     public void sendOtp(String phoneNumber) {
         
     	Customer customer = customerRepository.findByPhoneNumber(phoneNumber);
-
+    	
         if (customer == null) {
             errorMessage = "Invalid phone number";
             System.out.println(errorMessage);
             return;
         }
-    	
+
     	// Create a random number generator
         Random random = new Random();
         int min = 100000; // Minimum 6-digit number
@@ -43,11 +43,11 @@ public class OtpService {
         Date expirationTime = new Date(System.currentTimeMillis() + 120000); // 2 minutes
         
         String message = "Your Otp for TimeZone Login : " + randomNumber;
-        System.out.println(message);
-        twilioSmsService.sendSms(phoneNumber, message);
+//        twilioSmsService.sendSms(phoneNumber, message);
         
         customer.setOtp(randomNumber);
         customer.setExpirationTime(expirationTime);
+        customerRepository.save(customer);
         errorMessage = null;
         
     }

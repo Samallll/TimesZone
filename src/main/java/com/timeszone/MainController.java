@@ -89,7 +89,6 @@ public class MainController {
 	
 	@PostMapping("/sendOtp")
 	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l) {
-		System.out.println(l.getPhoneNumber());
 		otpService.sendOtp(l.getPhoneNumber());
 		return "redirect:/otpLogin";
 	}
