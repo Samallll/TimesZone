@@ -21,6 +21,13 @@ public class TimeszoneApplication {
 		
 		return args -> {
 			
+////			User Creation : For testing purpose implemented
+//			Set<Role> roles1 = new HashSet<>();
+//			roles1.add(roleRepository.findByAuthority("USER").get());
+//			
+//			Customer admin1 = new Customer("erp","erp","erp@example.com","+917907208032",encoder.encode("erp"),roles1);
+//			customerRepository.save(admin1);
+			
 //			If admin role is present in the table then no need to create a separate admin role. For ddl-auto:update , it is used.
 			if(roleRepository.findByAuthority("ADMIN").isPresent()) return;
 			
