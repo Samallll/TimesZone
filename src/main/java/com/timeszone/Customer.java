@@ -1,6 +1,7 @@
 package com.timeszone;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -32,19 +33,19 @@ public class Customer implements UserDetails {
 	@Column(name="customerId")
 	private Integer customerId;
 
-	@Column(name="firstName",nullable=true)
+	@Column(name="firstName",nullable=false)
 	private String firstName;
 	
-	@Column(name="lastName",nullable=true)
+	@Column(name="lastName",nullable=false)
 	private String lastName;
 	
-	@Column(name="emailId",nullable=true,unique=true)
+	@Column(name="emailId",nullable=false,unique=true)
 	private String emailId;
 	
-	@Column(name="phoneNumber",nullable=true,unique=true)
+	@Column(name="phoneNumber",nullable=false,unique=true)
 	private String phoneNumber;
 	
-	@Column(name="password",nullable=true)
+	@Column(name="password",nullable=false)
 	private String password;
 	
 	@ManyToMany(fetch=FetchType.EAGER)
@@ -57,6 +58,12 @@ public class Customer implements UserDetails {
 	
 	@Column(name="isLocked")
 	private boolean isLocked=false;
+	
+	@Column(name="otp",nullable=true)
+	private Integer otp;
+	
+	@Column(name="expirationTime",nullable=true)
+	private Date expirationTime;
 	
 	public Customer() {
 		super();
@@ -155,6 +162,30 @@ public class Customer implements UserDetails {
 
 	public void setAddresses(Set<Address> addresses) {
 		this.addresses = addresses;
+	}
+	
+	public boolean isLocked() {
+		return isLocked;
+	}
+
+	public void setLocked(boolean isLocked) {
+		this.isLocked = isLocked;
+	}
+
+	public Integer getOtp() {
+		return otp;
+	}
+
+	public void setOtp(Integer otp) {
+		this.otp = otp;
+	}
+
+	public Date getExpirationTime() {
+		return expirationTime;
+	}
+
+	public void setExpirationTime(Date expirationTime) {
+		this.expirationTime = expirationTime;
 	}
 
 	public Set<Address> getAddresses() {

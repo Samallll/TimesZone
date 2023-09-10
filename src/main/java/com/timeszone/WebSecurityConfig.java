@@ -43,6 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				.and()
 				.formLogin()
 				.loginPage("/login").permitAll()
+				.loginProcessingUrl("/login").permitAll()
 				.successHandler((req, resp, authentication) -> {
 
 					Set<String> roleSet= AuthorityUtils.authorityListToSet(authentication.getAuthorities());
