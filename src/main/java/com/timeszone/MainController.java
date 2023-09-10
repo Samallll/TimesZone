@@ -82,7 +82,7 @@ public class MainController {
 		
 		LoginDTO otpBasedLoginAccount = new LoginDTO();
 		model.addAttribute("otpBasedLoginAccount", otpBasedLoginAccount);
-		System.out.println(otpBasedLoginAccount.toString());
+//		System.out.println(otpBasedLoginAccount.toString());
 		return "otp.html";
 	}
 	
@@ -93,4 +93,17 @@ public class MainController {
 		return "redirect:/otpLogin";
 	}
 	
+	@PostMapping("/otpVerify")
+	public String otpVerification(@ModelAttribute("otpBasedLoginAccount") LoginDTO LoginAccount) {
+		
+//		LoginAccount contains only the otp entered by the user
+//		validPhoneNumber is the number entered by the user in the previous login page.
+		if(otpService.verifyOtp("+917907208032",LoginAccount.getOtp())) {
+			return "redirect:/user";
+		}
+		else {
+			return "redirect:/otpLogin";
+		}
+	}
+
 }

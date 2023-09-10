@@ -1,7 +1,7 @@
 package com.timeszone;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -63,7 +63,7 @@ public class Customer implements UserDetails {
 	private Integer otp;
 	
 	@Column(name="expirationTime",nullable=true)
-	private Date expirationTime;
+	private LocalDateTime expirationTime;
 	
 	public Customer() {
 		super();
@@ -180,11 +180,11 @@ public class Customer implements UserDetails {
 		this.otp = otp;
 	}
 
-	public Date getExpirationTime() {
+	public LocalDateTime getExpirationTime() {
 		return expirationTime;
 	}
 
-	public void setExpirationTime(Date expirationTime) {
+	public void setExpirationTime(LocalDateTime expirationTime) {
 		this.expirationTime = expirationTime;
 	}
 

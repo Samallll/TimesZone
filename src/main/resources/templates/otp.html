@@ -95,19 +95,22 @@
                         <div class="login_part_form border border-color-black p-5" style="max-height: 100px;">
                             
                                 <div class="container-fluid bg-body-tertiary d-block">
+
+		<!--============================Verify Login=================================-->
 								  <div class="card-body p-0 text-center">
 								            <h4>Verify</h4>
 								            <p>Your code was sent to you via email</p>
+											
+											<form action="/otpVerify" method="post">								
+									            <div class="otp-field form-outline form-white mb-4">
+									              <input type="text" maxlength="6" class="form-control w-50" name="otp" placeholder="Enter your otp" required/>
+									            </div>
+									            <button class="btn btn-primary mb-3" type="submit">
+									              Verify OTP
+									            </button>
+									        </form>
 								
-								            <div class="otp-field mb-4">
-								              <input type="number" maxlength="6" class="w-50" />
-								            </div>
-								
-								            <button class="btn btn-primary mb-3">
-								              Verify
-								            </button>
-								
-								          </div>
+								  </div>
 								</div>
                             
                         </div>

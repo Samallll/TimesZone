@@ -1,5 +1,7 @@
 package com.timeszone;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Random;
 
@@ -40,11 +42,11 @@ public class OtpService {
         int randomNumber = random.nextInt(max - min + 1) + min;
 
         // Set the expiration time for the OTP
-        Date expirationTime = new Date(System.currentTimeMillis() + 120000); // 2 minutes
-        
+        LocalDateTime expirationTime = LocalDateTime.now().plus(2, ChronoUnit.MINUTES);
         String message = "Your Otp for TimeZone Login : " + randomNumber;
 //        twilioSmsService.sendSms(phoneNumber, message);
         
+        System.out.println(randomNumber);
         customer.setOtp(randomNumber);
         customer.setExpirationTime(expirationTime);
         customerRepository.save(customer);
@@ -56,16 +58,28 @@ public class OtpService {
         // Check if the OTP is valid
     	// Get the current time
     	Customer verifyCustomer = customerRepository.findByPhoneNumber(phoneNumber);
-    	Date expirationTime = verifyCustomer.getExpirationTime();
-        Date currentTime = new Date();
+    	LocalDateTime expirationTime = verifyCustomer.getExpirationTime();
+    	LocalDateTime currentTime = LocalDateTime.now();
+    	System.out.println(currentTime.toString());
+    	System.out.println(expirationTime.toString());
+    	System.out.println(currentTime.isEqual(expirationTime));
+    	int comparison = currentTime.compareTo(expirationTime);
 
         // Compare the two times
-        if (currentTime.before(expirationTime)&&verifyCustomer.getOtp()==otp) {
+        if (comparison < 0 &&verifyCustomer.getOtp()==otp) {
             System.out.println("The given time is before the expired time.");
         	verifyCustomer.setExpirationTime(null);
         	verifyCustomer.setOtp(null);
             return true;
-        } else {
+        } 
+        else if(comparison > 0) {
+        	verifyCustomer.setExpirationTime(null);
+        	verifyCustomer.setOtp(null);
+        	System.out.println("Time expired....");
+        	return false;
+        }
+        else {
+        	System.out.println(currentTime.isBefore(expirationTime));
             System.out.println("Invalid OTP");
             return false;
         }
