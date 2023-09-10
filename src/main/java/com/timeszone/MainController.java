@@ -38,43 +38,59 @@ public class MainController {
 		return "loginPage.html";
 	}
 	
-	@PostMapping("/sendOtp")
-	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l, Model model) {
-		System.out.println("Invalid number");
-		otpService.sendOtp(l.getPhoneNumber());
-		
-		if(otpService.getErrorMessage()!=null) {
-			model.addAttribute("error", otpService.getErrorMessage());
-			System.out.println("Invalid number");
-			return "redirect:/login";
-		}
-		else {
-			model.addAttribute("validPhoneNumber", l.getPhoneNumber());
-			return "redirect:/otpLogin";
-		}
-	}
+//	@PostMapping("/sendOtp")
+//	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l, Model model) {
+//		System.out.println("Invalid number");
+//		otpService.sendOtp(l.getPhoneNumber());
+//		
+//		if(otpService.getErrorMessage()!=null) {
+//			model.addAttribute("error", otpService.getErrorMessage());
+//			System.out.println("Invalid number");
+//			return "redirect:/login";
+//		}
+//		else {
+//			model.addAttribute("validPhoneNumber", l.getPhoneNumber());
+//			return "redirect:/otpLogin";
+//		}
+//	}
 	
-//	OtpLogin
+////	OtpLogin
+//	@GetMapping("/otpLogin")
+//	public String otpLogin(Model model) {
+//		
+//		System.out.println(model.getAttribute("validPhoneNumber"));
+//		LoginDTO otpBasedLoginAccount = new LoginDTO();
+//		model.addAttribute("otpBasedLoginAccount", otpBasedLoginAccount);
+//		return "otp.html";
+//	}
+	
+//	@PostMapping("/otpVerify")
+//	public String otpVerification(@ModelAttribute("validPhoneNumber") String phoneNumber, @ModelAttribute("otpBasedLoginAccount") LoginDTO LoginAccount, Model model) {
+//		
+////		LoginAccount contains only the otp entered by the user
+////		validPhoneNumber is the number entered by the user in the previous login page.
+//		if(otpService.verifyOtp("validPhoneNumber",LoginAccount.getOtp())) {
+//			return "redirect:/user";
+//		}
+//		else {
+//			return "redirect:/otpLogin";
+//		}
+//	}
+	
 	@GetMapping("/otpLogin")
 	public String otpLogin(Model model) {
 		
-		System.out.println(model.getAttribute("validPhoneNumber"));
 		LoginDTO otpBasedLoginAccount = new LoginDTO();
 		model.addAttribute("otpBasedLoginAccount", otpBasedLoginAccount);
+		System.out.println(otpBasedLoginAccount.toString());
 		return "otp.html";
 	}
 	
-	@PostMapping("/otpVerify")
-	public String otpVerification(@ModelAttribute("validPhoneNumber") String phoneNumber, @ModelAttribute("otpBasedLoginAccount") LoginDTO LoginAccount, Model model) {
-		
-//		LoginAccount contains only the otp entered by the user
-//		validPhoneNumber is the number entered by the user in the previous login page.
-		if(otpService.verifyOtp("validPhoneNumber",LoginAccount.getOtp())) {
-			return "redirect:/user";
-		}
-		else {
-			return "redirect:/otpLogin";
-		}
+	
+	@PostMapping("/sendOtp")
+	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l) {
+		System.out.println(l.getPhoneNumber());
+		return "redirect:/otpLogin";
 	}
 	
 }
