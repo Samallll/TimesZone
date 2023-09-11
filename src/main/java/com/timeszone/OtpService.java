@@ -56,19 +56,15 @@ public class OtpService {
         // Check if the OTP is valid
     	// Get the current time
     	Customer verifyCustomer = customerRepository.findByPhoneNumber(phoneNumber);
-    	System.out.println(verifyCustomer.getOtp());
+    	System.out.println("Stored OTP: "+verifyCustomer.getOtp());
     	LocalDateTime expirationTime = verifyCustomer.getExpirationTime();
     	LocalDateTime currentTime = LocalDateTime.now();
     	int comparison = currentTime.compareTo(expirationTime);
     	
-    	System.out.println(currentTime.isBefore(expirationTime));
-    	System.out.println(verifyCustomer.getOtp());
-    	System.out.println(otp);
-    	System.out.println(verifyCustomer.getOtp().equals(otp));
 
         // Compare the two times
         if (currentTime.isBefore(expirationTime) &&verifyCustomer.getOtp().equals(otp)) {
-            System.out.println("The given time is before the expired time.");
+            System.out.println("Allowed Login...");
         	verifyCustomer.setExpirationTime(null);
         	verifyCustomer.setOtp(null);
         	customerRepository.save(verifyCustomer);
@@ -78,12 +74,10 @@ public class OtpService {
         	verifyCustomer.setExpirationTime(null);
         	verifyCustomer.setOtp(null);
         	System.out.println("Time expired....");
-        	System.out.println(currentTime.isBefore(expirationTime));
         	customerRepository.save(verifyCustomer);
         	return false;
         }
         else {
-        	System.out.println(currentTime.isBefore(expirationTime));
             System.out.println("Invalid OTP");
             return false;
         }
