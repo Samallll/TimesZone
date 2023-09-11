@@ -25,7 +25,7 @@ public class TimeszoneApplication {
 //			Set<Role> roles1 = new HashSet<>();
 //			roles1.add(roleRepository.findByAuthority("USER").get());
 //			
-//			Customer admin1 = new Customer("erp","erp","erp@example.com","+917907208032",encoder.encode("erp"),roles1);
+//			Customer admin1 = new Customer("ram","ram","ram@example.com","1111111111",encoder.encode("ram"),roles1);
 //			customerRepository.save(admin1);
 			
 //			If admin role is present in the table then no need to create a separate admin role. For ddl-auto:update , it is used.
@@ -33,20 +33,13 @@ public class TimeszoneApplication {
 			
 //			Creating a admin role when the application executes if there is no admins.
 			Role adminRole = roleRepository.save(new Role("ADMIN"));
-			Role userRole;
-			if(roleRepository.findByAuthority("USER").isPresent()) {
-				userRole = roleRepository.findByAuthority("USER").get();
-			}
-			else {
-				userRole = new Role("USER");
-			}
+			Role userRole = roleRepository.save(new Role("USER"));
 			
 			Set<Role> roles = new HashSet<>();
 			roles.add(adminRole);
 			roles.add(userRole);
 			
-			Customer admin = new Customer("root","root","root@example.com","2222222222",encoder.encode("root"),roles);
-			admin.allAuthorities();
+			Customer admin = new Customer("root","root","root@example.com","+917907208032",encoder.encode("root"),roles);
 			customerRepository.save(admin);
 			
 			};

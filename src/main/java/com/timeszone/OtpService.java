@@ -2,7 +2,6 @@ package com.timeszone;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,6 @@ public class OtpService {
         String message = "Your Otp for TimeZone Login : " + randomNumber;
 //        twilioSmsService.sendSms(phoneNumber, message);
         
-        System.out.println(randomNumber);
         customer.setOtp(randomNumber);
         customer.setExpirationTime(expirationTime);
         customerRepository.save(customer);
@@ -58,24 +56,30 @@ public class OtpService {
         // Check if the OTP is valid
     	// Get the current time
     	Customer verifyCustomer = customerRepository.findByPhoneNumber(phoneNumber);
+    	System.out.println(verifyCustomer.getOtp());
     	LocalDateTime expirationTime = verifyCustomer.getExpirationTime();
     	LocalDateTime currentTime = LocalDateTime.now();
-    	System.out.println(currentTime.toString());
-    	System.out.println(expirationTime.toString());
-    	System.out.println(currentTime.isEqual(expirationTime));
     	int comparison = currentTime.compareTo(expirationTime);
+    	
+    	System.out.println(currentTime.isBefore(expirationTime));
+    	System.out.println(verifyCustomer.getOtp());
+    	System.out.println(otp);
+    	System.out.println(verifyCustomer.getOtp().equals(otp));
 
         // Compare the two times
-        if (comparison < 0 &&verifyCustomer.getOtp()==otp) {
+        if (currentTime.isBefore(expirationTime) &&verifyCustomer.getOtp().equals(otp)) {
             System.out.println("The given time is before the expired time.");
         	verifyCustomer.setExpirationTime(null);
         	verifyCustomer.setOtp(null);
+        	customerRepository.save(verifyCustomer);
             return true;
         } 
         else if(comparison > 0) {
         	verifyCustomer.setExpirationTime(null);
         	verifyCustomer.setOtp(null);
         	System.out.println("Time expired....");
+        	System.out.println(currentTime.isBefore(expirationTime));
+        	customerRepository.save(verifyCustomer);
         	return false;
         }
         else {
