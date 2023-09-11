@@ -1,4 +1,4 @@
-package com.timeszone;
+package com.timeszone.service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -7,22 +7,23 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.timeszone.model.Customer;
+import com.timeszone.repository.CustomerRepository;
+
 @Service
 public class OtpService {
 	
 	@Autowired
 	private CustomerRepository customerRepository;
 	
-	@Autowired
-	private TwilioSmsService twilioSmsService;
+//	@Autowired
+//	private TwilioSmsService twilioSmsService;
 	
 	private String errorMessage;
 
     public String getErrorMessage() {
 		return errorMessage;
 	}
-
-	private static final int OTP_LENGTH = 6;
 
     public void sendOtp(String phoneNumber) {
         
@@ -42,7 +43,9 @@ public class OtpService {
 
         // Set the expiration time for the OTP
         LocalDateTime expirationTime = LocalDateTime.now().plus(2, ChronoUnit.MINUTES);
-        String message = "Your Otp for TimeZone Login : " + randomNumber;
+        
+//        SMS Service is not working as expected hence commenting the below lines.
+//        String message = "Your Otp for TimeZone Login : " + randomNumber;
 //        twilioSmsService.sendSms(phoneNumber, message);
         
         customer.setOtp(randomNumber);

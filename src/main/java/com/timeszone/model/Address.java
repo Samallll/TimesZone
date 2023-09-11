@@ -1,4 +1,4 @@
-package com.timeszone;
+package com.timeszone.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

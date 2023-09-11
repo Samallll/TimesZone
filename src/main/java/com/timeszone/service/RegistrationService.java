@@ -1,4 +1,4 @@
-package com.timeszone;
+package com.timeszone.service;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,6 +6,12 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.timeszone.model.Customer;
+import com.timeszone.model.Role;
+import com.timeszone.model.dto.RegistrationRequest;
+import com.timeszone.repository.CustomerRepository;
+import com.timeszone.repository.RoleRepository;
 
 @Service
 public class RegistrationService {

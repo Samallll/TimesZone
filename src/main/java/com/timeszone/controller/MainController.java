@@ -1,4 +1,4 @@
-package com.timeszone;
+package com.timeszone.controller;
 
 import javax.servlet.http.HttpSession;
 
@@ -8,6 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.timeszone.model.dto.LoginDTO;
+import com.timeszone.service.OtpService;
 
 
 @Controller
@@ -56,29 +59,6 @@ public class MainController {
 //		}
 //	}
 	
-////	OtpLogin
-//	@GetMapping("/otpLogin")
-//	public String otpLogin(Model model) {
-//		
-//		System.out.println(model.getAttribute("validPhoneNumber"));
-//		LoginDTO otpBasedLoginAccount = new LoginDTO();
-//		model.addAttribute("otpBasedLoginAccount", otpBasedLoginAccount);
-//		return "otp.html";
-//	}
-	
-//	@PostMapping("/otpVerify")
-//	public String otpVerification(@ModelAttribute("validPhoneNumber") String phoneNumber, @ModelAttribute("otpBasedLoginAccount") LoginDTO LoginAccount, Model model) {
-//		
-////		LoginAccount contains only the otp entered by the user
-////		validPhoneNumber is the number entered by the user in the previous login page.
-//		if(otpService.verifyOtp("validPhoneNumber",LoginAccount.getOtp())) {
-//			return "redirect:/user";
-//		}
-//		else {
-//			return "redirect:/otpLogin";
-//		}
-//	}
-	
 	@PostMapping("/sendOtp")
 	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l,HttpSession session) {
 		otpService.sendOtp(l.getPhoneNumber());
@@ -107,7 +87,7 @@ public class MainController {
 		}
 		else {
 			return "redirect:/otpLogin";
-		}
+		}		
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.timeszone;
+package com.timeszone.model.dto;
 
 public class RegistrationRequest {
 	

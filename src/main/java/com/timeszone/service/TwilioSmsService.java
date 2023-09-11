@@ -1,4 +1,4 @@
-package com.timeszone;
+package com.timeszone.service;
 
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;

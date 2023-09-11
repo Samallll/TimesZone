@@ -1,4 +1,4 @@
-package com.timeszone;
+package com.timeszone.configuration;
 
 import java.util.Set;
 
@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.timeszone.service.CustomerService;
 
 @Configuration
 @EnableWebSecurity
@@ -45,10 +47,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				.loginPage("/login").permitAll()
 				.loginProcessingUrl("/login").permitAll()
 				.successHandler((req, resp, authentication) -> {
-
+					
 					Set<String> roleSet= AuthorityUtils.authorityListToSet(authentication.getAuthorities());
 				    
-				    if(roleSet.contains("ADMIN"))
+					if(roleSet.contains("ADMIN"))
 				    {
 				    	resp.sendRedirect("/admin");
 				    }
@@ -56,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				    {
 				    	resp.sendRedirect("/user");
 				    }
+					
 			});
 	}
 

@@ -9,6 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.timeszone.model.Customer;
+import com.timeszone.model.Role;
+import com.timeszone.repository.CustomerRepository;
+import com.timeszone.repository.RoleRepository;
+
 @SpringBootApplication
 public class TimeszoneApplication {
 
