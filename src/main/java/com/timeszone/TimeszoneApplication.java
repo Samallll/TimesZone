@@ -30,7 +30,7 @@ public class TimeszoneApplication {
 //			Set<Role> roles1 = new HashSet<>();
 //			roles1.add(roleRepository.findByAuthority("USER").get());
 //			
-//			Customer admin1 = new Customer("ram","ram","ram@example.com","1111111111",encoder.encode("ram"),roles1);
+//			Customer admin1 = new Customer("sam","sam","sam@example.com","2222222222",encoder.encode("sam"),roles1);
 //			customerRepository.save(admin1);
 			
 //			If admin role is present in the table then no need to create a separate admin role. For ddl-auto:update , it is used.

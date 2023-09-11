@@ -27,6 +27,10 @@ public class RegistrationDTO {
 		this.password = password;
 	}
 
+	public RegistrationDTO() {
+		super();
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}

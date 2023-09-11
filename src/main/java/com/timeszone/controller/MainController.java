@@ -10,9 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.timeszone.model.dto.LoginDTO;
+import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.service.OtpService;
+import com.timeszone.service.RegistrationService;
 
 
 @Controller
@@ -23,19 +26,25 @@ public class MainController {
 	@Autowired
 	private OtpService otpService;
 	
+	@Autowired
+	private RegistrationService registrationService;
+	
 	@GetMapping("/admin")
 	public String adminHome() {
-		return "In Admin Home , You have admin power";
+		return "adminHome.html";
 	}
 	
 	@GetMapping("/user")
 	public String userHome() {
-		return "In User Home , You are normal user";
+		return "userHome.html";
 	}
 	
 	@GetMapping("/user_registration")
-	public String userRegistration() {
-		return "In user registration , please register";
+	public String userRegistration(Model model) {
+		
+		RegistrationDTO newUserData = new RegistrationDTO();
+		model.addAttribute("newUserData", newUserData);
+		return "user_register.html";
 	}
 	
 //	For Login
@@ -45,7 +54,15 @@ public class MainController {
 //		To hold the data
 		LoginDTO userLoginAccount = new LoginDTO();
 		model.addAttribute("userLoginAccount", userLoginAccount);
-		return "loginPage.html";
+		return "login.html";
+	}
+	
+	@PostMapping("/register_user")
+	public String register(@ModelAttribute("newUserData") RegistrationDTO request) {
+		logger.info("User Registeriing started");
+		registrationService.register(request);
+		logger.info("User Registration Completed Successfully");
+		return "redirect:/login";
 	}
 	
 //	@PostMapping("/sendOtp")
