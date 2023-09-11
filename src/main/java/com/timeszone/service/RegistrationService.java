@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.timeszone.model.Customer;
 import com.timeszone.model.Role;
-import com.timeszone.model.dto.RegistrationRequest;
+import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.RoleRepository;
 
@@ -25,7 +25,7 @@ public class RegistrationService {
 	@Autowired
 	public PasswordEncoder encoder;
 	
-	public Customer register(RegistrationRequest request) {
+	public Customer register(RegistrationDTO request) {
 		
 		Role userRole;
 		if(roleRepository.findByAuthority("USER").isPresent()) {

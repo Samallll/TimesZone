@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.timeszone.model.dto.RegistrationRequest;
+import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.service.RegistrationService;
 
 @RestController
@@ -17,7 +17,7 @@ public class RegistrationController {
 	private RegistrationService registrationService;
 	
 	@PostMapping("/user_registration")
-	public String register(@RequestBody RegistrationRequest request) {
+	public String register(@RequestBody RegistrationDTO request) {
 		registrationService.register(request);
 		return "Registered successfully";
 	}

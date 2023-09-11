@@ -1,6 +1,6 @@
 package com.timeszone.model.dto;
 
-public class RegistrationRequest {
+public class RegistrationDTO {
 	
 	private String firstName;
 	
@@ -14,11 +14,11 @@ public class RegistrationRequest {
 
 	@Override
 	public String toString() {
-		return "RegistrationRequest [firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId
+		return "RegistrationDTO [firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + emailId
 				+ ", phoneNumber=" + phoneNumber + ", password=" + password + "]";
 	}
 
-	public RegistrationRequest(String firstName, String lastName, String emailId, String phoneNumber, String password) {
+	public RegistrationDTO(String firstName, String lastName, String emailId, String phoneNumber, String password) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;

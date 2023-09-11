@@ -2,6 +2,7 @@ package com.timeszone.configuration;
 
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -20,6 +21,9 @@ import com.timeszone.service.CustomerService;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private final CustomerService customerService;
+	
+	@Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 	
 	
 	public WebSecurityConfig(CustomerService customerService) {
@@ -46,6 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				.formLogin()
 				.loginPage("/login").permitAll()
 				.loginProcessingUrl("/login").permitAll()
+				.failureHandler(customAuthenticationFailureHandler)
 				.successHandler((req, resp, authentication) -> {
 					
 					Set<String> roleSet= AuthorityUtils.authorityListToSet(authentication.getAuthorities());
