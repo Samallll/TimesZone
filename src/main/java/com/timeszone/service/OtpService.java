@@ -59,6 +59,9 @@ public class OtpService {
         // Check if the OTP is valid
     	// Get the current time
     	Customer verifyCustomer = customerRepository.findByPhoneNumber(phoneNumber);
+    	if(verifyCustomer==null) {
+    		return false;
+    	}
     	System.out.println("Stored OTP: "+verifyCustomer.getOtp());
     	LocalDateTime expirationTime = verifyCustomer.getExpirationTime();
     	LocalDateTime currentTime = LocalDateTime.now();

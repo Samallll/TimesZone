@@ -28,6 +28,18 @@ public class CustomerService implements UserDetailsService{
 		return customerRepository.findByEmailId(emailId).orElseThrow(()-> new UsernameNotFoundException("UserName not Found"));
 	}
 	
+	public UserDetails loadUserForOtpLogin(String phoneNumber) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+			Customer customer = customerRepository.findByPhoneNumber(phoneNumber);
+			
+			if (customer != null) {
+				System.out.println("customer details from customer service:" + customer.getFirstName());
+				return customer;
+			}
+			System.out.println("failed to load the customer");
+			throw new UsernameNotFoundException("User not available");
+		}
+	
 	public List<CustomerDTO> getAllUsers() {
 		
 		return customerRepository.findAll()

@@ -52,7 +52,7 @@ public class Customer implements UserDetails {
 	@JoinColumn(name = "roleId")
 	private Set<Role> authorities;
 	
-	@OneToMany(fetch=FetchType.LAZY)
+	@OneToMany(fetch=FetchType.EAGER)
 	@JoinColumn(name = "addressId")
 	private Set<Address> addresses;
 	

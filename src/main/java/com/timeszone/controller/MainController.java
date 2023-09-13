@@ -1,6 +1,12 @@
 package com.timeszone.controller;
 
 import java.time.LocalDate;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -8,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +40,8 @@ public class MainController {
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
 	
-//	@Autowired
-//	private OtpService otpService;
+	@Autowired
+	private OtpService otpService;
 	
 	@Autowired
 	private CustomerService customerService;
@@ -53,6 +60,7 @@ public class MainController {
 		return "adminHome.html";
 	}
 	
+	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/user")
 	public String userHome() {
 		return "userHome.html";
@@ -188,37 +196,47 @@ public class MainController {
 //		}
 //	}
 	
-//	@PostMapping("/sendOtp")
-//	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l,HttpSession session) {
-//		System.out.println("In OTP Login");
-//		logger.info("In OTP Login");
-//		otpService.sendOtp(l.getPhoneNumber());
-//		session.setAttribute("validPhoneNumber", l.getPhoneNumber());
-//		return "redirect:/otpLogin";
-//	}
+	@PostMapping("/sendOtp")
+	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l,HttpSession session) {
+		System.out.println("In OTP Login");
+		logger.info("In OTP Login");
+		otpService.sendOtp(l.getPhoneNumber());
+		session.setAttribute("validPhoneNumber", l.getPhoneNumber());
+		return "redirect:/otpLogin";
+	}
+	
+	@GetMapping("/otpLogin")
+	public String otpLogin(Model model,HttpSession session) {
+		
+		LoginDTO otpBasedLoginAccount = new LoginDTO();
+		model.addAttribute("otpBasedLoginAccount", otpBasedLoginAccount);
+		return "otp.html";
+	}
 //	
-//	@GetMapping("/otpLogin")
-//	public String otpLogin(Model model,HttpSession session) {
-//		
-//		LoginDTO otpBasedLoginAccount = new LoginDTO();
-//		model.addAttribute("otpBasedLoginAccount", otpBasedLoginAccount);
-//		return "otp.html";
-//	}
-//	
-//	@PostMapping("/otpVerify")
-//	public String otpVerification(@ModelAttribute("otpBasedLoginAccount") LoginDTO LoginAccount,HttpSession session) {
-//		
-////		LoginAccount contains only the otp entered by the user
-//		
-////		validPhoneNumber is the number entered by the user in the previous login page.
-////		session.getAttribute("validPhoneNumber").toString()): contains the phoneNumber entered by the user.
-//		
-//		if(otpService.verifyOtp(session.getAttribute("validPhoneNumber").toString(),LoginAccount.getOtp())) {
-//			return "redirect:/user";
-//		}
-//		else {
-//			return "redirect:/otpLogin";
-//		}		
-//	}
+	@PostMapping("/otpVerify")
+	public String otpVerification(@ModelAttribute("otpBasedLoginAccount") LoginDTO LoginAccount,HttpSession session) {
+		
+//		LoginAccount contains only the otp entered by the user
+		
+//		validPhoneNumber is the number entered by the user in the previous login page.
+//		session.getAttribute("validPhoneNumber").toString()): contains the phoneNumber entered by the user.
+		String phoneNumber = session.getAttribute("validPhoneNumber").toString();
+		System.out.println(phoneNumber);
+		boolean flag = otpService.verifyOtp(phoneNumber,LoginAccount.getOtp());
+		System.out.println(flag);
+		if(flag) {
+			System.out.println("Inside Allowing mechanism");
+			UserDetails userDetails = customerService.loadUserForOtpLogin(phoneNumber);
+			System.out.println(userDetails.getAuthorities().size());
+	        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+	        SecurityContextHolder.getContext().setAuthentication(authentication);
+	        System.out.println(authentication.toString());
+			return "redirect:/user";
+		}
+		else {
+			System.out.println("Inside OtpVerfication Failed Case");
+			return "redirect:/otpLogin";
+		}		
+	}
 
 }
