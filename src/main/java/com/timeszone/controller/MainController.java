@@ -119,7 +119,7 @@ public class MainController {
 //	Product Management ---------------------------------------------------------------
 	@GetMapping("/product_management")
 	public String productManagementPage(Model model) {
-		logger.info("InSide Product Management Controller");
+		logger.trace("InSide Product Management Controller");
 //		To hold the data
 		List<Product> productList = productService.getAllProducts();
 		model.addAttribute("productList", productList);
@@ -158,11 +158,17 @@ public class MainController {
 	
 	@PostMapping("/{id}")
 	public String editProduct(@PathVariable Integer id,@ModelAttribute("editProduct") Product ep) {
-		logger.info("InSide Product Editing Controller");
+		logger.trace("InSide Product Editing Controller");
 		
 		productService.updateProduct(id,ep.getProductName(),ep.getCaseSize(),ep.getDescription(),ep.getIsEnabled(),ep.getPrice(),ep.getQuantity());
-		
-		System.out.println("Not working");
+		return "redirect:/product_management";
+	}
+	
+	@GetMapping("/deleteProduct/{id}")
+	public String deletrProduct(@PathVariable Integer id) {
+		logger.trace("InSide Delete Product Controller");
+
+		productService.deleteProduct(id);
 		return "redirect:/product_management";
 	}
 	

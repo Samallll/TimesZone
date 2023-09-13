@@ -22,18 +22,19 @@ public class ProductService {
 	public void updateProduct(Integer id, String productName, Double caseSize, String description, boolean isEnabled,
 			Double price, Integer quantity) {
 		
-		System.out.println(productRepository.count());
 		Product editProduct = productRepository.findById(id).get();
-		System.out.println(productRepository.count());
 		editProduct.setCaseSize(caseSize);
-		System.out.println(productRepository.count());
 		editProduct.setDescription(description);
 		editProduct.setEnabled(isEnabled);
 		editProduct.setPrice(price);
 		editProduct.setQuantity(quantity);
 		editProduct.setProductName(productName);
 		productRepository.save(editProduct);
-		System.out.println(productRepository.count());
 		
+	}
+
+	public void deleteProduct(Integer id) {
+		
+		productRepository.deleteById(id);
 	}
 }
