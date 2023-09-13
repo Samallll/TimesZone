@@ -153,7 +153,17 @@ public class MainController {
 //		To hold the data
 		Product editProduct = productRepository.findById(id).get();
 		model.addAttribute("editProduct", editProduct);
-		return "productManagement.html";
+		return "editProductTest.html";
+	}
+	
+	@PostMapping("/{id}")
+	public String editProduct(@PathVariable Integer id,@ModelAttribute("editProduct") Product ep) {
+		logger.info("InSide Product Editing Controller");
+		
+		productService.updateProduct(id,ep.getProductName(),ep.getCaseSize(),ep.getDescription(),ep.getIsEnabled(),ep.getPrice(),ep.getQuantity());
+		
+		System.out.println("Not working");
+		return "redirect:/product_management";
 	}
 	
 //	@PostMapping("/sendOtp")
