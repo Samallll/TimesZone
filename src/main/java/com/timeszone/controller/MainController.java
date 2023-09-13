@@ -55,12 +55,6 @@ public class MainController {
 	@Autowired
 	private ProductRepository productRepository;
 	
-	@GetMapping("/admin")
-	public String adminHome() {
-		return "adminHome.html";
-	}
-	
-	@PreAuthorize("hasAuthority('USER')")
 	@GetMapping("/user")
 	public String userHome() {
 		return "userHome.html";
@@ -93,92 +87,6 @@ public class MainController {
 		return "login.html";
 	}
 	
-	
-//	For user management ---------------------------------------------------------------------
-	@GetMapping("/user_management")
-	public String userManagementPage(Model model) {
-		logger.info("InSide User Management Controller");
-		
-//		To hold the data
-		List<CustomerDTO> userList = customerService.getAllUsers();
-		model.addAttribute("userList", userList);
-		return "userManagement.html";
-	}
-	
-//	Lock Management -------------------------------------------------------------------
-	@GetMapping("/block/{id}")
-	public String blockUser(@PathVariable Integer id) {
-		
-		logger.trace("InSide Locking Controller");
-		customerService.lockUser(id);
-		logger.info("Locked User");
-		return "redirect:/user_management";
-	}
-	
-	@GetMapping("/unBlock/{id}")
-	public String unblockUser(@PathVariable Integer id) {
-		
-		logger.trace("InSide Unlocking Controller");
-		customerService.unLockUser(id);
-		logger.info("UnLocked User");
-		return "redirect:/user_management";
-	}
-	
-//	Product Management ---------------------------------------------------------------
-	@GetMapping("/product_management")
-	public String productManagementPage(Model model) {
-		logger.trace("InSide Product Management Controller");
-//		To hold the data
-		List<Product> productList = productService.getAllProducts();
-		model.addAttribute("productList", productList);
-		return "productManagement.html";
-	}
-	
-	@GetMapping("/addProduct")
-	public String addProductPage(Model model) {
-		logger.trace("InSide Add Product Controller");
-		
-//		To hold the data
-		Product newProduct = new Product();
-		model.addAttribute("newProduct", newProduct);
-		return "addProduct.html";
-	}
-	
-	@PostMapping("/registerProduct")
-	public String addProduct(@ModelAttribute("newProduct") Product p) {
-		logger.trace("InSide Product Registering Controller");
-		
-//		To hold the data
-		Product registerProduct = new Product(p.getProductId(), p.getProductName(), p.getDescription(), p.getQuantity(), p.getCaseSize(),
-				p.getPrice(), LocalDate.now());
-		productRepository.save(registerProduct);
-		return "redirect:/product_management";
-	}
-	
-	@GetMapping("/editProduct/{id}")
-	public String editProductPage(@PathVariable Integer id,Model model) {
-		logger.trace("InSide Edit Product Controller");
-//		To hold the data
-		Product editProduct = productRepository.findById(id).get();
-		model.addAttribute("editProduct", editProduct);
-		return "editProductTest.html";
-	}
-	
-	@PostMapping("/{id}")
-	public String editProduct(@PathVariable Integer id,@ModelAttribute("editProduct") Product ep) {
-		logger.trace("InSide Product Editing Controller");
-		
-		productService.updateProduct(id,ep.getProductName(),ep.getCaseSize(),ep.getDescription(),ep.getIsEnabled(),ep.getPrice(),ep.getQuantity());
-		return "redirect:/product_management";
-	}
-	
-	@GetMapping("/deleteProduct/{id}")
-	public String deletrProduct(@PathVariable Integer id) {
-		logger.trace("InSide Delete Product Controller");
-
-		productService.deleteProduct(id);
-		return "redirect:/product_management";
-	}
 	
 //	@PostMapping("/sendOtp")
 //	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l, Model model) {

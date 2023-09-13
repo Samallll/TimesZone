@@ -50,7 +50,7 @@
                         <div class="main-menu d-none d-lg-block">
                             <nav>                                                
                                 <ul id="navigation">  
-                                    <li><a href="index.html">Home</a></li>
+                                    <li><a th:href="@{/user/}">Home</a></li>
                                     <li><a th:href="@{/shop}">shop</a></li>
                                     <li><a href="about.html">about</a></li>
                                     <li class="hot"><a href="#">Latest</a>
@@ -88,7 +88,7 @@
                                 </li>
                                 <li> <a th:href="@{/login}"><span class="flaticon-user"></span></a></li>
                                 <a th:href="@{/logout}" class="btn btn-primary">Logout</a>
-                                <li><a th:href="@{/admin_dashboard}"><span class="flaticon-shopping-cart"></span></a> </li>
+                                <li><a th:href="@{/admin/}"><span class="flaticon-shopping-cart"></span></a> </li>
                             </ul>
                         </div>
                     </div>
