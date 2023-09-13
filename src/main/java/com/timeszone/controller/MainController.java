@@ -1,5 +1,6 @@
 package com.timeszone.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -18,8 +19,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.LoginDTO;
 import com.timeszone.model.dto.RegistrationDTO;
+import com.timeszone.model.product.Product;
+import com.timeszone.model.product.ProductDTO;
+import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.OtpService;
+import com.timeszone.service.ProductService;
 import com.timeszone.service.RegistrationService;
 
 
@@ -35,7 +40,13 @@ public class MainController {
 	private CustomerService customerService;
 	
 	@Autowired
+	private ProductService productService;
+	
+	@Autowired
 	private RegistrationService registrationService;
+	
+	@Autowired
+	private ProductRepository productRepository;
 	
 	@GetMapping("/admin")
 	public String adminHome() {
@@ -56,6 +67,14 @@ public class MainController {
 		return "userRegister.html";
 	}
 	
+	@PostMapping("/register_user")
+	public String register(@ModelAttribute("newUserData") RegistrationDTO request) {
+		logger.info("User Registeriing started");
+		registrationService.register(request);
+		logger.info("User Registration Completed Successfully");
+		return "redirect:/login";
+	}
+	
 //	For Login --------------------------------------------------------------------------------
 	@GetMapping("/login")
 	public String loginPage(Model model) {
@@ -64,14 +83,6 @@ public class MainController {
 		LoginDTO userLoginAccount = new LoginDTO();
 		model.addAttribute("userLoginAccount", userLoginAccount);
 		return "login.html";
-	}
-	
-	@PostMapping("/register_user")
-	public String register(@ModelAttribute("newUserData") RegistrationDTO request) {
-		logger.info("User Registeriing started");
-		registrationService.register(request);
-		logger.info("User Registration Completed Successfully");
-		return "redirect:/login";
 	}
 	
 	
@@ -100,10 +111,49 @@ public class MainController {
 	public String unblockUser(@PathVariable Integer id) {
 		
 		logger.trace("InSide Unlocking Controller");
-		System.out.println("Integer :" +id);
 		customerService.unLockUser(id);
 		logger.info("UnLocked User");
 		return "redirect:/user_management";
+	}
+	
+//	Product Management ---------------------------------------------------------------
+	@GetMapping("/product_management")
+	public String productManagementPage(Model model) {
+		logger.info("InSide Product Management Controller");
+//		To hold the data
+		List<Product> productList = productService.getAllProducts();
+		model.addAttribute("productList", productList);
+		return "productManagement.html";
+	}
+	
+	@GetMapping("/addProduct")
+	public String addProductPage(Model model) {
+		logger.trace("InSide Add Product Controller");
+		
+//		To hold the data
+		Product newProduct = new Product();
+		model.addAttribute("newProduct", newProduct);
+		return "addProduct.html";
+	}
+	
+	@PostMapping("/registerProduct")
+	public String addProduct(@ModelAttribute("newProduct") Product p) {
+		logger.trace("InSide Product Registering Controller");
+		
+//		To hold the data
+		Product registerProduct = new Product(p.getProductId(), p.getProductName(), p.getDescription(), p.getQuantity(), p.getCaseSize(),
+				p.getPrice(), LocalDate.now());
+		productRepository.save(registerProduct);
+		return "redirect:/product_management";
+	}
+	
+	@GetMapping("/editProduct/{id}")
+	public String editProductPage(@PathVariable Integer id,Model model) {
+		logger.trace("InSide Edit Product Controller");
+//		To hold the data
+		Product editProduct = productRepository.findById(id).get();
+		model.addAttribute("editProduct", editProduct);
+		return "productManagement.html";
 	}
 	
 //	@PostMapping("/sendOtp")
