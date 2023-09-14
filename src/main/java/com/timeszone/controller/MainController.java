@@ -23,11 +23,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import com.timeszone.model.Customer;
 import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.LoginDTO;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductDTO;
+import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.OtpService;
@@ -61,6 +63,14 @@ public class MainController {
 	}
 	
 //	For user registration --------------------------------------------------------------------
+	@GetMapping("/otpVerification")
+	public String otpVerification(Model model,HttpSession session) {
+		
+		LoginDTO otpBasedLoginAccount = new LoginDTO();
+		model.addAttribute("otpBasedLoginAccount", otpBasedLoginAccount);
+		return "userValidation.html";
+	}
+	
 	@GetMapping("/user_registration")
 	public String userRegistration(Model model) {
 		
@@ -70,11 +80,34 @@ public class MainController {
 	}
 	
 	@PostMapping("/register_user")
-	public String register(@ModelAttribute("newUserData") RegistrationDTO request) {
+	public String register(@ModelAttribute("newUserData") RegistrationDTO request,HttpSession session) {
 		logger.info("User Registeriing started");
-		registrationService.register(request);
-		logger.info("User Registration Completed Successfully");
-		return "redirect:/login";
+		Customer verifyCustomer = registrationService.register(request);
+		otpService.sendRegistrationOtp(verifyCustomer.getPhoneNumber());
+		session.setAttribute("validPhoneNumber", verifyCustomer.getPhoneNumber());
+		session.setAttribute("verifyCustomer", verifyCustomer);
+		return "redirect:/otpVerification";	
+	}
+	
+	@PostMapping("/otpRegistrationValidation")
+	public String otpRegistrationValidation(@ModelAttribute("otpBasedLoginAccount") LoginDTO LoginAccount,HttpSession session) {
+		
+//			LoginAccount contains only the otp entered by the user
+		
+//			validPhoneNumber is the number entered by the user in the previous login page.
+//			session.getAttribute("validPhoneNumber").toString()): contains the phoneNumber entered by the user.
+		String phoneNumber = session.getAttribute("validPhoneNumber").toString();
+		boolean flag = otpService.validateRegistrationOtp(phoneNumber,LoginAccount.getOtp());
+		System.out.println(flag);
+		if(flag) {
+			Customer verifyCustomer = (Customer) session.getAttribute("verifyCustomer");
+			customerService.customerRepository.save(verifyCustomer);
+			return "redirect:/login";
+		}
+		else {
+			System.out.println("Inside OtpVerfication Failed Case");
+			return "redirect:/otpVerification";
+		}		
 	}
 	
 //	For Login --------------------------------------------------------------------------------
@@ -106,8 +139,7 @@ public class MainController {
 	
 	@PostMapping("/sendOtp")
 	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l,HttpSession session) {
-		System.out.println("In OTP Login");
-		logger.info("In OTP Login");
+		logger.debug("In OTP Login");
 		otpService.sendOtp(l.getPhoneNumber());
 		session.setAttribute("validPhoneNumber", l.getPhoneNumber());
 		return "redirect:/otpLogin";

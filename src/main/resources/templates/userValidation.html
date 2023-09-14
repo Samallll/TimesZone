@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zxx" xmlns:th="http://www.thymeleaf.org">
 <head>
-    
+    <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Watch shop | eCommers</title>
     <meta name="description" content="">
@@ -37,26 +37,31 @@
                         <div class="main-menu d-none d-lg-block">
                             <nav>                                                
                                 <ul id="navigation">  
-                                    <li><a th:href="@{/user}">Home</a></li>
-                                    <li><a th:href="@{/shop}">shop</a></li>
-                                    <li><a th:href="@{/about}">about</a></li>
-                                    <li class="hot"><a th:href="@{/latest}">Latest</a>
+                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="shop.html">shop</a></li>
+                                    <li><a href="about.html">about</a></li>
+                                    <li class="hot"><a href="#">Latest</a>
                                         <ul class="submenu">
-                                            <li><a href=th:href="@{/shop}"> Product list</a></li>
-                                            <li><a th:href="@{/prdouct_details}"> Product Details</a></li>
+                                            <li><a href="shop.html"> Product list</a></li>
+                                            <li><a href="product_details.html"> Product Details</a></li>
                                         </ul>
                                     </li>
-                                    
+                                    <li><a href="blog.html">Blog</a>
+                                        <ul class="submenu">
+                                            <li><a href="blog.html">Blog</a></li>
+                                            <li><a href="blog-details.html">Blog Details</a></li>
+                                        </ul>
+                                    </li>
                                     <li><a href="#">Pages</a>
                                         <ul class="submenu">
-                                            <li><a href="login.html">Login</a></li>
+                                            <li><a th:href="@{/login}">Login</a></li>
                                             <li><a href="cart.html">Cart</a></li>
                                             <li><a href="elements.html">Element</a></li>
                                             <li><a href="confirmation.html">Confirmation</a></li>
                                             <li><a href="checkout.html">Product Checkout</a></li>
                                         </ul>
                                     </li>
-                                    <li><a th:href="@{/contact}">Contact</a></li>
+                                    <li><a href="contact.html">Contact</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -68,8 +73,8 @@
                                         <span class="flaticon-search"></span>
                                     </div>
                                 </li>
-                                <li> <a th:href="@{/get_otp}"><span class="flaticon-user"></span></a></li>
-                                <li><a th:href="@{/shopping_cart}"><span class="flaticon-shopping-cart"></span></a> </li>
+                                <li> <a href="login.html"><span class="flaticon-user"></span></a></li>
+                                <li><a href="cart.html"><span class="flaticon-shopping-cart"></span></a> </li>
                             </ul>
                         </div>
                     </div>
@@ -84,48 +89,30 @@
     </header>
     <main>
         <!--================login_part Area =================-->
-        <section class="login_part section_padding py-0">
+        <section class="login_part section_padding py-4">
             <div class="container">
                 <div class="row align-items-center justify-content-center  mx-0 my-0">
-                        <div class="login_part_form border border-color-black">
-                            <div class="login_part_form_iner">
-                                <h3 class="md-5">Hey Welcome ! <br>
-                                    Register now</h3>
-                                <form class="row contact_form" action="/register_user" method="post" novalidate="novalidate">
-                                    <div class="col-md-12 form-group p_star d-flex">
-                                        <div class="col-md-6 form-group p_star">
-                                        	<input type="text" class="form-control" id="first_name" name="firstName" value=""
-                                            placeholder="First Name">
-                                    	</div>
-                                    	<div class="col-md-6 form-group p_star">
-                                        	<input type="text" class="form-control" id="last_name" name="lastName" value=""
-                                            placeholder="Last Name">
-                                    	</div>
-                                    </div>
-                                    <div class="col-md-12 form-group p_star d-flex">
-                                        <div class="col-md-6 form-group p_star">
-	                                        <input type="email" class="form-control" id="email_id" name="emailId" value=""
-                                            placeholder="Email ID">
-	                                    </div>
-                                    	<div class="col-md-6 form-group p_star">
-	                                        <input type="tel" class="form-control" id="phone_number" name="phoneNumber" value=""
-                                            placeholder="Phone Number">
-	                                    </div>
-                                    </div>
-                                    <div class="col-md-12 form-group p_star d-flex">
-                                        <div class="col-md-6 form-group p_star">
-	                                    <input type="password" class="form-control" id="password" name="password" value=""
-	                                            placeholder="Password">
-	                                    </div>
-                                    </div>
-                                    <div class="col-md-12 d-flex  justify-content-center form-group p_star">
-                                        <button type="submit" value="submit" class="btn_3 w-50">
-                                            Send OTP for validation...
-                                    	</button>
-                                    </div>
-                                    
-                                </form>
-                            </div>
+                        <div class="login_part_form border border-color-black p-5" style="max-height: 100px;">
+                            
+                                <div class="container-fluid bg-body-tertiary d-block">
+
+		<!--============================Verify Login=================================-->
+								  <div class="card-body p-0 text-center">
+								            <h4>Verify</h4>
+								            <p>Your code was sent to you via email</p>
+											
+											<form action="/otpRegistrationValidation" method="post">								
+									            <div class="otp-field form-outline form-white mb-4">
+									              <input type="text" maxlength="6" class="form-control w-50" name="otp" placeholder="Enter your otp" required/>
+									            </div>
+									            <button class="btn btn-primary mb-3" type="submit">
+									              Verify OTP
+									            </button>
+									        </form>
+								
+								  </div>
+								</div>
+                            
                         </div>
                 </div>
             </div>
@@ -134,7 +121,7 @@
     </main>
     <footer>
         <!-- Footer Start-->
-        <div class="footer-area footer-padding">
+        <div class="footer-area footer-padding pt-5">
             <div class="container">
                 <div class="row d-flex justify-content-between">
                     <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6">

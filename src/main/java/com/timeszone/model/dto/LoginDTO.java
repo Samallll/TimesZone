@@ -53,5 +53,11 @@ public class LoginDTO {
 	public void setOtp(Integer otp) {
 		this.otp = otp;
 	}
+
+	@Override
+	public String toString() {
+		return "LoginDTO [emailId=" + emailId + ", password=" + password + ", phoneNumber=" + phoneNumber + ", otp="
+				+ otp + "]";
+	}
 	
 }
