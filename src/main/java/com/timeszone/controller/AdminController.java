@@ -103,10 +103,10 @@ public class AdminController {
 //	Edit Product -------------
 	@GetMapping("/editProduct/{id}")
 	public String editProductPage(@PathVariable Integer id,Model model) {
-		logger.trace("InSide Edit Product Controller");
+		logger.info("InSide Edit Product Controller");
 		Product editProduct = productRepository.findById(id).get();
-		model.addAttribute("editProduct", editProduct);
-		return "editProductTest.html";
+		model.addAttribute("newProduct", editProduct);
+		return "editProduct.html";
 	}
 	
 	@PostMapping("/{id}")
