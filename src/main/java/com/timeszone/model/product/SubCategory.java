@@ -1,5 +1,7 @@
 package com.timeszone.model.product;
 
+
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -75,6 +77,5 @@ public class SubCategory {
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
-    
-    
+   
 }

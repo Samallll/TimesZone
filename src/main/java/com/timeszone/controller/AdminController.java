@@ -1,7 +1,9 @@
 package com.timeszone.controller;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -24,6 +26,7 @@ import com.timeszone.model.product.Product;
 import com.timeszone.model.product.SubCategory;
 import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.ProductRepository;
+import com.timeszone.repository.SubCategoryRepository;
 import com.timeszone.service.CategoryService;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.ProductService;
@@ -48,6 +51,9 @@ public class AdminController {
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
+	
+	@Autowired
+	private SubCategoryRepository subCategoryRepository;
 	
 	@GetMapping("/")
 	public String adminHome() {
@@ -148,7 +154,7 @@ public class AdminController {
 		return "categoryManagement.html";
 	}
 	
-//	Add Product -------------
+//	Add Category -------------
 	@GetMapping("/addCategory")
 	public String addCategoryPage(Model model) {
 		logger.info("InSide Add Category Controller");	
@@ -170,7 +176,7 @@ public class AdminController {
 		return "redirect:/admin/category_management";
 	}
 	
-	
+//	Add Sub Category -------------
 	@GetMapping("/addSubCategory/{id}")
 	public String addSubCategoryPage(@PathVariable Integer id,Model model) {
 		logger.info("InSide Add Category Controller");	
@@ -185,45 +191,60 @@ public class AdminController {
 		logger.trace("InSide Sub Category Registering Controller");
 		
 		Category existingCategory = categoryRepository.findById(c.getCategoryId()).get();
-        List<SubCategory> subcategories = c.getSubcategories();
-
-     // Set the category property on each subcategory
-        for (SubCategory subcategory : subcategories) {
-          subcategory.setCategory(existingCategory);
-        }
+        List<SubCategory> customerSubCategories = c.getSubcategories();
         
-        existingCategory.setSubcategories(subcategories);
+        List<SubCategory> existingSubCategories = existingCategory.getSubcategories();
         
-        categoryRepository.save(existingCategory);
+        List<SubCategory> newlyAdded = categoryService.newSubCategories( existingSubCategories,customerSubCategories);
+        for (SubCategory subcategory : newlyAdded) {
+	      	  subcategory.setCategory(existingCategory);
+	      	  subCategoryRepository.save(subcategory);
+          } 
+        
         
 		return "redirect:/admin/category_management";
 	}
 	
-////	Edit Product -------------
-//	@GetMapping("/editCategory/{id}")
-//	public String editCategoryPage(@PathVariable Integer id,Model model) {
-//		logger.info("InSide Edit Category Controller");
-//		Category editCategory = categoryRepository.findById(id).get();
-//		model.addAttribute("newCategory", editCategory);
-//		return "editCategory.html";
-//	}
+//	Edit Product -------------
+	@GetMapping("/editCategory/{id}")
+	public String editCategoryPage(@PathVariable Integer id,Model model) {
+		logger.trace("InSide Edit Category Page Loading Controller");
+		Category editCategory = categoryRepository.findById(id).get();
+		model.addAttribute("editCategory", editCategory);
+		return "editCategory.html";
+	}
 	
-//	@PostMapping("/{id}")
-//	public String editCategory(@PathVariable Integer id,@ModelAttribute("editCategory") Category ec) {
-//		logger.trace("InSide Category Editing Controller");
-//		categoryService.updateProduct(id,ec.getProductName(),ec.getCaseSize(),ec.getDescription(),ec.getIsEnabled(),ec.getPrice(),ec.getQuantity());
-//		return "redirect:/admin/category_management";
-//	}
+	@PostMapping("/modifyCategory/{id}")
+	public String editCategory(@PathVariable Integer id,@ModelAttribute("editCategory") Category ec) {
+		logger.trace("InSide Category Editing Controller");
+		categoryService.updateCategory(id,ec);
+		return "redirect:/admin/category_management";
+	}
 	
 //	Delete Product -------------
-//	@GetMapping("/deleteProduct/{id}")
-//	public String CategoryProduct(@PathVariable Integer id) {
-//		logger.trace("InSide Delete Category Controller");
-//		categoryService.deleteCategory(id);
-//		return "redirect:/admin/category_management";
-//	}
+	@GetMapping("/deleteCategory/{id}")
+	public String CategoryProduct(@PathVariable Integer id) {
+		logger.trace("InSide Delete Category Controller");
+		categoryService.deleteCategory(id);
+		return "redirect:/admin/category_management";
+	}
 
+//	Edit Product -------------
+	@GetMapping("/editSubCategory/{id}")
+	public String editSubCategoryPage(@PathVariable Integer id,Model model) {
+		logger.trace("InSide Edit Category Page Loading Controller");
+		Category editCategory = categoryRepository.findById(id).get();
+		model.addAttribute("editCategory", editCategory);
+		return "editSubCategory.html";
+	}
 	
+	@PostMapping("/modifySubCategory/{id}")
+	public String editSubCategory(@PathVariable Integer id,@ModelAttribute("editCategory") Category ec) {
+		logger.trace("InSide Category Editing Controller");
+		SubCategory sc = subCategoryRepository.findById(id).get();
+		sc.setSubCategoryName(null)
+		return "redirect:/admin/category_management";
+	}
 	
 	
 }

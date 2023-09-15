@@ -13,27 +13,27 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 -->
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
   <title>
     Admin Dashboard - User Management
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
   <!-- Nucleo Icons -->
-  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
+  <link id="pagestyle" href="/assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -138,84 +138,81 @@
     
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-      <div class="row">
-		  <div class="col-10"></div>
-		  <div class="col-2">
-			  <a th:href="@{/admin/addCategory}">
-				  <button class="btn bg-gradient-light mb-3 border border-1 border-secondary" type="button">Add Category</button>
-			  </a>
-		  </div>
-	  </div>
 		
       <div class="row">
         <div class="col-12">
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
-					<h6 class="text-white text-capitalize ps-4">Category</h6>
+					<h6 class="text-white text-capitalize ps-4">Category</h4>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category Name</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sub Category</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Changes Available</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr th:each="category:${categoryList}">
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm" th:text="${category.categoryName}"></h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center">
-                        <p class="text-xs text-secondary font-weight-bold mb-0" th:text="${category.description}"></p>
-                      </td>
-                      <td class="align-middle text-center">
-                        <p class="text-xs text-secondary font-weight-bold mb-0">
-					        <span th:each="subcategory, iterStat : ${category.subcategories}">
-					            <span th:text="${subcategory.subCategoryName}"></span>
-					            <!-- Add a separator if needed -->
-					            <span th:if="${!iterStat.last}">,</span>
-					        </span>
-					    </p>
-                      </td>
-                      <td class="align-middle text-center text-sm" th:if="${category.isEnabled}">
-                        <span class="badge badge-sm bg-gradient-success">Available</span>
-                      </td>
-                      <td class="align-middle text-center text-sm" th:if="${!category.isEnabled}">
-                        <span class="badge badge-sm bg-gradient-secondary">Locked</span>
-                      </td>
-                      <td class="align-middle d-flex align-items-center justify-content-center pe-0">
-                        <a th:href="@{/admin/editCategory/{id}(id=${category.categoryId})}" class="btn bg-gradient-info font-weight-bold text-xs mb-0" data-toggle="tooltip">
-                          Edit
-                        </a>
-                        <!--The below button will be visible only if the subcategories list is not full.-->
-                        <a th:if="${#lists.size(category.subcategories) < category.noOfSubCategories}" th:href="@{/admin/addSubCategory/{id}(id=${category.categoryId})}" class="btn bg-gradient-success font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip">
-                          Add Sub Category
-                        </a>
-                        <a th:href="@{/admin/deleteCategory/{id}(id=${category.categoryId})}" class="btn bg-gradient-danger font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip">
-                          Delete
-                        </a>
-                      </td>
-                    </tr>
-                    
-                  </tbody>
-                </table>
-              </div>
+                          
+            	<form class="row mx-5 my-2" th:action="@{/admin/modifySubCategory/{id}(id=${editCategory.categoryId})}" method="post" th:object="${editCategory}">
+		
+				  
+				  <div class="col-md-3">
+				    <label for="inputCategoryName" class="form-label">Category Name</label>
+				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCategoryName" name="categoryName" th:field="*{categoryName}" readonly>
+				  </div>
+				  
+					
+					
+					<!--<div class="col-md-3">
+						<h6 class="text-black text-capitalize ps-4 pt-2">Status:</h6>
+						<div class="form-check">
+						    <input type="radio" class="form-check-input" id="enabledRadio" th:field="*{isEnabled}" value="true"
+						           th:checked="${editCategory.isEnabled}">
+						    <label class="form-check-label" for="enabledRadio">Enabled</label>
+						</div>
+						<div class="form-check">
+						    <input type="radio" class="form-check-input" id="disabledRadio" th:field="*{isEnabled}" value="false"
+						           th:checked="${!editCategory.isEnabled}">
+					    <label class="form-check-label" for="disabledRadio">Disabled</label>
+						</div>
+					</div>-->
+					
+					<div class="col-md-10 ">
+						<h6 class="text-black text-capitalize ps-2 pt-2">Sub Categories</h6>
+						<div th:each="subCategory : ${editCategory.subcategories}" class="d-flex align-items-center">
+						    <div class="col-md-5">
+						        <label for="inputSubCategoryName" class="form-label">Sub Category Name:</label>
+						        <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputSubCategoryName" name="suCategoryName" th:value="${subCategory.subCategoryName}" readonly>
+						    </div>
+						    <div class="col-md-3 border-radius-lg pt-4 pb-3" th:if="${!editCategory.isEnabled}">
+									<span class="text-secondary text-capitalize ps-4"> Status :</span>
+									<span class="badge badge-sm bg-gradient-secondary">Locked</span>
+					        </div>
+					        <div class="col-md-3 border-radius-lg pt-4 pb-3 d-flex align-items-center" th:if="${editCategory.isEnabled}">
+									<span class="text-secondary text-capitalize ps-4"> Status :</span>
+									<span class="badge badge-sm bg-gradient-success ms-2">Available</span>
+					        </div>
+					        <div class="col-md-3"  th:if="${editCategory.isEnabled}">
+							    <a type="button" class="btn btn-secondary mt-4" th:href="@{/admin/disableSubCategory/{subCategoryId}(subCategoryId=${subCategory.subCategoryId})}">Disable</a>
+							</div>
+							<div class="col-md-3"  th:if="${!editCategory.isEnabled}">
+							    <a type="button" class="btn btn-success mt-4" th:href="@{/admin/enableSubCategory/{subCategoryId}(subCategoryId=${subCategory.subCategoryId})}">Disable</a>
+							</div>
+						</div>
+					</div>
+					
+			 
+				  <!--Category Registration Completed-->
+				  
+				  
+				  <div class="col-9">
+				    <button type="submit" class="btn btn-primary mt-3">Save the changes</button>
+				  </div>
+				</form>         
+                          
             </div>
           </div>
+        </div>
+        <div class="col-9">
+	        <div class=" border-radius-lg pt-4 pb-3 d-flex align-items-center">
+					<span class="text-secondary text-capitalize ps-4">Note: You will be able to add Sub Categories once Category is added.</span>
+	        </div>
         </div>
       </div>
     </div>  
@@ -223,13 +220,13 @@
   
   <!--   Core JS Files   -->
 
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
   
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="../assets/js/material-dashboard.min.js?v=3.0.0"></script>
+  <script src="/assets/js/material-dashboard.min.js?v=3.0.0"></script>
 </body>
 
 </html>

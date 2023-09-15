@@ -1,7 +1,9 @@
 package com.timeszone.model.product;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -110,4 +112,7 @@ public class Category {
 		this.isEnabled = isEnabled;
 	}
 	
+	public void addSubCategory(SubCategory subCategory) {
+		this.subcategories.add(subCategory);
+	}
 }
