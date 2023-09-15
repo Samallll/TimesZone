@@ -1,15 +1,15 @@
 package com.timeszone.model.product;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -38,13 +38,11 @@ public class Product {
 	@Column(name="price",nullable=false)
 	private Double price;
 	
-//	@OneToMany(fetch=FetchType.EAGER)
-//	@JoinColumn(name = "categoryId")
-//	private Set<Category>categories;
-//	
-//	@OneToMany(fetch=FetchType.EAGER)
-//	@JoinColumn(name = "productImageId")
-//	private Set<ProductImage>productImages;
+	@OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    private List<Category> categories = new ArrayList<>();
+
+	@OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    private List<ProductImage> productImages = new ArrayList<>();
 	
 	@Column(name="isEnabled",nullable=false)
 	private boolean isEnabled=true;
@@ -56,31 +54,44 @@ public class Product {
 		super();
 	}
 
-//	public Product(Integer productId, String productName, String description, Integer quantity, Double price,
-//			Set<Category> categories, Set<ProductImage> productImages, boolean isEnabled,LocalDate dateAdded, Double caseSize) {
-//		super();
-//		this.productId = productId;
-//		this.productName = productName;
-//		this.description = description;
-//		this.quantity = quantity;
-//		this.price = price;
-////		this.categories = categories;
-////		this.productImages = productImages;
-//		this.isEnabled = isEnabled;
-//		this.dateAdded = dateAdded;
-//		this.caseSize= caseSize;
-//	}
-
-	public Product(Integer productId, String productName, String description, Integer quantity, Double caseSize,
-			Double price, LocalDate dateAdded) {
+	public Product(String productName, String description, Integer quantity, Double caseSize,
+			Double price, LocalDate dateAdded, List<Category> categories,List<ProductImage> productImages) {
 		super();
-		this.productId = productId;
 		this.productName = productName;
 		this.description = description;
 		this.quantity = quantity;
 		this.caseSize = caseSize;
 		this.price = price;
 		this.dateAdded = dateAdded;
+		this.categories = categories;
+		this.productImages = productImages;
+	}
+
+	public Product(String productName, String description, Integer quantity, Double caseSize,
+			Double price, LocalDate dateAdded) {
+		// TODO Auto-generated constructor stub
+		this.productName = productName;
+		this.description = description;
+		this.quantity = quantity;
+		this.caseSize = caseSize;
+		this.price = price;
+		this.dateAdded = dateAdded;
+	}
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
+	public List<ProductImage> getProductImages() {
+		return productImages;
+	}
+
+	public void setProductImages(List<ProductImage> productImages) {
+		this.productImages = productImages;
 	}
 
 	public Double getCaseSize() {
@@ -151,28 +162,12 @@ public class Product {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-
-//	public Set<Category> getCategories() {
-//		return categories;
-//	}
-//
-//	public void setCategories(Set<Category> categories) {
-//		this.categories = categories;
-//	}
-//
-//	public Set<ProductImage> getProductImages() {
-//		return productImages;
-//	}
-//
-//	public void setProductImages(Set<ProductImage> productImages) {
-//		this.productImages = productImages;
-//	}
-//	
-//	public void allCategories() {
-//		// TODO Auto-generated method stub
-//		System.out.println("Categories=");
-//		for(Category category:categories) {
-//			category.toString();
-//		}
-//	}
+	
+	public void allCategories() {
+		// TODO Auto-generated method stub
+		System.out.println("Categories=");
+		for(Category category:categories) {
+			category.toString();
+		}
+	}
 }
