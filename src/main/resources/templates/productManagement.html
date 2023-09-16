@@ -33,7 +33,7 @@
   <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
+  <link id="pagestyle" href="/assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -165,8 +165,8 @@
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                       
                       
-<!--                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sub Category</th>-->
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sub Category</th>
                       
                       
                       
@@ -196,12 +196,24 @@
                       </td>
                       
                       
-<!--                      <td class="align-middle text-center">
-                        <p class="text-xs text-secondary font-weight-bold mb-0" th:text="${product.category}"></p>
+                      <td class="align-middle text-center">
+                        <p class="text-xs text-secondary font-weight-bold mb-0">
+					        <span th:each="category, iterStat : ${product.categories}">
+					            <span th:text="${category.categoryName}"></span>
+					            <!-- Add a separator if needed -->
+					            <span th:if="${!iterStat.last}">,</span>
+					        </span>
+					    </p>
                       </td>
                       <td class="align-middle text-center">
-                        <p class="text-xs text-secondary mb-0" th:text="${product.subCategory}"></p>
-                      </td>-->
+                        <p class="text-xs text-secondary font-weight-bold mb-0">
+					        <span th:each="category, iterStat : ${product.categories}">
+					            <span th:text="${category.categoryName}"></span>
+					            <!-- Add a separator if needed -->
+					            <span th:if="${!iterStat.last}">,</span>
+					        </span>
+					    </p>
+                      </td>
                       
                       
                       

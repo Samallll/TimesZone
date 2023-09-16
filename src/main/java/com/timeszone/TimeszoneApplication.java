@@ -12,10 +12,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.timeszone.model.Customer;
 import com.timeszone.model.Role;
+import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
+import com.timeszone.model.product.SubCategory;
+import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.repository.RoleRepository;
+import com.timeszone.repository.SubCategoryRepository;
 
 @SpringBootApplication
 public class TimeszoneApplication {
@@ -25,7 +29,13 @@ public class TimeszoneApplication {
 	}
 	
 	@Bean
-	CommandLineRunner run(CustomerRepository customerRepository, RoleRepository roleRepository, PasswordEncoder encoder,ProductRepository productRepository) {
+	CommandLineRunner run(CustomerRepository customerRepository,
+			RoleRepository roleRepository,
+			PasswordEncoder encoder,
+			ProductRepository productRepository,
+			CategoryRepository categoryRepository,
+			SubCategoryRepository subCategoryRepository
+			) {
 		
 		return args -> {
 			
@@ -51,6 +61,35 @@ public class TimeszoneApplication {
 //			
 //			Customer admin1 = new Customer("sam","sam","sam@example.com","2222222222",encoder.encode("sam"),roles1);
 //			customerRepository.save(admin1);
+			
+//			Set<SubCategory> subCategories = new HashSet<>();
+//			SubCategory subCategory1 = new SubCategory("blue standard");
+//			SubCategory subCategory2 = new SubCategory("blue class");
+//			SubCategory subCategory3 = new SubCategory("blue premium");
+//			subCategories.add(subCategory1);
+//			subCategories.add(subCategory2);
+//			subCategories.add(subCategory3);
+//			
+//			Category manualAddCat = new Category("Blue", "Based on Blue color", 3);
+//			subCategory1.setCategory(manualAddCat);
+//			subCategory2.setCategory(manualAddCat);
+//			subCategory3.setCategory(manualAddCat);
+//			
+//			categoryRepository.save(manualAddCat);
+//			
+//			subCategoryRepository.save(subCategory1);
+//			subCategoryRepository.save(subCategory2);
+//			subCategoryRepository.save(subCategory3);
+//			
+//			manualAddCat.setSubcategories(subCategories);
+//			
+//			categoryRepository.save(manualAddCat);
+			
+//			Category c = categoryRepository.findById(2).get()	;		
+//			c.setCategoryName("Brand Color Red");
+//			
+//			categoryRepository.save(c);
+			
 			
 //			If admin role is present in the table then no need to create a separate admin role. For ddl-auto:update , it is used.
 			if(roleRepository.findByAuthority("ADMIN").isPresent()) return;

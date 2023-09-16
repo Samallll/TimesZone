@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.timeszone.model.Customer;
 import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.dto.CustomerDTO;
-import com.timeszone.model.dto.SearchCustomerDTO;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.SubCategory;
@@ -69,24 +68,24 @@ public class AdminController {
 		logger.info("InSide User Management Controller");
 //		To hold the list of users
 		List<CustomerDTO> userList = customerService.getAllUsers();
-		SearchCustomerDTO searchKey = new SearchCustomerDTO();
+		CustomerDTO searchKey = new CustomerDTO();
 		model.addAttribute("userList", userList);
 		model.addAttribute("searchKey", searchKey);
 		return "userManagement.html";
 	}
 	
-//	User Search ------------------
+////	User Search ------------------
 	@PostMapping("/admin/searchUser")
-	public String searchUser(@ModelAttribute("searchKey") SearchCustomerDTO c,Model model) {
+	public String search(@PathVariable CustomerDTO c,Model model) {
 			
 		logger.debug("Inside Searching Controller");
 		System.out.println("Inside search controller");
 		List<Customer> customerList = customerRepository.findAllByFirstName(c.getFirstName());
-//		List<Customer> customerListByPhoneNumber = customerRepository.findAllByPhoneNumber(c.getFirstName());
-//		List<Customer> customerListByEmailId = customerRepository.findAllByEmailId(c.getFirstName());
+		List<Customer> customerListByPhoneNumber = customerRepository.findAllByPhoneNumber(c.getFirstName());
+		List<Customer> customerListByEmailId = customerRepository.findAllByEmailId(c.getFirstName());
 		
-//		customerList.addAll(customerListByEmailId);
-//		customerList.addAll(customerListByPhoneNumber);
+		customerList.addAll(customerListByEmailId);
+		customerList.addAll(customerListByPhoneNumber);
 		if(customerList.isEmpty()) {
 			return "noResult.html";
 		}

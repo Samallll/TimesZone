@@ -130,10 +130,11 @@
 	  	<div class="input-group input-group-outline ">
 			  <form class="col-12 d-flex justify-content-end align-items-center" th:action="@{/admin/searchUser}" method="post" th:object="${searchKey}">
 				  <div>
-	              	<input type="text" class="form-control" name="firstName" placeholder="Type here...">
+	              	<input type="search" placeholder="Search" aria-label="Search" class="form-control" th:field="*{firstName}">
 	              </div>
 	              <button type="submit" class="btn btn-primary mb-0 ms-2">Search</button>
               </form>
+              
         </div>
 
       

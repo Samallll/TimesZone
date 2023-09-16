@@ -1,17 +1,20 @@
 package com.timeszone.model.product;
 
+import java.util.Set;
 
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="SubCategory")
+@Table(name="subcategories")
 public class SubCategory {
 	
 	@Id
@@ -25,10 +28,21 @@ public class SubCategory {
 	private boolean isEnabled=true;
     
     @ManyToOne
+    @JoinColumn(name = "category_id")
     private Category category;
+
+    @ManyToMany(mappedBy = "subcategories", cascade = CascadeType.ALL)
+    private Set<Product> products;
 
 	public SubCategory() {
 		super();
+	}
+
+	public SubCategory(String subCategoryName, Category category, Set<Product> products) {
+		super();
+		this.subCategoryName = subCategoryName;
+		this.category = category;
+		this.products = products;
 	}
 
 	public SubCategory(String subCategoryName, Category category) {
@@ -58,14 +72,6 @@ public class SubCategory {
 		this.subCategoryName = subCategoryName;
 	}
 
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-	
 	public boolean getIsEnabled() {
 		return isEnabled();
 	}
@@ -77,5 +83,23 @@ public class SubCategory {
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+	
    
 }

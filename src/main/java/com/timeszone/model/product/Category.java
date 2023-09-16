@@ -1,8 +1,5 @@
 package com.timeszone.model.product;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,12 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Category")
+@Table(name="categories")
 public class Category {
 	
 	@Id
@@ -33,31 +30,41 @@ public class Category {
     @Column(name="isEnabled",nullable=false)
 	private boolean isEnabled=true;
     
-    @ManyToOne
-    private Product product;
-    
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<SubCategory> subcategories = new ArrayList<>();
+    private Set<SubCategory> subcategories;
 
-	public Category(String categoryName, Product product, List<SubCategory> subcategories,String description) {
-		super();
-		this.categoryName = categoryName;
-		this.product = product;
-		this.subcategories = subcategories;
-		this.description = description;
-		noOfSubCategories=subcategories.size();
-	}
-
-	public Integer getNoOfSubCategories() {
-		return noOfSubCategories;
-	}
-
-	public void setNoOfSubCategories(Integer noOfSubCategories) {
-		this.noOfSubCategories = noOfSubCategories;
-	}
+    @ManyToMany
+    private Set<Product> products;
 
 	public Category() {
 		super();
+	}
+
+	public Category(String categoryName, String description, Integer noOfSubCategories, boolean isEnabled,
+			Set<SubCategory> subcategories, Set<Product> products) {
+		super();
+		this.categoryName = categoryName;
+		this.description = description;
+		this.noOfSubCategories = noOfSubCategories;
+		this.isEnabled = isEnabled;
+		this.subcategories = subcategories;
+		this.products = products;
+	}
+
+	public Category(String categoryName, String description, Integer noOfSubCategories,
+			Set<SubCategory> subcategories) {
+		super();
+		this.categoryName = categoryName;
+		this.description = description;
+		this.noOfSubCategories = noOfSubCategories;
+		this.subcategories = subcategories;
+	}
+
+	public Category(String categoryName, String description, Integer noOfSubCategories) {
+		super();
+		this.categoryName = categoryName;
+		this.description = description;
+		this.noOfSubCategories = noOfSubCategories;
 	}
 
 	public Integer getCategoryId() {
@@ -76,22 +83,6 @@ public class Category {
 		this.categoryName = categoryName;
 	}
 
-	public Product getProduct() {
-		return product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-
-	public List<SubCategory> getSubcategories() {
-		return subcategories;
-	}
-
-	public void setSubcategories(List<SubCategory> subcategories) {
-		this.subcategories = subcategories;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -99,7 +90,15 @@ public class Category {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
+	public Integer getNoOfSubCategories() {
+		return noOfSubCategories;
+	}
+
+	public void setNoOfSubCategories(Integer noOfSubCategories) {
+		this.noOfSubCategories = noOfSubCategories;
+	}
+
 	public boolean getIsEnabled() {
 		return isEnabled();
 	}
@@ -111,8 +110,22 @@ public class Category {
 	public void setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
-	
-	public void addSubCategory(SubCategory subCategory) {
-		this.subcategories.add(subCategory);
+
+	public Set<SubCategory> getSubcategories() {
+		return subcategories;
 	}
+
+	public void setSubcategories(Set<SubCategory> subcategories) {
+		this.subcategories = subcategories;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+	
+	
 }
