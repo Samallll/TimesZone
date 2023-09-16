@@ -59,7 +59,7 @@
         
 <!--	User Management		-->
         <li class="nav-item">
-          <a class="nav-link text-white " th:href="@{/user_management}">
+          <a class="nav-link text-white " th:href="@{/admin/user_management}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">table_view</i>
             </div>
@@ -69,7 +69,7 @@
         
 <!--	Product Management		-->
         <li class="nav-item">
-          <a class="nav-link text-white" th:href="@{/product_management}">
+          <a class="nav-link text-white" th:href="@{/admin/prdouct_management}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">table_view</i>
             </div>
@@ -107,11 +107,11 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/sign-in.html">
+          <a class="nav-link text-white " th:href="@{/logout}">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">login</i>
             </div>
-            <span class="nav-link-text ms-1">Logout</span>
+            <span class="nav-link-text ms-1">Log out</span>
           </a>
         </li>
       </ul>

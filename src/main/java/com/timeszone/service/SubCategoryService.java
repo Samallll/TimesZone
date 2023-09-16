@@ -18,4 +18,5 @@ public class SubCategoryService {
 		
 		return subCategoryRepository.findAll();
 	}
+
 }

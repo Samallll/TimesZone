@@ -149,7 +149,7 @@
             </div>
             <div class="card-body px-0 pb-2">
                           
-            	<form class="row mx-5 my-2" th:action="@{/admin/modifySubCategory/{id}(id=${editCategory.categoryId})}" method="post" th:object="${editCategory}">
+            	<form class="row mx-5 my-2" th:action="@{/admin/modifySubCategory/{id}(id=${deleteChildCategory.categoryId})}" method="post" th:object="${deleteChildCategory}">
 		
 				  
 				  <div class="col-md-3">
@@ -163,36 +163,33 @@
 						<h6 class="text-black text-capitalize ps-4 pt-2">Status:</h6>
 						<div class="form-check">
 						    <input type="radio" class="form-check-input" id="enabledRadio" th:field="*{isEnabled}" value="true"
-						           th:checked="${editCategory.isEnabled}">
+						           th:checked="${deleteChildCategory.isEnabled}">
 						    <label class="form-check-label" for="enabledRadio">Enabled</label>
 						</div>
 						<div class="form-check">
 						    <input type="radio" class="form-check-input" id="disabledRadio" th:field="*{isEnabled}" value="false"
-						           th:checked="${!editCategory.isEnabled}">
+						           th:checked="${!deleteChildCategory.isEnabled}">
 					    <label class="form-check-label" for="disabledRadio">Disabled</label>
 						</div>
 					</div>-->
 					
-					<div class="col-md-10 ">
+					<div class="col-md-10 mb-4">
 						<h6 class="text-black text-capitalize ps-2 pt-2">Sub Categories</h6>
-						<div th:each="subCategory : ${editCategory.subcategories}" class="d-flex align-items-center">
+						<div th:each="subCategory : ${deleteChildCategory.subcategories}" class="d-flex align-items-center">
 						    <div class="col-md-5">
 						        <label for="inputSubCategoryName" class="form-label">Sub Category Name:</label>
 						        <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputSubCategoryName" name="suCategoryName" th:value="${subCategory.subCategoryName}" readonly>
 						    </div>
-						    <div class="col-md-3 border-radius-lg pt-4 pb-3" th:if="${!editCategory.isEnabled}">
+						    <div class="col-md-3 border-radius-lg pt-4 pb-3" th:if="${!deleteChildCategory.isEnabled}">
 									<span class="text-secondary text-capitalize ps-4"> Status :</span>
 									<span class="badge badge-sm bg-gradient-secondary">Locked</span>
 					        </div>
-					        <div class="col-md-3 border-radius-lg pt-4 pb-3 d-flex align-items-center" th:if="${editCategory.isEnabled}">
+					        <div class="col-md-3 border-radius-lg pt-4 pb-3 d-flex align-items-center" th:if="${deleteChildCategory.isEnabled}">
 									<span class="text-secondary text-capitalize ps-4"> Status :</span>
 									<span class="badge badge-sm bg-gradient-success ms-2">Available</span>
 					        </div>
-					        <div class="col-md-3"  th:if="${editCategory.isEnabled}">
-							    <a type="button" class="btn btn-secondary mt-4" th:href="@{/admin/disableSubCategory/{subCategoryId}(subCategoryId=${subCategory.subCategoryId})}">Disable</a>
-							</div>
-							<div class="col-md-3"  th:if="${!editCategory.isEnabled}">
-							    <a type="button" class="btn btn-success mt-4" th:href="@{/admin/enableSubCategory/{subCategoryId}(subCategoryId=${subCategory.subCategoryId})}">Disable</a>
+					        <div class="col-md-3">
+							    <a type="button" class="btn btn-secondary mt-4" th:href="@{/admin/removeSubCategory/{subCategoryId}(subCategoryId=${subCategory.subCategoryId})}">Delete</a>
 							</div>
 						</div>
 					</div>
@@ -201,9 +198,9 @@
 				  <!--Category Registration Completed-->
 				  
 				  
-				  <div class="col-9">
+				  <!--<div class="col-9">
 				    <button type="submit" class="btn btn-primary mt-3">Save the changes</button>
-				  </div>
+				  </div>-->
 				</form>         
                           
             </div>

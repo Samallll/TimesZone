@@ -65,5 +65,19 @@ public class CategoryService {
 	    return difference;
 	}
 
+	public void changeStatus(Integer id) {
+		
+
+		Category changeCategoryStatus = categoryRepository.findById(id).get();
+		System.out.println("Before :" + changeCategoryStatus.getIsEnabled());
+		if(changeCategoryStatus.getIsEnabled()) {
+			changeCategoryStatus.setEnabled(false);
+		}
+		else {
+			changeCategoryStatus.setEnabled(true);
+		}
+		categoryRepository.save(changeCategoryStatus);
+	}
+
 	
 }
