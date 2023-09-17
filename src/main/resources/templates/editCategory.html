@@ -200,14 +200,15 @@
 					  <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="quantity" name="noOfSubCategories" th:field="*{noOfSubCategories}">
 					</div>
 					
-					<div class="col-md-6 border-radius-lg d-flex align-items-center" th:if="${editCategory.isEnabled}">
+					<div class="col-md-6 border-radius-lg d-flex align-items-center">
 							<span class="text-black text-capitalize ps-4">Category Status :</span>
-							<span class="badge badge-sm bg-gradient-success ms-2">Available</span>
+							<span class="badge badge-sm bg-gradient-success ms-2" th:if="${editCategory.isEnabled}">Available</span>
+							<span class="badge badge-sm bg-gradient-secondary ms-2" th:if="${!editCategory.isEnabled}">Locked</span>
 			        		<div th:if="${editCategory.isEnabled}" class="ms-3">
 							    <a type="button" class="btn btn-secondary mt-4" th:href="@{/admin/lockCategory/{id}(id=${editCategory.categoryId})}">Disable</a>
 							</div>
 							<div th:if="${!editCategory.isEnabled}">
-							    <a type="button" class="btn btn-success mt-4" th:href="@{/admin/unlockCategory/{id}(id=${editCategory.categoryId})}">Enable</a>
+							    <a type="button" class="btn btn-success mt-4 ms-3" th:href="@{/admin/unlockCategory/{id}(id=${editCategory.categoryId})}">Enable</a>
 							</div>		        
 			        </div>
 			        

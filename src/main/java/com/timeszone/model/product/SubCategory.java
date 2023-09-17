@@ -31,7 +31,7 @@ public class SubCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(mappedBy = "subcategories", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "subcategories", cascade = CascadeType.MERGE)
     private Set<Product> products;
 
 	public SubCategory() {
