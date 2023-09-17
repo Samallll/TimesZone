@@ -1,7 +1,10 @@
 package com.timeszone.controller;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -29,6 +32,7 @@ import com.timeszone.repository.SubCategoryRepository;
 import com.timeszone.service.CategoryService;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.ProductService;
+import com.timeszone.service.SubCategoryService;
 
 @RequestMapping("/admin")
 @Controller
@@ -41,6 +45,9 @@ public class AdminController {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private SubCategoryService subCategoryService;
 	
 	@Autowired
 	private ProductRepository productRepository;
@@ -206,25 +213,19 @@ public class AdminController {
 	public String addSubCategoryPage(@PathVariable Integer id,Model model) {
 		logger.debug("InSide Add Category Controller");	
 //		To hold the data
-		Category newCategory = categoryRepository.findById(id).get();
+		Category c = categoryRepository.findById(id).get();
+		CategoryRegistrationDTO newCategory = categoryService.convertToCategoryDTO(c);
 		model.addAttribute("newCategory", newCategory);
 		return "addSubCategory.html";
 	}
 	
 	@PostMapping("/registerSubCategory")
-	public String addSubCategory(@ModelAttribute("newCategory") Category c) {
+	public String addSubCategory(@ModelAttribute("newCategory") CategoryRegistrationDTO cd) {
 		logger.debug("InSide Sub Category Registering Controller");
 		
-		Category existingCategory = categoryRepository.findById(c.getCategoryId()).get();
-        List<SubCategory> customerSubCategories = c.getSubcategories();
-        
-        List<SubCategory> existingSubCategories = existingCategory.getSubcategories();
-        
-        List<SubCategory> newlyAdded = categoryService.newSubCategories( existingSubCategories,customerSubCategories);
-        for (SubCategory subcategory : newlyAdded) {
-	      	  subcategory.setCategory(existingCategory);
-	      	  subCategoryRepository.save(subcategory);
-          } 
+		subCategoryService.addSubCategory(cd);
+		
+		logger.debug("Exiting from  Sub Category Registering Controller");
         
 		return "redirect:/admin/category_management";
 	}

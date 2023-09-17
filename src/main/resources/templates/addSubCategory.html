@@ -34,6 +34,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
   <link id="pagestyle" href="/assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
+
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -159,14 +160,18 @@
 			            <div class="form-group">
 			                <label th:text="'Subcategory ' + ${i}" class="form-label"></label>
 			                <input type="text" th:field="*{subcategories[__${i-1}__].subCategoryName}" class="form-control border border-1 border-primary ps-3"
-			                	th:name="${'newCategory.subcategories[' + (i-1) + '].subCategoryName'}" required>
+			                	th:name="${'newCategory.subcategories[' + (i-1) + '].subCategoryName'}" id="subCategoryName" 
+			                	 required>
 			            </div>
 		        	</div>
+
 		        	
 		        	<div class="col-12">
 				    	<button type="submit" class="btn btn-primary mt-3">Add Sub Categories</button>
+				    	<a type="button" class="btn btn-info mt-3" th:href="@{/admin/category_management}">Cancel</a>
 				  	</div>
 				  	
+				  				  	
 				</form> 		  
 			    			 
 				  <!--Category Registration Completed-->        
@@ -177,6 +182,16 @@
       </div>
     </div>  
   </main>
+  
+	<script>
+	//DOM code to make the input field readonly when there is a value inside the input field and the data is fetched from the backend
+	const inputField = document.getElementById('subCategoryName');
+	
+	if (inputField.value !== '') {
+	  inputField.setAttribute('readonly', true);
+	}
+	</script>
+	  
   
   <!--   Core JS Files   -->
 

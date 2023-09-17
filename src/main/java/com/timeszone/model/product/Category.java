@@ -1,5 +1,8 @@
 package com.timeszone.model.product;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.timeszone.model.dto.CategoryRegistrationDTO;
 
 @Entity
 @Table(name="categories")
@@ -31,7 +36,7 @@ public class Category {
 	private boolean isEnabled=true;
     
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private Set<SubCategory> subcategories;
+    private Set<SubCategory> subcategories = new HashSet<>();
 
     @ManyToMany
     private Set<Product> products;
@@ -126,6 +131,5 @@ public class Category {
 	public void setProducts(Set<Product> products) {
 		this.products = products;
 	}
-	
-	
+
 }

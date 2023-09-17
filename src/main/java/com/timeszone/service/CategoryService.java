@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.SubCategory;
 import com.timeszone.repository.CategoryRepository;
@@ -79,5 +79,27 @@ public class CategoryService {
 		categoryRepository.save(changeCategoryStatus);
 	}
 
+	public CategoryRegistrationDTO convertToCategoryDTO(Category c) {
+		
+		CategoryRegistrationDTO cd = new CategoryRegistrationDTO();
+		cd.setCategoryId(c.getCategoryId());
+		cd.setCategoryName(c.getCategoryName());
+		cd.setDescription(c.getDescription());
+		cd.setNoOfSubCategories(c.getNoOfSubCategories());
+		List<SubCategory> subCategoryList = new ArrayList<>(c.getSubcategories());
+        cd.setSubcategories(subCategoryList);
+        return cd;
+	}
 	
+	public Category convertToCategory(CategoryRegistrationDTO cd) {
+		
+		Category c = new Category();
+		c.setCategoryId(cd.getCategoryId());
+		c.setCategoryName(cd.getCategoryName());
+		c.setDescription(cd.getDescription());
+		c.setNoOfSubCategories(cd.getNoOfSubCategories());
+		Set<SubCategory> subCategorySet = new HashSet<>(cd.getSubcategories());
+        c.setSubcategories(subCategorySet);
+        return c;
+	}
 }

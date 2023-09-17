@@ -239,11 +239,12 @@
 				  <!--Category Registration Completed-->
 				  
 				  
-				  <div class="col-9 mt-3">
+				  <div class="col-6 mt-3">
 				    <button type="submit" class="btn btn-primary mt-3">Save the changes</button>
 				  </div>
-				  <div class="col-3 mt-3">
+				  <div class="col-6 mt-3 d-flex justify-content-end">
 				    <a type="button" class="btn btn-primary mt-3" th:href="@{/admin/deleteSubCategory/{id}(id=${editCategory.categoryId})}">Edit Sub Category</a>
+				    <a type="button" class="btn btn-info mt-3 ms-2" th:href="@{/admin/category_management}">Cancel</a>
 				  </div>
 				</form>         
                           

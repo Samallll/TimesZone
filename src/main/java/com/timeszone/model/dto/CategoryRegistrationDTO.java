@@ -1,8 +1,13 @@
 package com.timeszone.model.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.timeszone.model.product.SubCategory;
+
 public class CategoryRegistrationDTO {
 	
-    private Integer cateogryId;	
+    private Integer categoryId;	
 
     private String categoryName;
     
@@ -10,14 +15,16 @@ public class CategoryRegistrationDTO {
     
     private Integer noOfSubCategories;
     
+    List<SubCategory> subcategories = new ArrayList<>();
+    
 	public CategoryRegistrationDTO() {
 		super();
 	}
 
-	public CategoryRegistrationDTO(Integer cateogryId, String categoryName, String description,
+	public CategoryRegistrationDTO(Integer categoryId, String categoryName, String description,
 			Integer noOfSubCategories) {
 		super();
-		this.cateogryId = cateogryId;
+		this.categoryId = categoryId;
 		this.categoryName = categoryName;
 		this.description = description;
 		this.noOfSubCategories = noOfSubCategories;
@@ -30,12 +37,12 @@ public class CategoryRegistrationDTO {
 		this.noOfSubCategories = noOfSubCategories;
 	}
 
-	public Integer getCateogryId() {
-		return cateogryId;
+	public Integer getCategoryId() {
+		return categoryId;
 	}
 
-	public void setCateogryId(Integer cateogryId) {
-		this.cateogryId = cateogryId;
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
 	}
 
 	public String getCategoryName() {
@@ -60,6 +67,14 @@ public class CategoryRegistrationDTO {
 
 	public void setNoOfSubCategories(Integer noOfSubCategories) {
 		this.noOfSubCategories = noOfSubCategories;
+	}
+
+	public List<SubCategory> getSubcategories() {
+		return subcategories;
+	}
+
+	public void setSubcategories(List<SubCategory> subcategories) {
+		this.subcategories = subcategories;
 	}
 
     
