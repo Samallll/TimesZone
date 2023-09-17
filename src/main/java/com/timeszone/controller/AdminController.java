@@ -2,8 +2,10 @@ package com.timeszone.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpSession;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.timeszone.model.Customer;
 import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.dto.CustomerDTO;
+import com.timeszone.model.dto.ProductDTO;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.SubCategory;
@@ -136,17 +139,43 @@ public class AdminController {
 	public String addProductPage(Model model) {
 		logger.debug("InSide Add Product Controller");	
 //		To hold the data
-		Product newProduct = new Product();
+		ProductDTO newProduct = new ProductDTO();
+		List<Category> categories= categoryRepository.findAll();
+		Map<Category,ArrayList<SubCategory>> categoryAndSubCategory = new HashMap<>();
+		for(Category c:categories) {
+			categoryAndSubCategory.put(c, new ArrayList<SubCategory>(c.getSubcategories()));
+		}
 		model.addAttribute("newProduct", newProduct);
-		return "addProduct.html";
+		model.addAttribute("categories", categories);
+		model.addAttribute("categoryAndSubCategory", categoryAndSubCategory);		
+		
+		return "addProduct";
 	}
 	
 	@PostMapping("/registerProduct")
-	public String addProduct(@ModelAttribute("newProduct") Product p) {
+	public String addProduct(@ModelAttribute("newProduct") ProductDTO p) {
 		logger.debug("InSide Product Registering Controller");
-		Product registerProduct = new Product( p.getProductName(), p.getDescription(), p.getQuantity(), p.getCaseSize(),
-				p.getPrice(), LocalDate.now());
-		productRepository.save(registerProduct);
+		
+		Product newProduct = new Product();
+		Category c;
+		SubCategory sc;
+		Set<Category> categoryList = new HashSet<>();
+		newProduct.setProductName(p.getProductName());
+		newProduct.setCaseSize(p.getCaseSize());
+		newProduct.setDateAdded(LocalDate.now());
+		newProduct.setDescription(p.getDescription());
+		newProduct.setPrice(p.getPrice());
+		newProduct.setQuantity(p.getQuantity());
+		for(String s:p.getSelectedSubCategories()) {
+			sc = subCategoryRepository.findBySubCategoryName(s);
+			c = sc.getCategory();
+			c.getProducts().add(newProduct);
+			categoryList.add(c);
+			newProduct.getSubcategories().add(sc);
+		}
+		newProduct.setCategories(categoryList);
+		productRepository.save(newProduct);
+
 		return "redirect:/admin/product_management";
 	}
 	

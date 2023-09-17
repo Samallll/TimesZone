@@ -165,7 +165,7 @@
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                       
                       
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category</th>
+                      <!--<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category</th>-->
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sub Category</th>
                       
                       
@@ -196,19 +196,19 @@
                       </td>
                       
                       
-                      <td class="align-middle text-center">
+                      <!--<td class="align-middle text-center">
                         <p class="text-xs text-secondary font-weight-bold mb-0">
-					        <span th:each="category, iterStat : ${product.categories}">
+					        <span th:each="category: ${product.categories}">
 					            <span th:text="${category.categoryName}"></span>
-					            <!-- Add a separator if needed -->
+					             Add a separator if needed 
 					            <span th:if="${!iterStat.last}">,</span>
 					        </span>
 					    </p>
-                      </td>
+                      </td>-->
                       <td class="align-middle text-center">
                         <p class="text-xs text-secondary font-weight-bold mb-0">
-					        <span th:each="category, iterStat : ${product.categories}">
-					            <span th:text="${category.categoryName}"></span>
+					        <span th:each="subcategory, iterStat : ${product.subcategories}">
+					            <span th:text="${subcategory.subCategoryName}"></span>
 					            <!-- Add a separator if needed -->
 					            <span th:if="${!iterStat.last}">,</span>
 					        </span>

@@ -39,7 +39,7 @@ public class Category {
     private Set<SubCategory> subcategories = new HashSet<>();
 
     @ManyToMany
-    private Set<Product> products;
+    private Set<Product> products = new HashSet<>();
 
 	public Category() {
 		super();

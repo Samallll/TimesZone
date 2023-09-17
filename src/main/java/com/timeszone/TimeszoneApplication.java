@@ -39,6 +39,8 @@ public class TimeszoneApplication {
 		
 		return args -> {
 			
+
+			
 //			Adding product
 			
 //			Product product1 = new Product(1, "Rolex Submariner", "Stainless steel diver's watch", 10, 40.0, 7950.0, true, LocalDate.of(2023, 9, 12));

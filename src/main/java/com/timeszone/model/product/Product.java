@@ -1,6 +1,7 @@
 package com.timeszone.model.product;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -39,14 +40,14 @@ public class Product {
 	@Column(name="price",nullable=false)
 	private Double price;
 	
-	@ManyToMany(mappedBy = "products", cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "products", cascade = CascadeType.MERGE)
     private Set<Category> categories;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "product_subcategories",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "subcategory_id"))
-    private Set<SubCategory> subcategories;
+    private Set<SubCategory> subcategories = new HashSet<>();
 
 	@OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private Set<ProductImage> productImages;
