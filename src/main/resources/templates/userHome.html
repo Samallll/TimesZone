@@ -87,7 +87,7 @@
                                     </div>
                                 </li>
                                 <li> <a th:href="@{/login}"><span class="flaticon-user"></span></a></li>
-                                <a th:href="@{/logout}" class="btn btn-primary">Logout</a>
+                                <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-primary">Logout</a>
                                 <li><a th:href="@{/admin/}"><span class="flaticon-shopping-cart"></span></a> </li>
                             </ul>
                         </div>

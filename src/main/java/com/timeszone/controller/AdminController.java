@@ -1,14 +1,9 @@
 package com.timeszone.controller;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +70,7 @@ public class AdminController {
 //	For User management ---------------------------------------------------------------------
 	@GetMapping("/user_management")
 	public String userManagementPage(Model model) {
-		logger.info("InSide User Management Controller");
+		logger.debug("InSide User Management Controller");
 //		To hold the list of users
 		List<CustomerDTO> userList = customerService.getAllUsers();
 		CustomerDTO searchKey = new CustomerDTO();
@@ -109,9 +104,9 @@ public class AdminController {
 //	Lock Management for User -------------------------------------------------------------------------
 	@GetMapping("/block/{id}")
 	public String blockUser(@PathVariable Integer id) {
-		logger.trace("InSide Locking Controller");
+		logger.debug("InSide Locking Controller");
 		customerService.lockUser(id);
-		logger.info("Locked User");
+		logger.debug("Locked User");
 		return "redirect:/admin/user_management";
 	}
 	
@@ -141,13 +136,8 @@ public class AdminController {
 //		To hold the data
 		ProductDTO newProduct = new ProductDTO();
 		List<Category> categories= categoryRepository.findAll();
-		Map<Category,ArrayList<SubCategory>> categoryAndSubCategory = new HashMap<>();
-		for(Category c:categories) {
-			categoryAndSubCategory.put(c, new ArrayList<SubCategory>(c.getSubcategories()));
-		}
 		model.addAttribute("newProduct", newProduct);
-		model.addAttribute("categories", categories);
-		model.addAttribute("categoryAndSubCategory", categoryAndSubCategory);		
+		model.addAttribute("categories", categories);	
 		
 		return "addProduct";
 	}
@@ -183,15 +173,33 @@ public class AdminController {
 	@GetMapping("/editProduct/{id}")
 	public String editProductPage(@PathVariable Integer id,Model model) {
 		logger.debug("InSide Edit Product Controller");
-		Product editProduct = productRepository.findById(id).get();
-		model.addAttribute("newProduct", editProduct);
-		return "editProduct.html";
+		
+		Product existingProduct = productRepository.findById(id).get();
+		ProductDTO editProduct = productService.convertToProduct(existingProduct);
+		List<Category> categoryList= categoryRepository.findAll();
+		
+		model.addAttribute("editProduct", editProduct);
+		model.addAttribute("categoryList", categoryList);
+		
+		return "editProduct";
 	}
 	
-	@PostMapping("/{id}")
-	public String editProduct(@PathVariable Integer id,@ModelAttribute("editProduct") Product ep) {
+	@PostMapping("/modifyProduct")
+	public String editProduct(@ModelAttribute("editProduct") ProductDTO ep) {
 		logger.debug("InSide Product Editing Controller");
-		productService.updateProduct(id,ep.getProductName(),ep.getCaseSize(),ep.getDescription(),ep.getIsEnabled(),ep.getPrice(),ep.getQuantity());
+		
+
+		System.out.println(ep.getDescription());
+		System.out.println(ep.getProductId());
+		System.out.println(ep.getProductName());
+		System.out.println(ep.getCaseSize());
+		System.out.println(ep.getQuantity());
+		System.out.println(ep.getPrice());
+		for(String s:ep.getSelectedSubCategories()) {
+			System.out.println(s);
+		}
+		productService.updateProduct(ep);
+		
 		return "redirect:/admin/product_management";
 	}
 	

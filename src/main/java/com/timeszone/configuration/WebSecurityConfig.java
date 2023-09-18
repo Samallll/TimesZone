@@ -42,9 +42,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		http	
 				.csrf().disable()
 				.authorizeRequests()
-				.antMatchers("/user_registration","/otpLogin","/sendOtp","/otpVerify","/register_user","/otpVerification","/otpRegistrationValidation","/assets/**").permitAll()
-				.antMatchers("/user").hasAuthority("USER")
-				.antMatchers("/admin").hasAuthority("ADMIN")
+				.antMatchers("/user_registration","/otpLogin","/sendOtp","/otpVerify","/register_user","/otpVerification","/otpRegistrationValidation","/assets/**","/user").permitAll()
+				.antMatchers("/user/**").hasAuthority("USER")
+				.antMatchers("/admin/**").hasAuthority("ADMIN")
 				.anyRequest().authenticated()
 				.and()
 				.formLogin()
