@@ -25,7 +25,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 	
-	
 	public WebSecurityConfig(CustomerService customerService) {
 		super();
 		this.customerService = customerService;
@@ -42,7 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		http	
 				.csrf().disable()
 				.authorizeRequests()
-				.antMatchers("/user_registration","/otpLogin","/sendOtp","/otpVerify","/register_user","/otpVerification","/otpRegistrationValidation","/assets/**","/user").permitAll()
+				.antMatchers("/user_registration","/otpLogin","/sendOtp","/otpVerify","/register_user",
+						"/otpVerification","/otpRegistrationValidation","/assets/**","/user","/error/**").permitAll()
 				.antMatchers("/user/**").hasAuthority("USER")
 				.antMatchers("/admin/**").hasAuthority("ADMIN")
 				.anyRequest().authenticated()
@@ -85,4 +85,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		provider.setUserDetailsService(customerService);
 		return provider;
 	}
+	
+	
 }
