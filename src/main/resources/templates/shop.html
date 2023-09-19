@@ -1,0 +1,371 @@
+<!doctype html>
+<html class="no-js" lang="zxx" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Watch shop | eCommers</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicon.ico">
+
+    <!-- CSS here -->
+        <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../assets/css/owl.carousel.min.css">
+        <link rel="stylesheet" href="../assets/css/flaticon.css">
+        <link rel="stylesheet" href="../assets/css/slicknav.css">
+        <link rel="stylesheet" href="../assets/css/animate.min.css">
+        <link rel="stylesheet" href="../assets/css/magnific-popup.css">
+        <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="../assets/css/themify-icons.css">
+        <link rel="stylesheet" href="../assets/css/slick.css">
+        <link rel="stylesheet" href="../assets/css/nice-select.css">
+        <link rel="stylesheet" href="../assets/css/style.css">
+        <link rel="stylesheet" href="../assets/css/ashion_style.css">
+        
+	    <link rel="stylesheet" href="../assets/css/elegant-icons.css" type="text/css">
+	    <link rel="stylesheet" href="../assets/css/jquery-ui.min.css" type="text/css">
+	    <link rel="stylesheet" href="../assets/css/owl.carousel.min.css" type="text/css">
+</head>
+
+<body>
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__close">+</div>
+        <ul class="offcanvas__widget">
+            <li><span class="icon_search search-switch"></span></li>
+            <li><a href="#"><span class="icon_heart_alt"></span>
+                <div class="tip">2</div>
+            </a></li>
+            <li><a href="#"><span class="icon_bag_alt"></span>
+                <div class="tip">2</div>
+            </a></li>
+        </ul>
+        <div class="offcanvas__logo">
+            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__auth">
+            <a href="#">Login</a>
+            <a href="#">Register</a>
+        </div>
+    </div>
+    <!-- Offcanvas Menu End -->
+
+    <header>
+        <!-- Header Start -->
+        <div class="header-area">
+            <div class="main-header header-sticky">
+                <div class="container-fluid">
+                    <div class="menu-wrapper">
+                        <!-- Logo -->
+                        <div class="logo">
+                            <a href="index.html"><img src="assets/img/logo/logo.png" alt=""></a>
+                        </div>
+                        <!-- Main-menu -->
+                        <div class="main-menu d-none d-lg-block">
+                            <nav>                                                
+                                <ul id="navigation">  
+                                    <li><a th:href="@{/guest/user/}">Home</a></li>
+                                    <li><a th:href="@{/guest/shop}">shop</a></li>
+                                    <li><a href="about.html">about</a></li>
+                                    <li class="hot"><a href="#">Latest</a>
+                                        <ul class="submenu">
+                                            <li><a href="shop.html"> Product list</a></li>
+                                            <li><a href="product_details.html"> Product Details</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="blog.html">Blog</a>
+                                        <ul class="submenu">
+                                            <li><a href="blog.html">Blog</a></li>
+                                            <li><a href="blog-details.html">Blog Details</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Pages</a>
+                                        <ul class="submenu">
+                                            <li><a th:href="@{/guest/login}">Login</a></li>
+                                            <li><a href="cart.html">Cart</a></li>
+                                            <li><a href="elements.html">Element</a></li>
+                                            <li><a href="confirmation.html">Confirmation</a></li>
+                                            <li><a href="checkout.html">Product Checkout</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="contact.html">Contact</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <!-- Header Right -->
+                        <div class="header-right">
+                            <ul>
+                                <li>
+                                    <div class="nav-search search-switch">
+                                        <span class="flaticon-search"></span>
+                                    </div>
+                                </li>
+                                <li> <a th:href="@{/guest/login}"><span class="flaticon-user"></span></a></li>
+                                <li><a th:href="@{/admin/}"><span class="flaticon-shopping-cart"></span></a> </li>
+                                <li>
+                                <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-primary">Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Mobile Menu -->
+                    <div class="col-12">
+                        <div class="mobile_menu d-block d-lg-none"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+    </header>
+
+    <!-- Shop Section Begin -->
+    <section class="shop spad " style="background-color: #faf6f2;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="shop__sidebar form">
+                        <div class="sidebar__sizes">
+                            <div class="section-title">
+                                <h4>Shop by size</h4>
+                            </div>
+                            <div class="size__list">
+                                <label for="xxs" class="col-md-4">
+                                    xxs
+                                    <input type="checkbox form-control" id="xxs">
+                                    <span class="checkmark "></span>
+                                </label>
+                                <label for="xs" class="col-md-4">
+                                    xs
+                                    <input type="checkbox form-control" id="xs">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label for="xss" class="col-md-4">
+                                    xss
+                                    <input type="checkbox form-control" id="xss">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="sidebar__color">
+                            <div class="section-title">
+                                <h4>Shop by Color</h4>
+                            </div>
+                            <div class="size__list color__list">
+                                <label for="black">
+                                    Blacks
+                                    <input type="checkbox" id="black">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label for="whites">
+                                    Whites
+                                    <input type="checkbox" id="whites">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label for="reds">
+                                    Reds
+                                    <input type="checkbox" id="reds">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label for="greys">
+                                    Greys
+                                    <input type="checkbox" id="greys">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label for="blues">
+                                    Blues
+                                    <input type="checkbox" id="blues">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label for="beige">
+                                    Beige Tones
+                                    <input type="checkbox" id="beige">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label for="greens">
+                                    Greens
+                                    <input type="checkbox" id="greens">
+                                    <span class="checkmark"></span>
+                                </label>
+                                <label for="yellows">
+                                    Yellows
+                                    <input type="checkbox" id="yellows">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-9">
+                    <div class="row">
+						<div class="col-lg-4 col-md-6" th:each="product:${productList}">
+                            <div class="product__item border border-secondary rounded">
+								
+                                <div class="product__item__pic set-bg" data-setbg="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg">
+									<a th:href="@{/guest/productDetails/{id}(id=${product.productId})}"><img src="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg"></a>
+                                    <ul class="product__hover">
+                                        <li><a href="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                        <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                        <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text px-1 pb-2">
+                                    <h6><a th:href="@{/guest/productDetails/{id}(id=${product.productId})}" th:text="${product.productName}"></a></h6>
+                                    <div class="product__price text-xs text-danger mb-0" th:text="'Rs ' +${product.price}"></div>
+                                </div>
+                                <div id="myDiv" style="display: none;" th:text="${product.productId}"></div>
+                                
+                            </div>
+                        </div>
+						
+						<!--New Tag-->
+                        <!--<div class="col-lg-4 col-md-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="img/shop/shop-1.jpg">
+                                    <div class="label new">New</div>
+                                    <ul class="product__hover">
+                                        <li><a href="img/shop/shop-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                        <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                        <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="#">Furry hooded parka</a></h6>
+                                    <div class="rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <div class="product__price">$ 59.0</div>
+                                </div>
+                            </div>
+                        </div>-->
+                                                                      
+                        <!--<div class="col-lg-4 col-md-6">
+                            <div class="product__item sale">
+                                <div class="product__item__pic set-bg" data-setbg="img/shop/shop-5.jpg">
+                                    <div class="label">Sale</div>
+                                    <ul class="product__hover">
+                                        <li><a href="img/shop/shop-5.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                        <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                        <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="#">Ankle-cuff sandals</a></h6>
+                                    <div class="rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <div class="product__price">$ 49.0 <span>$ 59.0</span></div>
+                                </div>
+                            </div>
+                        </div>-->
+                        
+                        <!--Sale tag-->
+                        
+                        <!--<div class="col-lg-4 col-md-6">
+                            <div class="product__item sale">
+                                <div class="product__item__pic set-bg" data-setbg="img/shop/shop-9.jpg">
+                                    <div class="label">Sale</div>
+                                    <ul class="product__hover">
+                                        <li><a href="img/shop/shop-9.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                        <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                        <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="#">Water resistant zips backpack</a></h6>
+                                    <div class="rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <div class="product__price">$ 49.0 <span>$ 59.0</span></div>
+                                </div>
+                            </div>
+                        </div>-->
+                        <div class="col-lg-12 text-center">
+                            <div class="pagination__option">
+                                <a href="#" class="border border-secondary">1</a>
+                                <a href="#" class="border border-secondary">2</a>
+                                <a href="#" class="border border-secondary">3</a>
+                                <a href="#" class="border border-secondary"><i class="fa fa-angle-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+
+    
+    <!-- Search Begin -->
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            <form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here.....">
+            </form>
+        </div>
+    </div>
+    <!-- Search End -->
+
+    <!-- Js Plugins -->
+    <script src="../assets/js/jquery-3.3.1.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <script src="../assets/js/jquery.magnific-popup.min.js"></script>
+    <script src="../assets/js/jquery-ui.min.js"></script>
+    <script src="../assets/js/mixitup.min.js"></script>
+    <script src="../assets/js/jquery.countdown.min.js"></script>
+    <script src="../assets/js/jquery.slicknav.js"></script>
+    <script src="../assets/js/owl.carousel.min.js"></script>
+    <script src="../assets/js/jquery.nicescroll.min.js"></script>
+    <script src="../assets/js/main.js"></script>
+
+	<!-- JS here -->
+    <!-- All JS Custom Plugins Link Here here -->
+    <script src="../assets/js/vendor/modernizr-3.5.0.min.js"></script>
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src="../assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="../assets/js/popper.min.js"></script>
+    <script src="../assets/js/bootstrap.min.js"></script>
+    <!-- Jquery Mobile Menu -->
+    <script src="./assets/js/jquery.slicknav.min.js"></script>
+
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src="../assets/js/owl.carousel.min.js"></script>
+    <script src="../assets/js/slick.min.js"></script>
+
+    <!-- One Page, Animated-HeadLin -->
+    <script src="../assets/js/wow.min.js"></script>
+    <script src="../assets/js/animated.headline.js"></script>
+    <script src="../assets/js/jquery.magnific-popup.js"></script>
+
+    <!-- Scroll up, nice-select, sticky -->
+    <script src="../assets/js/jquery.scrollUp.min.js"></script>
+    <script src="../assets/js/jquery.nice-select.min.js"></script>
+    <script src="../assets/js/jquery.sticky.js"></script>
+    
+    <!-- contact js -->
+    <script src="../assets/js/contact.js"></script>
+    <script src="../assets/js/jquery.form.js"></script>
+    <script src="../assets/js/jquery.validate.min.js"></script>
+    <script src="../assets/js/mail-script.js"></script>
+    <script src="../assets/js/jquery.ajaxchimp.min.js"></script>
+    
+    <!-- Jquery Plugins, main Jquery -->	
+    <script src="../assets/js/plugins.js"></script>
+    <script src="../assets/js/main.js"></script>
+    
+</body>
+</html>

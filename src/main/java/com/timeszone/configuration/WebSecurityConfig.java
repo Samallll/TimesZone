@@ -41,15 +41,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		http	
 				.csrf().disable()
 				.authorizeRequests()
-				.antMatchers("/user_registration","/otpLogin","/sendOtp","/otpVerify","/register_user",
-						"/otpVerification","/otpRegistrationValidation","/assets/**","/user","/error/**").permitAll()
+				.antMatchers("/assets/**","/error/**","/guest/**").permitAll()
 				.antMatchers("/user/**").hasAuthority("USER")
 				.antMatchers("/admin/**").hasAuthority("ADMIN")
 				.anyRequest().authenticated()
 				.and()
 				.formLogin()
-				.loginPage("/login").permitAll()
-				.loginProcessingUrl("/login").permitAll()
+				.loginPage("/guest/login").permitAll()
+				.loginProcessingUrl("/guest/login").permitAll()
 				.failureHandler(customAuthenticationFailureHandler)
 				.successHandler((req, resp, authentication) -> {
 					
@@ -61,14 +60,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				    }
 				    else 
 				    {
-				    	resp.sendRedirect("/user");
+				    	resp.sendRedirect("/guest/user");
 				    }
 					
 			}).and()
 				.logout()
 				.invalidateHttpSession(true)
 				.clearAuthentication(true)
-				.logoutSuccessUrl("/login");
+				.logoutSuccessUrl("/guest/login");
 	}
 
 	@Override

@@ -2,7 +2,6 @@ package com.timeszone.controller;
 
 import java.time.LocalDate;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,22 +20,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.timeszone.model.Customer;
-import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.LoginDTO;
-import com.timeszone.model.dto.ProductDTO;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Product;
-import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.OtpService;
 import com.timeszone.service.ProductService;
 import com.timeszone.service.RegistrationService;
 
-
+@RequestMapping("/guest")
 @Controller
 public class MainController {
 	
@@ -86,7 +82,7 @@ public class MainController {
 		otpService.sendRegistrationOtp(verifyCustomer.getPhoneNumber());
 		session.setAttribute("validPhoneNumber", verifyCustomer.getPhoneNumber());
 		session.setAttribute("verifyCustomer", verifyCustomer);
-		return "redirect:/otpVerification";	
+		return "redirect:/guest/otpVerification";	
 	}
 	
 	@PostMapping("/otpRegistrationValidation")
@@ -102,7 +98,7 @@ public class MainController {
 		if(flag) {
 			Customer verifyCustomer = (Customer) session.getAttribute("verifyCustomer");
 			customerService.customerRepository.save(verifyCustomer);
-			return "redirect:/login";
+			return "redirect:/guest/login";
 		}
 		else {
 			System.out.println("Inside OtpVerfication Failed Case");
@@ -142,7 +138,7 @@ public class MainController {
 		logger.debug("In OTP Login");
 		otpService.sendOtp(l.getPhoneNumber());
 		session.setAttribute("validPhoneNumber", l.getPhoneNumber());
-		return "redirect:/otpLogin";
+		return "redirect:/guest/otpLogin";
 	}
 	
 	@GetMapping("/otpLogin")
@@ -171,12 +167,29 @@ public class MainController {
 	        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
 	        System.out.println(authentication.toString());
-			return "redirect:/user";
+			return "redirect:/guest/user";
 		}
 		else {
 			System.out.println("Inside OtpVerfication Failed Case");
-			return "redirect:/otpLogin";
+			return "redirect:/guest/otpLogin";
 		}		
 	}
-
+	
+//	Shopping side -------------------------------------------------------------------------------
+	
+	@GetMapping("/shop")
+	public String shopPage(Model model) {
+		
+		List<Product> productList = productRepository.findAll();
+		model.addAttribute("productList", productList);
+		return "shop";
+	}
+	
+//	Product details ------------------------------------------
+	
+	@GetMapping("/productDetails/{id}")
+	public String showProductDetails(@PathVariable("id") Integer productId) {
+		
+		return "productDetails";
+	}
 }
