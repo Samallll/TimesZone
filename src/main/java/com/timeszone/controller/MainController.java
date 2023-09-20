@@ -121,11 +121,18 @@ public class MainController {
 //	For Login --------------------------------------------------------------------------------
 	@GetMapping("/login")
 	public String loginPage(Model model,HttpSession session) {
-		logger.info("InSide Login Controller");
+		logger.debug("InSide Login Controller");
 //		To hold the data
 		LoginDTO userLoginAccount = new LoginDTO();
 		model.addAttribute("userLoginAccount", userLoginAccount);
 		return "login.html";
+	}
+	
+	@GetMapping("/forgotPassword")
+	public String forgotPasswordPage(HttpSession session,Model model) {
+		LoginDTO userLoginAccount = new LoginDTO();
+		model.addAttribute("userLoginAccount", userLoginAccount);
+		return "forgotPassword";
 	}
 	
 	@PostMapping("/sendOtp")
