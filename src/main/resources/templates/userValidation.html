@@ -73,7 +73,7 @@
                                         <span class="flaticon-search"></span>
                                     </div>
                                 </li>
-                                <li> <a href="login.html"><span class="flaticon-user"></span></a></li>
+                                <li> <a th:href="@{/guest/login}"><span class="flaticon-user"></span></a></li>
                                 <li><a href="cart.html"><span class="flaticon-shopping-cart"></span></a> </li>
                             </ul>
                         </div>
@@ -98,6 +98,16 @@
 
 		<!--============================Verify Login=================================-->
 								  <div class="card-body p-0 text-center">
+									  
+								    <div th:if="${session.registerError}" class="alert alert-danger">
+						        		<span th:if="${session.registerError}" th:text="${session.registerError}"></span>
+						    		</div>
+								    <div th:if="${session.registerSuccess}" class="alert alert-success">
+							        	<span th:if="${session.registerSuccess}" th:text="${session.registerSuccess}"></span>
+								    </div>
+									  
+									  
+									  
 								            <h4>Verify</h4>
 								            <p>Your code was sent to you via email</p>
 											

@@ -62,13 +62,17 @@
                                 </form>
                                 <hr>
                                 <h5 class="text-center mb-4 mt-5"> Login with your Registered<br>
-                                		Phone Number</h5>
-                                    
+                                		Email ID</h5>
+                                <div class="card-body p-2 text-center ">
+							    	<div th:if="${session.otpFail}" class="alert alert-danger">
+							        	<span th:if="${session.otpFail}" th:text="${session.otpFail}"></span>
+							    	</div>
+								</div>    
 								<form action="/guest/sendOtp" method="post">
 						
 						              <div class="form-outline form-white mb-4">
-						                <input type="text" class="form-control form-control-lg" name="phoneNumber" required/>
-						                <label class="form-label mt-2 text-center" for="username">Registered Mobile Number</label>
+						                <input type="email" class="form-control form-control-lg" name="emailId" required/>
+						                <label class="form-label mt-2 text-center" for="emailId">Registered Email Id</label>
 						              </div>
 										              	
 						              <button class="btn_3" type="submit">Send OTP</button>

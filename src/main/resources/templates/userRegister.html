@@ -30,6 +30,14 @@
                 <div class="row align-items-center justify-content-center  mx-0 my-0">
                         <div class="login_part_form border border-primary">
                             <div class="login_part_form_iner">
+								
+								<div th:if="${session.registerError}" class="alert alert-danger">
+							        	<span th:if="${session.registerError}" th:text="${session.registerError}"></span>
+							    </div>
+							    <div th:if="${session.registerSuccess}" class="alert alert-success">
+							        	<span th:if="${session.registerSuccess}" th:text="${session.registerSuccess}"></span>
+							    </div>
+								
                                 <h3 class="md-5">Hey Welcome ! <br>
                                     Register now</h3>
                                 <form class="row contact_form" action="/guest/register_user" method="post" novalidate="novalidate">

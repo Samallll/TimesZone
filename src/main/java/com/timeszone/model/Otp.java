@@ -18,8 +18,8 @@ public class Otp {
 	@Column(name="otpId")
 	private Integer otp_id;
 	
-	@Column(name="phoneNumber",nullable=false,unique=true)
-	private String phoneNumber;
+	@Column(name="emailId",nullable=false,unique=true)
+	private String emailId;
 	
 	@Column(name="otp",nullable=true)
 	private Integer otp;
@@ -35,12 +35,12 @@ public class Otp {
 		this.otp_id = otp_id;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getEmailId() {
+		return emailId;
 	}
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 
 	public Integer getOtp() {
@@ -59,9 +59,9 @@ public class Otp {
 		this.expirationTime = expirationTime;
 	}
 
-	public Otp(String phoneNumber, Integer otp, LocalDateTime expirationTime) {
+	public Otp(String emailId, Integer otp, LocalDateTime expirationTime) {
 		super();
-		this.phoneNumber = phoneNumber;
+		this.emailId = emailId;
 		this.otp = otp;
 		this.expirationTime = expirationTime;
 	}

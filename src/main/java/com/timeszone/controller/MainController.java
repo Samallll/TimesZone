@@ -68,7 +68,7 @@ public class MainController {
 	}
 	
 	@GetMapping("/user_registration")
-	public String userRegistration(Model model) {
+	public String userRegistration(Model model,HttpSession session) {
 		
 		RegistrationDTO newUserData = new RegistrationDTO();
 		model.addAttribute("newUserData", newUserData);
@@ -77,12 +77,20 @@ public class MainController {
 	
 	@PostMapping("/register_user")
 	public String register(@ModelAttribute("newUserData") RegistrationDTO request,HttpSession session) {
-		logger.info("User Registeriing started");
-		Customer verifyCustomer = registrationService.register(request);
-		otpService.sendRegistrationOtp(verifyCustomer.getPhoneNumber());
-		session.setAttribute("validPhoneNumber", verifyCustomer.getPhoneNumber());
-		session.setAttribute("verifyCustomer", verifyCustomer);
-		return "redirect:/guest/otpVerification";	
+		logger.debug("User Registeriing started");
+		
+		if(customerService.customerExists(request)) {
+			
+			session.setAttribute("registerError", customerService.getErrorMsg());
+			return "redirect:/guest/user_registration";
+		}
+		else {
+			Customer verifyCustomer = registrationService.register(request);
+			otpService.sendRegistrationOtp(verifyCustomer.getEmailId());
+			session.setAttribute("validEmailId", verifyCustomer.getEmailId());
+			session.setAttribute("verifyCustomer", verifyCustomer);		
+			return "redirect:/guest/otpVerification";	
+		}
 	}
 	
 	@PostMapping("/otpRegistrationValidation")
@@ -90,25 +98,29 @@ public class MainController {
 		
 //			LoginAccount contains only the otp entered by the user
 		
-//			validPhoneNumber is the number entered by the user in the previous login page.
-//			session.getAttribute("validPhoneNumber").toString()): contains the phoneNumber entered by the user.
-		String phoneNumber = session.getAttribute("validPhoneNumber").toString();
-		boolean flag = otpService.validateRegistrationOtp(phoneNumber,LoginAccount.getOtp());
+//			validEmailId is the email entered by the user in the previous login page.
+//			session.getAttribute("validEmailId").toString()): contains the email entered by the user.
+		String emailId = session.getAttribute("validEmailId").toString();
+		boolean flag = otpService.validateRegistrationOtp(emailId,LoginAccount.getOtp());
 		System.out.println(flag);
 		if(flag) {
 			Customer verifyCustomer = (Customer) session.getAttribute("verifyCustomer");
 			customerService.customerRepository.save(verifyCustomer);
-			return "redirect:/guest/login";
+			session.setAttribute("registerSuccess", otpService.getSuccessMessage());
+			session.removeAttribute("registerError");
+			return "redirect:/guest/user_registration";
 		}
 		else {
 			System.out.println("Inside OtpVerfication Failed Case");
+			session.setAttribute("registerError", otpService.getErrorMessage());
+			session.removeAttribute("registerSuccess");
 			return "redirect:/otpVerification";
 		}		
 	}
 	
 //	For Login --------------------------------------------------------------------------------
 	@GetMapping("/login")
-	public String loginPage(Model model) {
+	public String loginPage(Model model,HttpSession session) {
 		logger.info("InSide Login Controller");
 //		To hold the data
 		LoginDTO userLoginAccount = new LoginDTO();
@@ -116,29 +128,22 @@ public class MainController {
 		return "login.html";
 	}
 	
-	
-//	@PostMapping("/sendOtp")
-//	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l, Model model) {
-//		System.out.println("Invalid number");
-//		otpService.sendOtp(l.getPhoneNumber());
-//		
-//		if(otpService.getErrorMessage()!=null) {
-//			model.addAttribute("error", otpService.getErrorMessage());
-//			System.out.println("Invalid number");
-//			return "redirect:/login";
-//		}
-//		else {
-//			model.addAttribute("validPhoneNumber", l.getPhoneNumber());
-//			return "redirect:/otpLogin";
-//		}
-//	}
-	
 	@PostMapping("/sendOtp")
 	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l,HttpSession session) {
 		logger.debug("In OTP Login");
-		otpService.sendOtp(l.getPhoneNumber());
-		session.setAttribute("validPhoneNumber", l.getPhoneNumber());
-		return "redirect:/guest/otpLogin";
+		otpService.sendOtp(l.getEmailId());
+		if(otpService.getErrorMessage()!=null) {
+			session.setAttribute("otpFail", otpService.getErrorMessage());
+			session.removeAttribute("error");
+			System.out.println("Invalid Email Id");
+			return "redirect:/login";
+		}
+		else {
+			session.setAttribute("validEmailId", l.getEmailId());
+			session.removeAttribute("otpFail");
+			session.removeAttribute("error");
+			return "redirect:/guest/otpLogin";
+		}
 	}
 	
 	@GetMapping("/otpLogin")
@@ -156,21 +161,24 @@ public class MainController {
 		
 //		validPhoneNumber is the number entered by the user in the previous login page.
 //		session.getAttribute("validPhoneNumber").toString()): contains the phoneNumber entered by the user.
-		String phoneNumber = session.getAttribute("validPhoneNumber").toString();
-		System.out.println(phoneNumber);
-		boolean flag = otpService.verifyOtp(phoneNumber,LoginAccount.getOtp());
+		String emailId = session.getAttribute("validEmailId").toString();
+		System.out.println(emailId);
+		boolean flag = otpService.verifyOtp(emailId,LoginAccount.getOtp());
 		System.out.println(flag);
 		if(flag) {
 			System.out.println("Inside Allowing mechanism");
-			UserDetails userDetails = customerService.loadUserForOtpLogin(phoneNumber);
+			UserDetails userDetails = customerService.loadUserForOtpLogin(emailId);
 			System.out.println(userDetails.getAuthorities().size());
 	        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	        SecurityContextHolder.getContext().setAuthentication(authentication);
 	        System.out.println(authentication.toString());
+	        session.removeAttribute("otpSuccess");
+	        session.removeAttribute("otpFail");
 			return "redirect:/guest/user";
 		}
 		else {
-			System.out.println("Inside OtpVerfication Failed Case");
+			session.setAttribute("otpFail", otpService.getErrorMessage());
+			session.setAttribute("otpSuccess", otpService.getSuccessMessage());
 			return "redirect:/guest/otpLogin";
 		}		
 	}

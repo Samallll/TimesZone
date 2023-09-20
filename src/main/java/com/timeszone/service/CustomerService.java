@@ -14,29 +14,44 @@ import org.springframework.stereotype.Service;
 import com.timeszone.model.Customer;
 import com.timeszone.model.Role;
 import com.timeszone.model.dto.CustomerDTO;
+import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.repository.CustomerRepository;
 
+/**
+ * 
+ */
 @Service
 public class CustomerService implements UserDetailsService{
 	
 	@Autowired
 	public CustomerRepository customerRepository;
 	
+	private String errorMsg;
+
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String emailId) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
-		return customerRepository.findByEmailId(emailId).orElseThrow(()-> new UsernameNotFoundException("UserName not Found"));
+		Customer customer = customerRepository.findByEmailId(emailId);
+		
+		if (customer != null) {
+			return customer;
+		}
+		throw new UsernameNotFoundException("UserName Not Found");
+
 	}
 	
-	public UserDetails loadUserForOtpLogin(String phoneNumber) throws UsernameNotFoundException {
+	public UserDetails loadUserForOtpLogin(String emailId) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
-			Customer customer = customerRepository.findByPhoneNumber(phoneNumber);
+			Customer customer = customerRepository.findByEmailId(emailId);
 			
 			if (customer != null) {
 				System.out.println("customer details from customer service:" + customer.getFirstName());
 				return customer;
 			}
-			System.out.println("failed to load the customer");
 			throw new UsernameNotFoundException("User not available");
 		}
 	
@@ -79,6 +94,29 @@ public class CustomerService implements UserDetailsService{
 		return customerDTO;
 	}
 
-	
+	public boolean customerExists(RegistrationDTO customerData) {
+		
+		if(customerRepository.findByEmailId(customerData.getEmailId())!=null) {
+			
+			errorMsg="Email Id exists";
+			return true;
+		}
+		else if(customerRepository.findByFirstName(customerData.getFirstName())!=null) {
+			
+			errorMsg="First Name exists";
+			return true;
+		}
+		else if(customerRepository.findByPhoneNumber(customerData.getPhoneNumber())!=null) {
+			
+			errorMsg="Phone Number exists";
+			return true;
+		}
+		else {
+			errorMsg=null;
+			return false;
+		}
+	}
+
+
 
 }

@@ -2,11 +2,17 @@ package com.timeszone.service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.Random;
 
+import javax.mail.MessagingException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.timeszone.controller.MainController;
 import com.timeszone.model.Customer;
 import com.timeszone.model.Otp;
 import com.timeszone.repository.CustomerRepository;
@@ -15,27 +21,36 @@ import com.timeszone.repository.OtpRepository;
 @Service
 public class OtpService {
 	
+	Logger logger = LoggerFactory.getLogger(MainController.class);
+	
 	@Autowired
 	private CustomerRepository customerRepository;
 	
 	@Autowired
 	private OtpRepository otpRepository;
 	
-//	@Autowired
-//	private TwilioSmsService twilioSmsService;
+	@Autowired
+	private EmailSender emailSender;
 	
 	private String errorMessage;
+	
+	private String successMessage;
 
     public String getErrorMessage() {
 		return errorMessage;
 	}
+    
+    public String getSuccessMessage() {
+		return successMessage;
+	}
 
-    public void sendOtp(String phoneNumber) {
+    public void sendOtp(String emailId) {
         
-    	Customer customer = customerRepository.findByPhoneNumber(phoneNumber);
+    	System.out.println(emailId);
+    	Customer customer = customerRepository.findByEmailId(emailId);
     	
         if (customer == null) {
-            errorMessage = "Invalid phone number";
+            errorMessage = "Invalid Email Address";
             System.out.println(errorMessage);
             return;
         }
@@ -49,6 +64,13 @@ public class OtpService {
         // Set the expiration time for the OTP
         LocalDateTime expirationTime = LocalDateTime.now().plus(2, ChronoUnit.MINUTES);
         
+        String emailBody = "Your OTP is: " + randomNumber;
+        try {
+            emailSender.sendEmail(customer.getEmailId(), "OTP Verification", emailBody);
+        } catch (MessagingException e) {
+            logger.error("Failed to send email", e);
+        }
+        
 //        SMS Service is not working as expected hence commenting the below lines.
 //        String message = "Your Otp for TimeZone Login : " + randomNumber;
 //        twilioSmsService.sendSms(phoneNumber, message);
@@ -60,11 +82,13 @@ public class OtpService {
         
     }
     
-    public boolean verifyOtp(String phoneNumber, Integer otp) {
+    public boolean verifyOtp(String emailId, Integer otp) {
         // Check if the OTP is valid
     	// Get the current time
-    	Customer verifyCustomer = customerRepository.findByPhoneNumber(phoneNumber);
+    	Customer verifyCustomer = customerRepository.findByEmailId(emailId);
     	if(verifyCustomer==null) {
+    		errorMessage = "Invalid Email Address";
+            System.out.println(errorMessage);
     		return false;
     	}
     	System.out.println("Stored OTP: "+verifyCustomer.getOtp());
@@ -78,18 +102,21 @@ public class OtpService {
             System.out.println("Allowed Login...");
         	verifyCustomer.setExpirationTime(null);
         	verifyCustomer.setOtp(null);
+        	errorMessage = null;
         	customerRepository.save(verifyCustomer);
             return true;
         } 
         else if(comparison > 0) {
         	verifyCustomer.setExpirationTime(null);
         	verifyCustomer.setOtp(null);
+        	errorMessage = "Time expired....";
         	System.out.println("Time expired....");
         	customerRepository.save(verifyCustomer);
         	return false;
         }
         else {
             System.out.println("Invalid OTP");
+            errorMessage = "Invalid OTP";
             return false;
         }
     }
@@ -97,8 +124,17 @@ public class OtpService {
     
     
 //    For user validation through registred phone number ----------------------------------------
-    public void sendRegistrationOtp(String phoneNumber) {
-
+    public void sendRegistrationOtp(String emailId) {
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
     	// Create a random number generator
         Random random = new Random();
         int min = 100000; // Minimum 6-digit number
@@ -108,23 +144,30 @@ public class OtpService {
         // Set the expiration time for the OTP
         LocalDateTime expirationTime = LocalDateTime.now().plus(4, ChronoUnit.MINUTES);
         
-//        SMS Service is not working as expected hence commenting the below lines.
-//        String message = "Your Otp for TimeZone Login : " + randomNumber;
-//        twilioSmsService.sendSms(phoneNumber, message);
-        Otp newOtp = otpRepository.findByPhoneNumber(phoneNumber);
-        if(newOtp==null) {
-        	newOtp = new Otp(phoneNumber, randomNumber, expirationTime); 
-            otpRepository.save(newOtp);
+        String emailBody = "Your OTP is: " + randomNumber;
+        try {
+            emailSender.sendEmail(emailId, "OTP Verification", emailBody);
+        } catch (MessagingException e) {
+            logger.error("Failed to send email", e);
         }
+        
+        
+        Otp newOtp = otpRepository.findByEmailId(emailId);
+        if(newOtp==null) {
+        	newOtp = new Otp(emailId, randomNumber, expirationTime); 
+        }
+        newOtp.setOtp(randomNumber);
+        newOtp.setExpirationTime(expirationTime);
+        otpRepository.save(newOtp);
         errorMessage = null;
         
     }
     
-    public boolean validateRegistrationOtp(String phoneNumber, Integer otp) {
+    public boolean validateRegistrationOtp(String emailId, Integer otp) {
         // Check if the OTP is valid
     	// Get the current time
 
-    	Otp validatedOtp = otpRepository.findByPhoneNumber(phoneNumber);
+    	Otp validatedOtp = otpRepository.findByEmailId(emailId);
 
     	LocalDateTime expirationTime = validatedOtp.getExpirationTime();
     	LocalDateTime currentTime = LocalDateTime.now();
@@ -134,16 +177,22 @@ public class OtpService {
         // Compare the two times
         if (currentTime.isBefore(expirationTime) &&validatedOtp.getOtp().equals(otp)) {
             System.out.println("Allowed Registration...");
+            errorMessage = null;
+            successMessage = "Account Created Successfully";
             otpRepository.delete(validatedOtp);
             return true;
         } 
         else if(comparison > 0) {
         	System.out.println("Time expired....");
+        	errorMessage = "Time expired....";
+        	successMessage = null;
             otpRepository.delete(validatedOtp);
         	return false;
         }
         else {
             System.out.println("Invalid OTP");
+            errorMessage = "Invalid OTP";
+            successMessage = null;
             return false;
         }
     }

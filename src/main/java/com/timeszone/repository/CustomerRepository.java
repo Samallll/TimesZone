@@ -14,9 +14,11 @@ import com.timeszone.model.Customer;
 @Transactional
 public interface CustomerRepository extends JpaRepository<Customer,Integer> {
 	
-	Optional<Customer> findByEmailId(String emailId);
+	Customer findByEmailId(String emailId);
 	
 	Customer findByPhoneNumber(String phoneNumber);
+	
+	Customer findByFirstName(String firstName);
 	
 	List<Customer> findAllByFirstName(String firstName);
 	

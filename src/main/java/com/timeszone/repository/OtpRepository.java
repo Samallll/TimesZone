@@ -8,5 +8,5 @@ import com.timeszone.model.Otp;
 @Repository
 public interface OtpRepository extends JpaRepository<Otp,Integer>{
 	
-	Otp findByPhoneNumber(String phoneNumber);
+	Otp findByEmailId(String emailId);
 }
