@@ -17,16 +17,12 @@ public class ProductImage {
 	
     private String imageName;
     
+    private byte[] image;
+    
+    private long size;
+    
     @ManyToOne
     private Product product;
-
-	public Integer getIamgeId() {
-		return imageId;
-	}
-
-	public void setIamgeId(Integer imageId) {
-		this.imageId = imageId;
-	}
 
 	public String getImageName() {
 		return imageName;
@@ -44,15 +40,46 @@ public class ProductImage {
 		this.product = product;
 	}
 
-	public ProductImage(Integer imageId, String imageName, Product product) {
+	public Integer getImageId() {
+		return imageId;
+	}
+
+	public void setImageId(Integer imageId) {
+		this.imageId = imageId;
+	}
+
+	public byte[] getImage() {
+		return image;
+	}
+
+	public void setImage(byte[] image) {
+		this.image = image;
+	}
+
+	public long getSize() {
+		return size;
+	}
+
+	public void setSize(long size) {
+		this.size = size;
+	}
+
+	public ProductImage(Integer imageId, String imageName, Product product,byte[] image) {
 		super();
 		this.imageId = imageId;
 		this.imageName = imageName;
 		this.product = product;
+		this.image=image;
 	}
 
 	public ProductImage() {
 		super();
 	}
-
+	
+	public ProductImage(String imageName, Product product,byte[] image) {
+		super();
+		this.image = image;
+		this.imageName = imageName;
+		this.product = product;
+	}
 }

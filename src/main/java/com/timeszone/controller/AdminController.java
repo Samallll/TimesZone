@@ -1,9 +1,12 @@
 package com.timeszone.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.timeszone.model.Customer;
 import com.timeszone.model.dto.CategoryRegistrationDTO;
@@ -22,13 +28,16 @@ import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.ProductDTO;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
+import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.product.SubCategory;
 import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
+import com.timeszone.repository.ProductImageRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.repository.SubCategoryRepository;
 import com.timeszone.service.CategoryService;
 import com.timeszone.service.CustomerService;
+import com.timeszone.service.ProductImageService;
 import com.timeszone.service.ProductService;
 import com.timeszone.service.SubCategoryService;
 
@@ -57,10 +66,16 @@ public class AdminController {
 	private CategoryService categoryService;
 	
 	@Autowired
+	private ProductImageService productImageService;
+	
+	@Autowired
 	private CategoryRepository categoryRepository;
 	
 	@Autowired
 	private SubCategoryRepository subCategoryRepository;
+	
+	@Autowired
+	private ProductImageRepository productImageRepository;
 	
 	@GetMapping("/")
 	public String adminHome() {
@@ -211,7 +226,48 @@ public class AdminController {
 		productService.deleteProduct(id);
 		return "redirect:/admin/product_management";
 	}
-
+	
+	
+	@GetMapping("/addProductImage/{id}")
+	public String addProductImagePage(@PathVariable("id") Integer prodcutId,Model model) {
+		
+		Product p = productRepository.findById(prodcutId).get();
+		List<ProductImage> imageList = p.getProductImages();
+		model.addAttribute("imageList", imageList);
+		model.addAttribute("product", p);
+		return "addProductImage";
+	}
+	
+	@PostMapping("/upload")
+	public RedirectView uploadProductImage(@RequestParam("file") MultipartFile file,@ModelAttribute("product") Product p,Model model) throws IOException {
+		
+		ProductImage newImage = new ProductImage();
+		Product imageProduct = productRepository.findById(p.getProductId()).get();		
+		String fileName = file.getOriginalFilename();
+		newImage.setImageName(fileName);
+		newImage.setImage(file.getBytes());
+		newImage.setSize(file.getSize());
+		newImage.setProduct(imageProduct);
+		productImageService.create(newImage);
+		productRepository.save(imageProduct);
+		
+		// Redirect to another endpoint with a path variable
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/admin/addProductImage/{id}"); 
+        redirectView.addStaticAttribute("id", p.getProductId());
+        model.addAttribute("success", "File Uploaded Successfully");
+        return redirectView;
+	}
+	
+	@GetMapping("/showImage")
+	public void showImagePage(@PathVariable("id") Integer id,HttpServletResponse response,ProductImage productImage) throws IOException {
+		
+		System.out.println("Heloooo" + id);
+		productImage = productImageRepository.findByImageId(id);
+		response.setContentType("image/jpg");
+		response.getOutputStream().write(productImage.getImage());
+		response.getOutputStream().close();
+	}
 	
 //	Category Management ----------------------------------------------------------------------
 	

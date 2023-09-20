@@ -118,43 +118,49 @@
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
-      <div class="container-fluid py-1 px-3">
-        <nav aria-label="breadcrumb">
-          <h5 class="font-weight-bolder mt-3 mb-0">Table Representation</h4>
-        </nav>
-        
-      </div>
-      
-	  	<div class="input-group input-group-outline ">
-			  <form class="col-12 d-flex justify-content-end align-items-center" method="post">
-				  <div>
-	              	<input type="search" placeholder="Search" aria-label="Search" class="form-control">
-	              </div>
-	              <button type="submit" class="btn btn-primary mb-0 ms-2">Search</button>
-              </form>
-              
-        </div>
-    </nav>
     
-    <!-- End Navbar -->
-    <div class="container-fluid py-4">
-      <div class="row">
-		  <div class="col-10"></div>
-		  <div class="col-2">
-			  <a th:href="@{/admin/addProduct}">
-			  		<button class="btn bg-gradient-light mb-3 border border-1 border-secondary" type="button">Add Product</button>  
-			  </a>
-		  </div>
-	  </div>
-		
+    
+    <div class="container-fluid py-4 mt-3">	
       <div class="row">
         <div class="col-12">
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
-					<h6 class="text-white text-capitalize ps-4">Products</h6>
+					<h6 class="text-white text-capitalize ps-4">Add Product Images</h6>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+                
+				<h6 class="text-success">[[${success}]]</h6>
+                          
+            	<form class="row mx-5 my-2" method="post" action="/admin/upload" th:object="${product}" enctype="multipart/form-data">
+				  
+				  <div class="col-md-6">
+				    <label for="inputProductName" class="form-label">Select Image</label>
+				    <input type="file" class="form-control border border-1 border-primary ps-3 mb-2" id="inputFile" name="file">
+				    <input type="hidden" th:field="${product.productId}">
+				  </div>
+				  
+				  <div class="col-12">
+				    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+				    <a type="button" class="btn btn-info mt-3 ms-2" th:href="@{/admin/category_management}">Cancel</a>
+				  </div>
+				</form>                      
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+
+    
+    
+    <div class="container-fluid py-4">	
+      <div class="row">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
+					<h6 class="text-white text-capitalize ps-4">Product Images</h6>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
@@ -162,70 +168,37 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product Name</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Added Date</th>
+					  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product Name</th>		  
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                      
-                      
-                      <!--<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category</th>-->
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sub Category</th>
-                      
-                      
-                      
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Price</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image Name</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Changes Available</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr th:each="product:${productList}">
-                      <td class="align-middle text-center text-sm">
-                        <h6 class="mb-0 text-sm" th:text="${product.productName}"></h6>
+                    <tr th:each="img:${imageList}">
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div>
+                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
+                          </div>
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm" th:text="${img.product.productName}"></h6>
+                          </div>
+                        </div>
                       </td>
                       <td class="align-middle text-center text-sm">
-                        <span class="text-secondary text-xs font-weight-bold" th:text="${product.dateAdded}"></span>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success" th:if="${product.isEnabled}">Available</span>
-                        <span class="badge badge-sm bg-gradient-secondary" th:if="${!product.isEnabled}">Locked</span>
-                      </td>
-                      
-                      
-                      <!--<td class="align-middle text-center">
-                        <p class="text-xs text-secondary font-weight-bold mb-0">
-					        <span th:each="category: ${product.categories}">
-					            <span th:text="${category.categoryName}"></span>
-					             Add a separator if needed 
-					            <span th:if="${!iterStat.last}">,</span>
-					        </span>
-					    </p>
-                      </td>-->
-                      <td class="align-middle text-center">
-                        <p class="text-xs text-secondary font-weight-bold mb-0">
-					        <span th:each="subcategory, iterStat : ${product.subcategories}">
-					            <span th:text="${subcategory.subCategoryName}"></span>
-					            <!-- Add a separator if needed -->
-					            <span th:if="${!iterStat.last}">,</span>
-					        </span>
-					    </p>
-                      </td>
-                      
-                      
-                      
-                      <td class="align-middle text-center">
-                        <p class="text-xs text-secondary mb-0" th:text="${product.price}"></p>
+                        <span class="badge badge-sm bg-gradient-success" th:if="${img.product.isEnabled}">Available</span>
+                        <span class="badge badge-sm bg-gradient-secondary" th:if="${!img.product.isEnabled}">Locked</span>
                       </td>
                       <td class="align-middle text-center">
-                        <p class="text-xs text-secondary mb-0" th:text="${product.quantity}"></p>
+                        <p th:if="${img != null}" class="text-xs text-secondary mb-0" th:text="${img.imageName}"></p>
                       </td>
+                      <td>
+						  <img th:src="@{'/admin/showImage?id='+${img.imageId}}">
+					  </td>
                       <td class="align-middle d-flex align-items-center justify-content-center pe-0">
-						<a th:href="@{/admin/addProductImage/{id}(id=${product.productId})}" class="btn bg-gradient-warning font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip">
-                          Add Image
-                        </a>
-                        <a th:href="@{/admin/editProduct/{id}(id=${product.productId})}" class="btn bg-gradient-info font-weight-bold text-xs mb-0 ms-2" data-toggle="tooltip">
-                          Edit
-                        </a>
-                        <a th:href="@{/admin/deleteProduct/{id}(id=${product.productId})}" class="btn bg-gradient-danger font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip">
+                        <a th:href="@{/admin/deleteProductImage/{id}(id=${img.imageId})}" class="btn bg-gradient-danger font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip">
                           Delete
                         </a>
                       </td>

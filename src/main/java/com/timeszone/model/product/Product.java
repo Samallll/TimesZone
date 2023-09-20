@@ -2,6 +2,7 @@ package com.timeszone.model.product;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -50,7 +51,7 @@ public class Product {
     private Set<SubCategory> subcategories = new HashSet<>();
 
 	@OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
-    private Set<ProductImage> productImages;
+    private List<ProductImage> productImages;
 	
 	@Column(name="isEnabled",nullable=false)
 	private boolean isEnabled=true;
@@ -63,7 +64,7 @@ public class Product {
 	}
 
 	public Product(String productName, String description, Integer quantity, Double caseSize, Double price,
-			Set<Category> categories, Set<SubCategory> subcategories, Set<ProductImage> productImages,
+			Set<Category> categories, Set<SubCategory> subcategories, List<ProductImage> productImages,
 			LocalDate dateAdded) {
 		super();
 		this.productName = productName;
@@ -78,7 +79,7 @@ public class Product {
 	}
 
 	public Product(Integer productId, String productName, String description, Integer quantity, Double caseSize,
-			Double price, Set<Category> categories, Set<SubCategory> subcategories, Set<ProductImage> productImages,
+			Double price, Set<Category> categories, Set<SubCategory> subcategories, List<ProductImage> productImages,
 			boolean isEnabled, LocalDate dateAdded) {
 		super();
 		this.productId = productId;
@@ -158,11 +159,11 @@ public class Product {
 		this.subcategories = subcategories;
 	}
 
-	public Set<ProductImage> getProductImages() {
+	public List<ProductImage> getProductImages() {
 		return productImages;
 	}
 
-	public void setProductImages(Set<ProductImage> productImages) {
+	public void setProductImages(List<ProductImage> productImages) {
 		this.productImages = productImages;
 	}
 

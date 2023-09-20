@@ -15,8 +15,11 @@ public class ProductImageService {
 	private ProductImageRepository productImageRepository;
 	
 	List<ProductImage> getAllProductImages(){
-		
 		return productImageRepository.findAll();
+	}
+	
+	public ProductImage create(ProductImage productImage) {
+		return productImageRepository.save(productImage);
 	}
 
 }
