@@ -19,7 +19,7 @@ public class ProductDTO {
 	
 	private Double price;
 	
-	private boolean isEnabled;
+	private boolean isEnabled=true;
 	
 	private LocalDate dateAdded;
 	

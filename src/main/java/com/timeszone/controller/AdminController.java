@@ -195,8 +195,9 @@ public class AdminController {
 		System.out.println(ep.getCaseSize());
 		System.out.println(ep.getQuantity());
 		System.out.println(ep.getPrice());
+		System.out.println(ep.getIsEnabled());
 		for(String s:ep.getSelectedSubCategories()) {
-			System.out.println(s);
+			System.out.println("Selected SubCategory"+s);
 		}
 		productService.updateProduct(ep);
 		

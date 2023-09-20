@@ -42,17 +42,35 @@ public class ProductService {
 		editProduct.setPrice(p.getPrice());
 		editProduct.setQuantity(p.getQuantity());
 		editProduct.setProductName(p.getProductName());
-		for(String s:p.getSelectedSubCategories()) {
-			scpd = subCategoryRepository.findBySubCategoryName(s);
-			for(SubCategory scp:editProduct.getSubcategories()) {
-				if((scp.getCategory().getCategoryName() == scpd.getCategory().getCategoryName())&&
-						scp.getSubCategoryName() != scpd.getSubCategoryName()) {
-					
-					editProduct.getSubcategories().remove(scp);
-					editProduct.getSubcategories().add(scpd);
+		
+		Set<SubCategory> subCategoriesOfEditProduct = editProduct.getSubcategories();
+		
+		if(subCategoriesOfEditProduct.isEmpty()) {
+
+			for(String s:p.getSelectedSubCategories()) {
+				scpd = subCategoryRepository.findBySubCategoryName(s);
+				Category c = scpd.getCategory();
+				c.getProducts().add(editProduct);
+				categoryRepository.save(c);
+				editProduct.getCategories().add(c);
+				editProduct.getSubcategories().add(scpd);
+			}
+		}
+		else {
+			
+			for(String s:p.getSelectedSubCategories()) {
+				scpd = subCategoryRepository.findBySubCategoryName(s);
+				for(SubCategory scp:subCategoriesOfEditProduct) {
+					if((scp.getCategory().getCategoryName() == scpd.getCategory().getCategoryName())&&
+							scp.getSubCategoryName() != scpd.getSubCategoryName()) {
+						
+						editProduct.getSubcategories().remove(scp);
+						editProduct.getSubcategories().add(scpd);
+					}
 				}
 			}
 		}
+
 		productRepository.save(editProduct);
 		
 	}

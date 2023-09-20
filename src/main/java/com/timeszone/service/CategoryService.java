@@ -10,14 +10,19 @@ import org.springframework.stereotype.Service;
 
 import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.product.Category;
+import com.timeszone.model.product.Product;
 import com.timeszone.model.product.SubCategory;
 import com.timeszone.repository.CategoryRepository;
+import com.timeszone.repository.ProductRepository;
 
 @Service
 public class CategoryService {
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
+	
+	@Autowired
+	private ProductRepository productRepository;
 
 	public List<Category> getAllCategories() {
 		
@@ -26,6 +31,18 @@ public class CategoryService {
 
 	public void deleteCategory(Integer id) {
 		
+		Category deleteCategory = categoryRepository.findById(id).get();
+		Set<Product> attachedProducts = deleteCategory.getProducts();
+		for(Product p: attachedProducts) {
+			for(SubCategory sc:p.getSubcategories()) {
+				if(sc.getCategory().getCategoryId() == deleteCategory.getCategoryId()) {
+					p.getSubcategories().remove(sc);
+					p.getCategories().remove(deleteCategory);
+					productRepository.save(p);
+					break;
+				}
+			}
+		}
 		categoryRepository.deleteById(id);
 	}
 
