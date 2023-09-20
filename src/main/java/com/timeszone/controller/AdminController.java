@@ -259,14 +259,25 @@ public class AdminController {
         return redirectView;
 	}
 	
-	@GetMapping("/showImage")
+//	for displaying the data -------------------
+	@GetMapping("/showImage/{id}")
 	public void showImagePage(@PathVariable("id") Integer id,HttpServletResponse response,ProductImage productImage) throws IOException {
 		
-		System.out.println("Heloooo" + id);
 		productImage = productImageRepository.findByImageId(id);
 		response.setContentType("image/jpg");
 		response.getOutputStream().write(productImage.getImage());
 		response.getOutputStream().close();
+	}
+	
+	@GetMapping("/deleteProductImage/{id}")
+	public String deleteProductImage(@PathVariable("id") Integer productImageId) {
+		
+		ProductImage pi = productImageRepository.findByImageId(productImageId);
+		Product p = pi.getProduct();
+		p.getProductImages().remove(pi);
+		productRepository.save(p);
+		productImageRepository.deleteById(productImageId);
+		return "redirect:/admin/product_management";
 	}
 	
 //	Category Management ----------------------------------------------------------------------

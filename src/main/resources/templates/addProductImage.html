@@ -143,7 +143,7 @@
 				  
 				  <div class="col-12">
 				    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-				    <a type="button" class="btn btn-info mt-3 ms-2" th:href="@{/admin/category_management}">Cancel</a>
+				    <a type="button" class="btn btn-info mt-3 ms-2" th:href="@{/admin/product_management}">Cancel</a>
 				  </div>
 				</form>                      
             </div>
@@ -177,15 +177,8 @@
                   </thead>
                   <tbody>
                     <tr th:each="img:${imageList}">
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user1">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm" th:text="${img.product.productName}"></h6>
-                          </div>
-                        </div>
+					  <td class="align-middle text-center text-sm">
+                        <h6 class="mb-0 text-sm" th:text="${img.product.productName}"></h6>
                       </td>
                       <td class="align-middle text-center text-sm">
                         <span class="badge badge-sm bg-gradient-success" th:if="${img.product.isEnabled}">Available</span>
@@ -195,7 +188,7 @@
                         <p th:if="${img != null}" class="text-xs text-secondary mb-0" th:text="${img.imageName}"></p>
                       </td>
                       <td>
-						  <img th:src="@{'/admin/showImage?id='+${img.imageId}}">
+						  <img th:src="@{'/admin/showImage/' + ${img.imageId}}" width="150px" height="200px">
 					  </td>
                       <td class="align-middle d-flex align-items-center justify-content-center pe-0">
                         <a th:href="@{/admin/deleteProductImage/{id}(id=${img.imageId})}" class="btn bg-gradient-danger font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip">
