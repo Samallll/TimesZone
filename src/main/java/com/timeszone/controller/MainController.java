@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.timeszone.model.Customer;
 import com.timeszone.model.dto.LoginDTO;
@@ -59,6 +60,7 @@ public class MainController {
 	}
 	
 //	For user registration --------------------------------------------------------------------
+	
 	@GetMapping("/otpVerification")
 	public String otpVerification(Model model,HttpSession session) {
 		
@@ -128,12 +130,70 @@ public class MainController {
 		return "login.html";
 	}
 	
+	
+//	Forgot Password -------------------------------------------------------
+	
 	@GetMapping("/forgotPassword")
-	public String forgotPasswordPage(HttpSession session,Model model) {
-		LoginDTO userLoginAccount = new LoginDTO();
-		model.addAttribute("userLoginAccount", userLoginAccount);
+	public String forgotPasswordPage(HttpSession session) {
+		
 		return "forgotPassword";
 	}
+	
+	@PostMapping("/sendOtpForPassword")
+	public String sendOtpForPasswordChange(@RequestParam("emailId") String emailId,HttpSession session ) {
+		
+		logger.debug("ForgotPassword::sendOtpForPasswordChange");
+		otpService.sendOtp(emailId);
+		if(otpService.getErrorMessage()!=null) {
+			session.setAttribute("passwordOtpFail", otpService.getErrorMessage());
+			session.removeAttribute("error");
+			System.out.println("Invalid Email Id");
+			return "redirect:/guest/forgotPassword";
+		}
+		else {
+			session.setAttribute("passwordChangeEmailId", emailId);
+			session.removeAttribute("passwordOtpFail");
+			session.removeAttribute("error");
+			return "redirect:/guest/otpPassword";
+		}
+	}
+	
+	@PostMapping("/veriftyOtpPassword")
+	public String otpVerificationForPasswordChange(@ModelAttribute("otpBasedLoginAccount") LoginDTO LoginAccount,HttpSession session) {
+		
+//		LoginAccount contains only the otp entered by the user
+		
+//		validPhoneNumber is the number entered by the user in the previous login page.
+//		session.getAttribute("validPhoneNumber").toString()): contains the phoneNumber entered by the user.
+		String emailId = session.getAttribute("passwordChangeEmailId").toString();
+		System.out.println(emailId);
+		boolean flag = otpService.verifyOtp(emailId,LoginAccount.getOtp());
+		System.out.println(flag);
+		if(flag) {
+			System.out.println("Inside Allowing mechanism");
+
+//			Need to write the logic for changing the password or redirecting to some other pages for password change
+			
+	        session.removeAttribute("passwordChangeEmailId");
+	        session.removeAttribute("passwordOtpFail");
+			return "redirect:/guest/user";
+		}
+		else {
+			session.setAttribute("passwordOtpFail", otpService.getErrorMessage());
+			return "redirect:/guest/otpPassword";
+		}		
+	}
+	
+	@GetMapping("/otpPassword")
+	public String otpForPasswordChange(Model model,HttpSession session) {
+		
+		LoginDTO otpBasedLoginAccount = new LoginDTO();
+		model.addAttribute("otpBasedLoginAccount", otpBasedLoginAccount);
+		return "passwordChangeOtp.html";
+	}
+	
+	
+//	Otp Based Login ------------------------------------------------------------------
 	
 	@PostMapping("/sendOtp")
 	public String sendOtp(@ModelAttribute("userLoginAccount") LoginDTO l,HttpSession session) {

@@ -71,10 +71,6 @@ public class OtpService {
             logger.error("Failed to send email", e);
         }
         
-//        SMS Service is not working as expected hence commenting the below lines.
-//        String message = "Your Otp for TimeZone Login : " + randomNumber;
-//        twilioSmsService.sendSms(phoneNumber, message);
-        
         customer.setOtp(randomNumber);
         customer.setExpirationTime(expirationTime);
         customerRepository.save(customer);
