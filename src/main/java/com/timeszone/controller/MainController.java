@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ import com.timeszone.model.Customer;
 import com.timeszone.model.dto.LoginDTO;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Product;
+import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.OtpService;
@@ -53,6 +55,12 @@ public class MainController {
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/user")
 	public String userHome() {
@@ -133,6 +141,7 @@ public class MainController {
 	
 //	Forgot Password -------------------------------------------------------
 	
+//	For rendering forgot password page rendering ------
 	@GetMapping("/forgotPassword")
 	public String forgotPasswordPage(HttpSession session) {
 		
@@ -171,12 +180,8 @@ public class MainController {
 		System.out.println(flag);
 		if(flag) {
 			System.out.println("Inside Allowing mechanism");
-
-//			Need to write the logic for changing the password or redirecting to some other pages for password change
-			
-	        session.removeAttribute("passwordChangeEmailId");
 	        session.removeAttribute("passwordOtpFail");
-			return "redirect:/guest/user";
+			return "redirect:/guest/changePassword";
 		}
 		else {
 			session.setAttribute("passwordOtpFail", otpService.getErrorMessage());
@@ -184,12 +189,40 @@ public class MainController {
 		}		
 	}
 	
+//	For rendering otp entering page ---------------
 	@GetMapping("/otpPassword")
 	public String otpForPasswordChange(Model model,HttpSession session) {
 		
 		LoginDTO otpBasedLoginAccount = new LoginDTO();
 		model.addAttribute("otpBasedLoginAccount", otpBasedLoginAccount);
 		return "passwordChangeOtp.html";
+	}
+	
+//	for rendering password change page ---------------
+	@GetMapping("/changePassword")
+	public String changePassword(Model model,HttpSession session) {
+		
+		LoginDTO passwordChange = new LoginDTO();
+		model.addAttribute("passwordChange", passwordChange);
+		return "changePassword";
+	}
+	
+	@PostMapping("/changePassword")
+	public String changePassword(@ModelAttribute("passwordChange") LoginDTO editAccount,HttpSession session) {
+		
+		String emailId = session.getAttribute("passwordChangeEmailId").toString();
+		if(!editAccount.getEmailId().equals(editAccount.getPassword())) {
+			session.setAttribute("passwordChangeError", "Password doesn't match");
+			session.removeAttribute("passwordChangeSuccess");
+		}
+		else {
+			session.setAttribute("passwordChangeSuccess", "Password Changed Successfully");
+			session.removeAttribute("passwordChangeError");
+			Customer editCustomer = customerRepository.findByEmailId(emailId);
+			editCustomer.setPassword(passwordEncoder.encode(editAccount.getPassword()));
+			customerRepository.save(editCustomer);			
+		}
+		return "redirect:/guest/changePassword";
 	}
 	
 	
