@@ -8,6 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="site.webmanifest">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicon.ico">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
     <!-- CSS here -->
         <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
@@ -100,70 +103,88 @@
     </header>
 
     <!-- Product Details Section Begin -->
-    <section class="product-details spad">
+    <section class="product-details spad pt-5" style="background-color: #faf6f2;">
         <div class="container">
-            <div class="row">
+            <div class="row" th:object="${product}">
                 <div class="col-lg-6">
-                    <div class="product__details__pic">
-                        <div class="product__details__pic__left product__thumb nice-scroll">
-                            <a class="pt active" href="#product-1">
-                                <img src="../assets/img/gallery/new_product1.png" alt="">
-                            </a>
-                            <a class="pt" href="#product-2">
-                                <img src="../assets/img/gallery/new_product2.png" alt="">
-                            </a>
-                            <a class="pt" href="#product-3">
-                                <img src="../assets/img/gallery/new_product3.png" alt="">
-                            </a>
-                            <a class="pt" href="#product-4">
-                                <img src="../assets/img/gallery/popular1.png" alt="">
-                            </a>
-                        </div>
-                        <div class="product__details__slider__content">
-                            <div class="product__details__pic__slider owl-carousel">
-                                <img data-hash="product-1" class="product__big__img" src="../assets/img/gallery/new_product1.png" alt="">
-                                <img data-hash="product-2" class="product__big__img" src="../assets/img/gallery/new_product2.png" alt="">
-                                <img data-hash="product-3" class="product__big__img" src="../assets/img/gallery/new_product3.png" alt="">
-                                <img data-hash="product-4" class="product__big__img" src="../assets/img/gallery/popular1.png" alt="">
-                            </div>
-                        </div>
-                    </div>
+                    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+						  <div class="carousel-indicators">
+						    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+						    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+						    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+						  </div>
+						  <div class="carousel-inner">
+						    <div class="carousel-item active">
+						      <img src="../assets/img/gallery/new_product1.png" class="d-block w-75 img-fluid" alt="..." 
+						      style="max-width: 100%; height: auto; margin:0 auto">
+						    </div>
+						    <div class="carousel-item">
+						      <img src="../assets/img/gallery/new_product2.png" class="d-block w-75" alt="..."
+						      style="max-width: 100%; height: auto; margin:0 auto">
+						    </div>
+						    <div class="carousel-item">
+						      <img src="../assets/img/gallery/new_product3.png" class="d-block w-75" alt="..."
+						      style="max-width: 100%; height: auto; margin:0 auto">
+						    </div>
+						  </div>
+						  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+						    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						    <span class="visually-hidden">Previous</span>
+						  </button>
+						  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+						    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+						    <span class="visually-hidden">Next</span>
+						  </button>
+					</div>
                 </div>
                 <div class="col-lg-6">
                     <div class="product__details__text">
-                        <h3>Essential structured blazer <span>Brand: SKMEIMore Men Watches from SKMEI</span></h3>
-                        <div class="rating">
+						<input type="hidden" name="id">
+                        <h3 th:text="${product.productName}" class="mb-0"></h3>
+                        <h4 style="color: green;" class="mb-2 mt-1">
+						    Rs <span th:text="${product.price}"></span>
+						</h5>
+                        <div th:text="${'Case Size: ' + product.caseSize + 'mm'}" class=" mb-2 ps-3" ></div>
+                        <div th:each="entry : ${product.categoryAndSubCategory}" class="d-flex align-items-center ps-3 my-2">
+							<h5 th:text="${entry.key + ':'}"></h5> 
+							<h6 th:text="${entry.value}" class="ps-1"></h6>
+						</div>
+						<p th:text="${product.description}" class="my-2"></p>
+						
+                        <!--<div class="rating">
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
                             <i class="fa fa-star"></i>
                             <span>( 138 reviews )</span>
-                        </div>
-                        <div class="product__details__price">$ 75.0 <span>$ 83.0</span></div>
-                        <p>Nemo enim ipsam voluptatem quia aspernatur aut odit aut loret fugit, sed quia consequuntur
-                        magni lores eos qui ratione voluptatem sequi nesciunt.</p>
-                        <div class="product__details__button">
-                            <div class="quantity">
-                                <span>Quantity:</span>
-                                <div class="pro-qty">
+                        </div>-->
+                        
+                        <hr>
+                        
+                        <div class="product__details__button d-flex align-items-center">
+                            <div class="quantity d-flex align-items-center">
+                                <span class="mt-0">Quantity:</span>
+                                <input class="border border-rounded " type="number" value="1" min="1" max="10">
+                                <div>
 									<!--	<span class="dec qtybtn">-</span>
                                     <input type="text" value="1">
                                     <span class="inc qtybtn">+</span>-->
                                     
                                     <!--Need to figureout where is inc and dec-->
-                                    <span class="inc qtybtn">+</span>
+                                    <!--<span class="inc qtybtn">+</span>
                                 	<input class="product_count_item input-number" type="text" value="1" min="0" max="10">
-                                	<span class="dec qtybtn">-</span>
+                                	<span class="dec qtybtn">-</span>-->
                                 </div>
                             </div>
                             <a href="#" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</a>
                             <ul>
-                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
-                                <li><a href="#"><span class="icon_adjust-horiz"></span></a></li>
+                                <li ><a href="#"><span class="icon_heart_alt"></span></a></li>
                             </ul>
                         </div>
-                        <div class="product__details__widget">
+                        
+                        
+                        <!--<div class="product__details__widget">
                             <ul>
                                 <li>
                                     <span>Availability:</span>
@@ -218,7 +239,8 @@
                                     <p>Free shipping</p>
                                 </li>
                             </ul>
-                        </div>
+                        </div>-->
+                        
                     </div>
                 </div>
             </div>
@@ -226,104 +248,6 @@
         </div>
     </section>
     <!-- Product Details Section End -->
-
-    
-	<footer>
-        <!-- Footer Start-->
-        <div class="footer-area footer-padding py-5">
-            <div class="container">
-                <div class="row d-flex justify-content-between">
-                    <div class="col-xl-3 col-lg-3 col-md-5 col-sm-6">
-                        <div class="single-footer-caption mb-50">
-                            <div class="single-footer-caption mb-30">
-                                <!-- logo -->
-                                <div class="footer-logo">
-                                    <a href="index.html"><img src="assets/img/logo/logo2_footer.png" alt=""></a>
-                                </div>
-                                <div class="footer-tittle">
-                                    <div class="footer-pera">
-                                        <p>Asorem ipsum adipolor sdit amet, consectetur adipisicing elitcf sed do eiusmod tem.</p>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-3 col-md-3 col-sm-5">
-                        <div class="single-footer-caption mb-50">
-                            <div class="footer-tittle">
-                                <h4>Quick Links</h4>
-                                <ul>
-                                    <li><a href="#">About</a></li>
-                                    <li><a href="#"> Offers & Discounts</a></li>
-                                    <li><a href="#"> Get Coupon</a></li>
-                                    <li><a href="#">  Contact Us</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-4 col-sm-7">
-                        <div class="single-footer-caption mb-50">
-                            <div class="footer-tittle">
-                                <h4>New Products</h4>
-                                <ul>
-                                    <li><a href="#">Woman Cloth</a></li>
-                                    <li><a href="#">Fashion Accessories</a></li>
-                                    <li><a href="#"> Man Accessories</a></li>
-                                    <li><a href="#"> Rubber made Toys</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-5 col-sm-7">
-                        <div class="single-footer-caption mb-50">
-                            <div class="footer-tittle">
-                                <h4>Support</h4>
-                                <ul>
-                                    <li><a href="#">Frequently Asked Questions</a></li>
-                                    <li><a href="#">Terms & Conditions</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                    <li><a href="#">Report a Payment Issue</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Footer bottom -->
-                <div class="row align-items-center">
-                    <div class="col-xl-7 col-lg-8 col-md-7">
-                        <div class="footer-copy-right pt-4">
-                            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>                 
-                        </div>
-                    </div>
-                    <div class="col-xl-5 col-lg-4 col-md-5">
-                        <div class="footer-copy-right f-right pt-4	">
-                            <!-- social -->
-                            <div class="footer-social">
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="https://www.facebook.com/sai4ull"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fab fa-behance"></i></a>
-                                <a href="#"><i class="fas fa-globe"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Footer End-->
-    </footer>
-
-    <!-- Search Begin -->
-    <div class="search-model">
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div class="search-close-switch">+</div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
-            </form>
-        </div>
-    </div>
-    <!-- Search End -->
     
     <!-- Js Plugins -->
     <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>

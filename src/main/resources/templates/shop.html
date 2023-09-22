@@ -203,7 +203,7 @@
                             <div class="product__item border border-secondary rounded">
 								
                                 <div class="product__item__pic set-bg" data-setbg="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg">
-									<a th:href="@{/guest/productDetails/{id}(id=${product.productId})}"><img src="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg"></a>
+									<a th:href="@{/guest/productDetails(id=${product.productId})}"><img src="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg"></a>
                                     <ul class="product__hover">
                                         <li><a href="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
                                         <li><a href="#"><span class="icon_heart_alt"></span></a></li>
@@ -211,7 +211,7 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text px-1 pb-2">
-                                    <h6><a th:href="@{/guest/productDetails/{id}(id=${product.productId})}" th:text="${product.productName}"></a></h6>
+                                    <h6><a th:href="@{/guest/productDetails(id=${product.productId})}" th:text="${product.productName}"></a></h6>
                                     <div class="product__price text-xs text-danger mb-0" th:text="'Rs ' +${product.price}"></div>
                                 </div>
                                 <div id="myDiv" style="display: none;" th:text="${product.productId}"></div>

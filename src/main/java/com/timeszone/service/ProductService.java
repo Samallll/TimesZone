@@ -1,7 +1,9 @@
 package com.timeszone.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +98,7 @@ public class ProductService {
 		
 		ProductDTO pd = new ProductDTO();
 		List<String> pdSubCategoryList = new ArrayList<>();	
+		Map<String,String> combo = new HashMap<>();
 		
 		pd.setCaseSize(p.getCaseSize());
 		pd.setEnabled(p.getIsEnabled());
@@ -106,8 +109,11 @@ public class ProductService {
 		pd.setQuantity(p.getQuantity());
 		for(SubCategory sc:p.getSubcategories()) {
 			pdSubCategoryList.add(sc.getSubCategoryName());
+			combo.put(sc.getCategory().getCategoryName(), sc.getSubCategoryName());
+			
 		}
 		pd.setSelectedSubCategories(pdSubCategoryList);
+		pd.setCategoryAndSubCategory(combo);
 		
 		return pd;
 	}

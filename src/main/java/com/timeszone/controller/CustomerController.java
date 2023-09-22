@@ -13,6 +13,10 @@ public class CustomerController {
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
 	
+	@GetMapping("/profile")
+	public String userProfile() {
+		
+		return "userProfile";
+	}
 	
-	
-}	
+}

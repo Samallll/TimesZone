@@ -2,7 +2,9 @@ package com.timeszone.model.dto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class ProductDTO {		
@@ -24,6 +26,8 @@ public class ProductDTO {
 	private LocalDate dateAdded;
 	
 	private List<String> selectedSubCategories = new ArrayList<>();
+	
+	private Map<String,String> categoryAndSubCategory = new HashMap<>();
 
 	public ProductDTO() {
 		super();
@@ -117,6 +121,14 @@ public class ProductDTO {
 
 	public void setSelectedSubCategories(List<String> selectedSubCategories) {
 		this.selectedSubCategories = selectedSubCategories;
+	}
+
+	public Map<String, String> getCategoryAndSubCategory() {
+		return categoryAndSubCategory;
+	}
+
+	public void setCategoryAndSubCategory(Map<String, String> categoryAndSubCategory) {
+		this.categoryAndSubCategory = categoryAndSubCategory;
 	}
 
 	

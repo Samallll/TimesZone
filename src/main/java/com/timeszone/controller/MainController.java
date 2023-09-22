@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.timeszone.model.Customer;
 import com.timeszone.model.dto.LoginDTO;
+import com.timeszone.model.dto.ProductDTO;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Product;
 import com.timeszone.repository.CustomerRepository;
@@ -295,9 +296,19 @@ public class MainController {
 	
 //	Product details ------------------------------------------
 	
-	@GetMapping("/productDetails/{id}")
-	public String showProductDetails(@PathVariable("id") Integer productId) {
+//	@GetMapping("/productDetails/{id}")
+//	public String showProductDetails(@PathVariable("id") Integer productId) {
+//		
+//		return "productDetails";
+//	}
+	
+	@GetMapping("/productDetails")
+	public String showProductDetails(@RequestParam("id") Integer id,Model model) {
 		
-		return "productDetails";
+		Product p = productRepository.findById(id).get();
+		ProductDTO showProduct = productService.convertToProduct(p);
+		model.addAttribute("product", showProduct);
+		return "new";
 	}
+			
 }
