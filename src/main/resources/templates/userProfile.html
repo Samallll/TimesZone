@@ -69,7 +69,7 @@
 	                      <h5 class="mb-0">Profile Information</h5>
 	                    </div>
 	                    <div class="col-md-4 text-end">
-						  <a href="javascript:;" >
+						  <a th:href="@{/user/changePassword(id=${customerData.customerId})}" >
 		                      <i class="fas text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Change Password">
 								   <img src="../assets/fonts/key-solid.svg" alt="Location Icon" width="15px">
 							  </i>
