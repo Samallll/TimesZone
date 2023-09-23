@@ -2,8 +2,10 @@ package com.timeszone.model;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -52,9 +54,8 @@ public class Customer implements UserDetails {
 	@JoinColumn(name = "roleId")
 	private Set<Role> authorities;
 	
-	@OneToMany(fetch=FetchType.EAGER)
-	@JoinColumn(name = "addressId")
-	private Set<Address> addresses;
+	@OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
+    private List<Address> addresses;
 	
 	@Column(name="isLocked")
 	private boolean isLocked=false;
@@ -81,7 +82,7 @@ public class Customer implements UserDetails {
 	}
 
 	public Customer(Integer customerId, String firstName, String lastName, String emailId, String phoneNumber,
-			String password, Set<Role> authorities, Set<Address> addresses) {
+			String password, Set<Role> authorities, List<Address> addresses) {
 		super();
 		this.customerId = customerId;
 		this.firstName = firstName;
@@ -160,7 +161,7 @@ public class Customer implements UserDetails {
 		this.authorities = authorities;
 	}
 
-	public void setAddresses(Set<Address> addresses) {
+	public void setAddresses(List<Address> addresses) {
 		this.addresses = addresses;
 	}
 	
@@ -188,7 +189,7 @@ public class Customer implements UserDetails {
 		this.expirationTime = expirationTime;
 	}
 
-	public Set<Address> getAddresses() {
+	public List<Address> getAddresses() {
 		// TODO Auto-generated method stub
 		return this.addresses;
 	}

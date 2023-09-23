@@ -10,6 +10,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.timeszone.model.product.Product;
+
 @Entity
 @Table(name="Address")
 public class Address {
@@ -37,8 +39,7 @@ public class Address {
 	@Column(name="isDefault",nullable=false)
 	private boolean isDefault;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
+	@ManyToOne
     private Customer customer;
 	
 	public Address() {
