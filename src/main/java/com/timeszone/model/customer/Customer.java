@@ -1,4 +1,4 @@
-package com.timeszone.model;
+package com.timeszone.model.customer;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

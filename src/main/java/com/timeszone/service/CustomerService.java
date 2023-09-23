@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.timeszone.model.Customer;
-import com.timeszone.model.Role;
+import com.timeszone.model.customer.Customer;
+import com.timeszone.model.customer.Role;
 import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.repository.CustomerRepository;

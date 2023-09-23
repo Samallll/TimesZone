@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.timeszone.controller.MainController;
-import com.timeszone.model.Customer;
-import com.timeszone.model.Otp;
+import com.timeszone.model.customer.Customer;
+import com.timeszone.model.customer.Otp;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.OtpRepository;
 

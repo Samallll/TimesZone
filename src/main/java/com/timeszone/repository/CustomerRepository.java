@@ -8,7 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.timeszone.model.Customer;
+import com.timeszone.model.customer.Customer;
 
 @Repository
 @Transactional

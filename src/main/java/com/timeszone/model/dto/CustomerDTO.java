@@ -3,8 +3,8 @@ package com.timeszone.model.dto;
 import java.util.List;
 import java.util.Set;
 
-import com.timeszone.model.Address;
-import com.timeszone.model.Role;
+import com.timeszone.model.customer.Address;
+import com.timeszone.model.customer.Role;
 
 public class CustomerDTO {
 	

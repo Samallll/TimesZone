@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.timeszone.model.Customer;
-import com.timeszone.model.Role;
+import com.timeszone.model.customer.Customer;
+import com.timeszone.model.customer.Role;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.RoleRepository;

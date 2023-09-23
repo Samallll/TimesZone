@@ -10,8 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.timeszone.model.Customer;
-import com.timeszone.model.Role;
+import com.timeszone.model.customer.Customer;
+import com.timeszone.model.customer.Role;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.SubCategory;
