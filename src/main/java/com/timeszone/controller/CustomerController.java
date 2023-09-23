@@ -46,7 +46,8 @@ public class CustomerController {
 		
 		Customer c = customerRepository.findByEmailId(userName);
 		CustomerDTO customerData = customerService.convertIntoCustomerDTO(c);
-		
+		System.out.println(customerData.getFirstName());
+		System.out.println(customerData.getLastName());
 		model.addAttribute("customerData", customerData);
 		return "userProfile";
 	}
@@ -66,6 +67,7 @@ public class CustomerController {
 	public String updateCustomer(@ModelAttribute("customerData") CustomerDTO editCustomer,HttpSession session) {
 		
 		Customer c = customerRepository.findById(editCustomer.getCustomerId()).get();
+//		Checking whether email or phonenumber changed
 		if(!(c.getEmailId().equals(editCustomer.getEmailId())&&c.getPhoneNumber().equals(editCustomer.getPhoneNumber()))) {
 
 			if(customerRepository.findByEmailId(editCustomer.getEmailId())!=null && !(c.getEmailId().equals(editCustomer.getEmailId()))) {

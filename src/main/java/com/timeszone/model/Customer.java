@@ -111,7 +111,7 @@ public class Customer implements UserDetails {
 	}
 	
 	public String getLastName() {
-		return this.firstName;
+		return this.lastName;
 	}
 
 	@Override
@@ -138,11 +138,11 @@ public class Customer implements UserDetails {
 	}
 
 	public void setFirstName(String firstName) {
-		this.firstName = new String(firstName);
+		this.firstName = firstName;
 	}
 
 	public void setLastName(String lastName) {
-		this.lastName = new String(lastName);;
+		this.lastName = lastName;
 	}
 
 	public void setEmailId(String emailId) {
