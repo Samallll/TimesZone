@@ -138,11 +138,11 @@ public class Customer implements UserDetails {
 	}
 
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		this.firstName = new String(firstName);
 	}
 
 	public void setLastName(String lastName) {
-		this.lastName = lastName;
+		this.lastName = new String(lastName);;
 	}
 
 	public void setEmailId(String emailId) {

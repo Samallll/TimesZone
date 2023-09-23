@@ -51,64 +51,36 @@
             </div>
             <div class="card-body px-0 pb-2">
                           
-            	<form class="row mx-5 my-2" th:action="@{/user/updateCustomer}" method="post">
+            	<form class="row mx-5 my-2" th:action="@{/user/updateCustomer}" method="post" th:object="${customerData}">
 					
 				  	  
-				  <!-- Address Starting -->
-				  <!--<div class="col-12">
-				    <label for="inputAddress" class="form-label">Address</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputAddress" placeholder="1234 Main St">
-				  </div>
-				  <div class="col-12">
-				    <label for="inputAddress2" class="form-label">Address 2</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputAddress2" placeholder="Apartment, studio, or floor">
-				  </div>
-				  <div class="col-md-6">
-				    <label for="inputCity" class="form-label">City</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCity">
-				  </div>
-				  <div class="col-md-4">
-				    <label for="inputState" class="form-label">State</label>
-				    <select id="inputState" class="form-select ps-3 border border-1 border-primary mb-2">
-				      <option selected>Choose...</option>
-				      <option>...</option>
-				    </select>
-				  </div>
-				  <div class="col-md-2">
-				    <label for="inputZip" class="form-label">Zip</label>
-				    <input type="text" class="form-control border border-1 border-danger ps-3 mb-2" id="inputZip">
-				  </div>
-				  <div class="col-12">
-				    <div class="form-check ps-3 pt-1">
-				      <input class="form-check-input " type="checkbox" id="gridCheck">
-				      <label class="form-check-label" for="gridCheck">
-				        Default
-				      </label>
-				    </div>
-				  </div>-->
-				  <!--Address Registration Completed-->
+				  <div class="card-body p-2 text-center  mx-5">
+			    	<div th:if="${session.errorMsg}" class="alert alert-danger text-white">
+			        	<span th:if="${session.errorMsg}" th:text="${session.errorMsg}"></span>
+					</div>
+				</div>         
 		
 				  <div class="col-md-6">
 				    <label for="inputFirstName" class="form-label" maxlength="15">First Name</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputFirstName" name="categoryName" >
+				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputFirstName" th:name="*{firstName}" th:field="*{firstName}">
 				  </div>
 				  
 					<div class="col-md-6">
 					  <label for="inputLastName" class="form-label" maxlength="15">Last Name</label>
-					  <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputLastName" name="inputLastName" >
+					  <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputLastName" th:name="*{lastName}" th:field="*{lastName}">
 					</div>
 					
 					<div class="col-md-6">
 					  <label for="inputEmailId" class="form-label" maxlength="15">Email Address</label>
-					  <input type="email" class="form-control border border-1 border-primary ps-3 mb-2" id="inputEmailId" name="inputLastName" >
+					  <input type="email" class="form-control border border-1 border-primary ps-3 mb-2" id="inputEmailId" th:name="*{emailId}" th:field="*{emailId}" >
 					</div>
 					
 					<div class="col-md-6">
 					  <label for="inputPhoneNumber" class="form-label" maxlength="10">Phone Number</label>
-					  <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputPhoneNumber" name="inputLastName" >
+					  <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputPhoneNumber" th:name="*{phoneNumber}" th:field="*{phoneNumber}">
 					</div>
 			        
-				  
+				  	<input type="hidden" th:field="${customerData.customerId}" th:value="*{customerId}">
 				  
 				  <div class="col-6 mt-3">
 				    <button type="submit" class="btn btn-primary mt-3">Save the changes</button>
@@ -121,7 +93,7 @@
         </div>
         <div class="col-9">
 	        <div class=" border-radius-lg pt-4 pb-3 d-flex align-items-center">
-					<span class="text-secondary text-capitalize ps-4">Note: Registered Email address and Mobile number will be used for Authentication.</span>
+					<span class="text-secondary text-capitalize ps-4">Note: Registered Email address and Mobile number will be used for Authentication hence need to relogin if changed.</span>
 	        </div>
         </div>
       </div>
