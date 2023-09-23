@@ -135,4 +135,9 @@ public class CustomerController {
 		}
 		return "redirect:/user/changePassword?id="+customerId;
 	}
+	
+	@GetMapping("/addAddress")
+	public String addAddress() {
+		return "addAddress";
+	}
 }
