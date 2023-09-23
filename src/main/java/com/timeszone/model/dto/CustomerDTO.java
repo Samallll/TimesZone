@@ -1,5 +1,6 @@
 package com.timeszone.model.dto;
 
+import java.util.List;
 import java.util.Set;
 
 import com.timeszone.model.Address;
@@ -19,7 +20,7 @@ public class CustomerDTO {
 	
 	private Set<Role> authorities;
 	
-	private Set<Address> addresses;
+	private List<Address> addresses;
 	
 	private boolean isLocked=false;
 
@@ -28,7 +29,7 @@ public class CustomerDTO {
 	}
 
 	public CustomerDTO(Integer customerId, String firstName, String lastName, String emailId, String phoneNumber,
-			Set<Role> authorities, Set<Address> addresses, boolean isLocked) {
+			Set<Role> authorities, List<Address> addresses, boolean isLocked) {
 		super();
 		this.customerId = customerId;
 		this.firstName = firstName;
@@ -88,11 +89,11 @@ public class CustomerDTO {
 		this.authorities = authorities;
 	}
 
-	public Set<Address> getAddresses() {
+	public List<Address> getAddresses() {
 		return addresses;
 	}
 
-	public void setAddresses(Set<Address> addresses) {
+	public void setAddresses(List<Address> addresses) {
 		this.addresses = addresses;
 	}
 

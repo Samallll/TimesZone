@@ -55,9 +55,7 @@
 		          </div>
 		          <div class="col-auto my-auto">
 		            <div class="h-100">
-		              <h5 class="mb-1">
-		                Richard Davis
-		              </h5>
+		              <h5 class="mb-1 text-capitalize" th:text="${customerData.firstName} + ' ' + ${customerData.lastName}"></h5>
 		            </div>
 		          </div>
 		      </div>
@@ -76,7 +74,7 @@
 								   <img src="../assets/fonts/key-solid.svg" alt="Location Icon" width="15px">
 							  </i>
 		                  </a>
-	                      <a href="javascript:;" class="ms-2">
+	                      <a th:href="@{/user/editCustomer(id=${customerData.customerId})}" class="ms-2">
 	                        <i class="fas fa-user-edit text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Profile"></i>
 	                      </a>
 	                      
@@ -86,11 +84,27 @@
 	                </div>
 	                <div class="card-body p-4">
 	                  <ul class="list-group">
-	                    <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">First Name:</strong> &nbsp; Alec M. Thompson</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Last Name:</strong> &nbsp; Alec M. Thompson</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Mobile:</strong> &nbsp; (44) 123 1234 123</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email:</strong> &nbsp; alecthompson@mail.com</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Location:</strong> &nbsp; India</li>
+	                    <li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">First Name:</strong> &nbsp;
+							<h6 th:text="${customerData.firstName}" class="border-0 ps-0 pt-0 text-sm text-capitalize" style="font-weight: normal;">
+							</h6>
+						</li>
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">Last Name:</strong> &nbsp;
+							<h6 th:text="${customerData.lastName}" class="border-0 ps-0 pt-0 text-sm text-capitalize" style="font-weight: normal;">
+							</h6>
+						</li>
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">Phone Number:</strong> &nbsp;
+							<h6 th:text="${customerData.phoneNumber}" class="border-0 ps-0 pt-0 text-sm text-capitalize" style="font-weight: normal;">
+							</h6>
+						</li>
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">Email Address:</strong> &nbsp;
+							<h6 th:text="${customerData.emailId}" class="border-0 ps-0 pt-0 text-sm" style="font-weight: normal;">
+							</h6>
+						</li>
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm" ><strong class="text-dark">Location:</strong> &nbsp; India</li>	                    
 	                  </ul>
 	                </div>
 	              </div>
