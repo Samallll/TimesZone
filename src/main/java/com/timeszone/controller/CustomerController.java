@@ -191,4 +191,10 @@ public class CustomerController {
 		addressService.removeAddress(addressId);
 		return "redirect:/user/profile";
 	}
+	
+	@GetMapping("/shoppingCart")
+	public String shoppingCart(@RequestParam("id") Integer productId) {
+		
+		return "cart";
+	}
 }

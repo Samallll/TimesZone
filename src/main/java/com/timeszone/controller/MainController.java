@@ -295,20 +295,14 @@ public class MainController {
 	}
 	
 //	Product details ------------------------------------------
-	
-//	@GetMapping("/productDetails/{id}")
-//	public String showProductDetails(@PathVariable("id") Integer productId) {
-//		
-//		return "productDetails";
-//	}
-	
+		
 	@GetMapping("/productDetails")
 	public String showProductDetails(@RequestParam("id") Integer id,Model model) {
 		
 		Product p = productRepository.findById(id).get();
 		ProductDTO showProduct = productService.convertToProduct(p);
 		model.addAttribute("product", showProduct);
-		return "new";
+		return "productDetails";
 	}
 			
 }
