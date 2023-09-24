@@ -2,15 +2,14 @@ package com.timeszone.model.customer;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.timeszone.model.product.Product;
 
 @Entity
 @Table(name="Address")
@@ -107,11 +106,15 @@ public class Address {
 		this.pinCode = pinCode;
 	}
 
+	public boolean getIsDefault() {
+		return isDefault();
+	}
+	
 	public boolean isDefault() {
 		return isDefault;
 	}
 
-	public void setDefault(boolean isDefault) {
+	public void setIsDefault(boolean isDefault) {
 		this.isDefault = isDefault;
 	}
 

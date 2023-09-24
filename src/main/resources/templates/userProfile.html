@@ -112,22 +112,22 @@
               
               <div class="col-12 col-xl-8">
 				  <div class="col-12 d-flex justify-content-end">
-					  <a th:href="@{/user/addAddress}" class="btn btn-success me-4 mb-2">Add Address</a>
+					  <a th:href="@{/user/addAddress(id=${customerData.customerId})}" class="btn btn-success me-4 mb-2">Add Address</a>
 				  </div>
-	              <div class="card card-plain border border-secondary mt-3">
+	              <div class="card card-plain border border-secondary mt-3" th:each="address:${addressList}">
 	                <div class="card-header pb-0 p-3">
 	                  <div class="row">
 	                    <div class="col-md-8 d-flex align-items-center">
 	                      <h6 class="mb-0">Address Details</h6>
 	                    </div>
 	                    <div class="col-md-4 d-flex justify-content-end pe-4 pb-2">
-							<a href="javascript:;" >
+							<a th:href="@{/user/editAddress(id=${address.addressId})}" >
 		                      <i class="fas text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Address">
 								   <img src="../assets/fonts/location-dot-solid.svg" alt="Location Icon" width="15px">
 							  </i>
 		                    </a>
 		                    
-		                    <a href="javascript:;" class="ms-3">
+		                    <a th:href="@{/user/deleteAddress(id=${address.addressId})}" class="ms-3">
 		                      <i class="fas text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove">
 								   <img src="../assets/fonts/minus-solid.svg" alt="Location Icon" width="15px">
 							  </i>
@@ -139,49 +139,34 @@
 	                
 	                <div class="card-body p-3">
 	                  <ul class="list-group">
-	                    <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Address Line 1:</strong> &nbsp; Alec M. Thompson</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Address Line 2:</strong> &nbsp; (44) 123 1234 123</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">City:</strong> &nbsp; alecthompson@mail.com</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">State:</strong> &nbsp; USA</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Pin code:</strong> &nbsp; </li>
+	                    <li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">Address Line 1:</strong> &nbsp;
+							<h6 th:text="${address.addressLineOne}" class="border-0 ps-2 pt-0 text-sm text-capitalize" style="font-weight: normal;">
+							</h6>
+						</li>
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">Address Line 2:</strong> &nbsp;
+							<h6 th:text="${address.addressLineTwo}" class="border-0 ps-2 pt-0 text-sm text-capitalize" style="font-weight: normal;">
+							</h6>
+						</li>
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">City:</strong> &nbsp;
+							<h6 th:text="${address.city}" class="border-0 ps-2 pt-0 text-sm text-capitalize" style="font-weight: normal;">
+							</h6>
+						</li>
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">State:</strong> &nbsp;
+							<h6 th:text="${address.state}" class="border-0 ps-2 pt-0 text-sm text-capitalize" style="font-weight: normal;">
+							</h6>
+						</li>
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">Pin code:</strong> &nbsp;
+							<h6 th:text="${address.pinCode}" class="border-0 ps-2 pt-0 text-sm text-capitalize" style="font-weight: normal;">
+							</h6>
+						</li>
 	                  </ul>
 	                </div>
-	              </div>
-	             
-	              <div class="card card-plain border border-secondary mt-3">
-	                <div class="card-header pb-0 p-3">
-	                  <div class="row">
-	                    <div class="col-md-8 d-flex align-items-center">
-	                      <h6 class="mb-0">Address Details</h6>
-	                    </div>
-	                    
-	                    <div class="col-md-4 d-flex justify-content-end pe-4 pb-2">
-							<a href="javascript:;" >
-		                      <i class="fas text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Address">
-								   <img src="../assets/fonts/location-dot-solid.svg" alt="Location Icon" width="15px">
-							  </i>
-		                    </a>
-		                    
-		                    <a href="javascript:;" class="ms-3">
-		                      <i class="fas text-secondary text-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove">
-								   <img src="../assets/fonts/minus-solid.svg" alt="Location Icon" width="15px">
-							  </i>
-		                    </a>
-						</div>
-	                  </div>
-	                  <hr class="horizontal border border-solid-3px border-secondary my-2">
-	                </div>
-	                
-	                <div class="card-body p-3">
-	                  <ul class="list-group">
-	                    <li class="list-group-item border-0 ps-0 pt-0 text-sm"><strong class="text-dark">Address Line 1:</strong> &nbsp; Alec M. Thompson</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Address Line 2:</strong> &nbsp; (44) 123 1234 123</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">City:</strong> &nbsp; alecthompson@mail.com</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">State:</strong> &nbsp; USA</li>
-	                    <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Pin code:</strong> &nbsp; </li>
-	                  </ul>
-	                </div>
-	              </div>
+	              </div>   
               </div>
 		  </div>
       </div>

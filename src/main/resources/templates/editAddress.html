@@ -51,31 +51,33 @@
             </div>
             <div class="card-body px-0 pb-2">
                 
-            	<form class="row mx-5 my-2"  method="post" th:object="${newAddress}" th:action="@{/user/newAddress}">
+            	<form class="row mx-5 my-2"  method="post" th:object="${editAddress}" th:action="@{/user/updateAddress}">
 					
 	
-				  <input type="hidden" th:field="${newAddress.customerId}" th:value="${newAddress.customerId}">
+				  <input type="hidden" th:field="${editAddress.addressId}" th:value="${editAddress.addressId}">
   
 				  <!-- Address Starting -->
 				  <div class="col-12">
 				    <label for="inputAddress" class="form-label">Address</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputAddress" th:name="addressLineOne" placeholder="1234 Main St" required>
+				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputAddress" th:name="addressLineOne" 
+				    	placeholder="1234 Main St" th:field="*{addressLineOne}" required>
 				  </div>
 				  <div class="col-12">
 				    <label for="inputAddress2" class="form-label">Address 2</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputAddress2" th:name="addressLineTwo" placeholder="Apartment, studio, or floor" required>
+				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputAddress2" th:name="addressLineTwo" 
+				    placeholder="Apartment, studio, or floor" th:field="*{addressLineTwo}" required>
 				  </div>
 				  <div class="col-md-6">
 				    <label for="inputCity" class="form-label">City</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCity" th:name="city" required>
+				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCity" th:name="city" th:field="*{city}" required>
 				  </div>
 				  <div class="col-md-4">
 				    <label for="inputState" class="form-label">State</label>
-				    <input type="text" id="inputState" class="form-control ps-3 border border-1 border-primary mb-2" th:name="state" required>
+				    <input type="text" id="inputState" class="form-control ps-3 border border-1 border-primary mb-2" th:name="state" th:value="*{state}" required>
 				  </div>
 				  <div class="col-md-2">
 				    <label for="inputZip" class="form-label">Zip</label>
-				    <input type="text" class="form-control border border-1 border-danger ps-3 mb-2" id="inputZip" th:name="pinCode" required>
+				    <input type="text" class="form-control border border-1 border-danger ps-3 mb-2" id="inputZip" th:name="pinCode" th:field="*{pinCode}" required>
 				  </div>
 				  <div class="col-12">
 				    <div class="form-check ps-3 pt-1">
@@ -95,11 +97,6 @@
                           
             </div>
           </div>
-        </div>
-        <div class="col-9">
-	        <div class=" border-radius-lg pt-4 pb-3 d-flex align-items-center">
-					<span class="text-secondary text-capitalize ps-4">Note: You can remove sub categories from the Sub Category panel.</span>
-	        </div>
         </div>
       </div>
     </div>  

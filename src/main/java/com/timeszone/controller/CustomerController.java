@@ -1,5 +1,7 @@
 package com.timeszone.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -17,10 +19,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.timeszone.model.customer.Address;
 import com.timeszone.model.customer.Customer;
+import com.timeszone.model.dto.AddressDTO;
 import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.LoginDTO;
+import com.timeszone.repository.AddressRepository;
 import com.timeszone.repository.CustomerRepository;
+import com.timeszone.service.AddressService;
 import com.timeszone.service.CustomerService;
 
 @RequestMapping("/user")
@@ -31,10 +37,16 @@ public class CustomerController {
 	private CustomerRepository customerRepository;
 	
 	@Autowired
+	private AddressRepository addressRepository;
+	
+	@Autowired
 	private CustomerService customerService;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private AddressService addressService;
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
 	
@@ -46,9 +58,10 @@ public class CustomerController {
 		
 		Customer c = customerRepository.findByEmailId(userName);
 		CustomerDTO customerData = customerService.convertIntoCustomerDTO(c);
-		System.out.println(customerData.getFirstName());
-		System.out.println(customerData.getLastName());
 		model.addAttribute("customerData", customerData);
+		
+		List<Address> addressList = addressService.getAllByCustomer(c);
+		model.addAttribute("addressList",addressList );
 		return "userProfile";
 	}
 	
@@ -136,8 +149,46 @@ public class CustomerController {
 		return "redirect:/user/changePassword?id="+customerId;
 	}
 	
+	
+//	Add new address -------------------------------------------------------------------------
 	@GetMapping("/addAddress")
-	public String addAddress() {
+	public String addAddress(@RequestParam("id") Integer customerId,Model model) {
+		
+		AddressDTO newAddress = new AddressDTO();
+		newAddress.setCustomerId(customerId);
+		model.addAttribute("newAddress", newAddress);
 		return "addAddress";
+	}
+	
+	@PostMapping("/newAddress")
+	public String newAddress(@ModelAttribute("newAddress") AddressDTO address) {
+		
+		addressService.newAddress(address.getCustomerId(),address);
+		return "redirect:/user/profile";
+	}
+	
+//	Edit Address -----------------------------------------------------------------------------------
+	@GetMapping("/editAddress")
+	public String editAddress(@RequestParam("id") Integer addressId, Model model) {
+		
+		Address address = addressRepository.findById(addressId).get();
+		AddressDTO editAddress = addressService.convertIntoCustomerDTO(address);
+		model.addAttribute("editAddress", editAddress);
+		return "editAddress";
+	}
+	
+	@PostMapping("/updateAddress")
+	public String updateAddress(@ModelAttribute("editAddress") AddressDTO address) {
+		
+		addressService.updateAddress(address);
+		return "redirect:/user/profile";
+	}
+	
+//	Delete Address ----------------------------------------------------------------------------------
+	@GetMapping("/deleteAddress")
+	public String deleteAddress(@RequestParam("id") Integer addressId) {
+		
+		addressService.removeAddress(addressId);
+		return "redirect:/user/profile";
 	}
 }
