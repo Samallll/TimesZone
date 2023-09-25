@@ -123,16 +123,14 @@ public class MainController {
 			Customer verifyCustomer = (Customer) session.getAttribute("verifyCustomer");
 			
 			Cart newCart = new Cart();
-			System.out.println("entering into cart save without setting customer");
 			cartRepository.save(newCart);
 			
 			verifyCustomer.setCart(newCart);
-			System.out.println("entering into customer save");
 			customerService.customerRepository.save(verifyCustomer);
 			
-			newCart.setCustomer(verifyCustomer);
-			System.out.println("entering into cart save");
+			newCart.setCustomer(verifyCustomer);;
 			cartRepository.save(newCart);
+			
 			session.setAttribute("registerSuccess", otpService.getSuccessMessage());
 			session.removeAttribute("registerError");
 			return "redirect:/guest/user_registration";

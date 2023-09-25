@@ -32,9 +32,10 @@ public class CartService {
 		
 		Cart customerCart = customer.getCart();
 		customerCart.getCartItems().add(cartItem);
+		cartItem.setCart(customerCart);
 		cartRepository.save(customerCart);
 		customerRepository.save(customer);
-		
+		 
 		return customerCart;
 		
 	}

@@ -219,10 +219,10 @@ public class CustomerController {
 	@GetMapping("/addCart")
 	public String addToCart(@RequestParam("id") Integer productId,@RequestParam("quantity") Integer productQuantity) {
 		
+		System.out.println(productQuantity);
 		Product product = productRepository.findById(productId).get();
 		CartItem cartItem = new CartItem(product,productQuantity);
 		cartItem.setCart(cartService.addCartItem(cartItem));
-		cartItemRepository.save(cartItem);
 		
 		product.getCartItems().add(cartItem);
 		productRepository.save(product);
