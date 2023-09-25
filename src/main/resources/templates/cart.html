@@ -152,19 +152,17 @@
 		            <!-- Single item -->
 		          </div>
 		        </div>
+		        
+		        <div id="flash-notification">
+		        </div>
+		        
 		        <div class="card mb-4">
 		          <div class="card-body p-4 d-flex flex-row">
 		            <div class="form-outline flex-fill">
-		              <input type="text" id="form1" class="form-control form-control-lg" />
-		              <label class="form-label" for="form1">Discound code</label>
+		              <input type="text" id="discount-code" class="form-control form-control-lg" />
+		              <label class="form-label" for="discount-code">Discount code</label>
 		            </div>
-		            <button type="button" class="btn btn-outline-warning btn-lg ms-3">Apply</button>
-		          </div>
-		        </div>
-		
-		        <div class="card">
-		          <div class="card-body">
-		            <button type="button" class="btn btn-warning btn-block btn-lg">Proceed to Pay</button>
+		            <button type="button" class="btn btn-outline-warning btn-lg ms-3" id="apply-coupon-apply">Apply</button>
 		          </div>
 		        </div>
 		      </div>
@@ -218,6 +216,8 @@
 		  //for making the changes in the product price based on the quantity
 		  const productPrice = 2000;
 		  
+		  //for checking whether coupon is applied or not
+		  
 		  console.log("Inside script");
 		  
 		  incrementButton.forEach((button,index) => {
@@ -236,39 +236,76 @@
 			  console.log("Inside foreach decrement");
 		  });
 		  
-	  function count(inputElement,action) {
+		  //for applying coupon code
+		  $("#apply-coupon-apply").on('click', function() {
+			  const discountCoupon = document.querySelector("#discount-code").value;
+			  const flashNotification = $("#flash-notification");
+			
+			  // Remove any existing alert elements
+			  flashNotification.empty();
+			
+			  // Create the alert element
+			  const alertElement = $(`<div class="alert alert-${discountCoupon === "hello" ? "success" : "danger"}" role="${discountCoupon === "hello" ? "success" : "error"}">
+			    ${discountCoupon === "hello" ? "Discount Code applied successfully" : "Entered Discount Code is invalid"}
+			  </div>`);
+			
+			  // Append the alert element to the flash notification element
+			  flashNotification.append(alertElement);
+			  
+			 
+			
+			  // Show the flash notification
+			  flashNotification.fadeIn("slow");
+			  
+			  $("#discount-code").val("");
+			
+			  // Hide the flash notification after 3 seconds
+			  setTimeout(function() {
+			    flashNotification.fadeOut("slow");
+			  }, 3000);
+		   });
+
+
+
+
+
+
+		 
 		  
-		  // currentvalue stored in the selected input field from the input fields
-		  let currentValue = parseInt(inputElement.value);
 		  
-		  //for calculating the amount for the particular product
-		  var currentAmount;
-		  
-		  const parentElement = inputElement.parentElement;
-		  const parentElementParentElement = parentElement.parentElement;
-		  const siblingElement = parentElementParentElement.nextElementSibling; 
-		  const childElement = siblingElement.querySelector('strong'); 
-		  let data = childElement.textContent; 
-		  
-		  console.log("Before assigning the value : " + currentValue);
-		  
-		  if(!isNaN(currentValue)){
-			  if(action === "increment"){
-				  currentValue = currentValue+1;
-				  currentAmount = currentValue*productPrice;
-				  childElement.textContent = "$"+ currentAmount;
-				  console.log("incremented price:" + data);
+		  function count(inputElement,action) {
+			  
+			  // currentvalue stored in the selected input field from the input fields
+			  let currentValue = parseInt(inputElement.value);
+			  
+			  //for calculating the amount for the particular product
+			  var currentAmount;
+			  
+			  const parentElement = inputElement.parentElement;
+			  const parentElementParentElement = parentElement.parentElement;
+			  const siblingElement = parentElementParentElement.nextElementSibling; 
+			  const childElement = siblingElement.querySelector('strong'); 
+			  let data = childElement.textContent; 
+			  
+			  console.log("Before assigning the value : " + currentValue);
+			  
+			  if(!isNaN(currentValue)){
+				  if(action === "increment"){
+					  currentValue = currentValue+1;
+					  currentAmount = currentValue*productPrice;
+					  childElement.textContent = "$"+ currentAmount;
+					  console.log("incremented price:" + data);
+				  }
+				  else if(action === "decrement" && currentValue>1){
+					  currentValue = currentValue-1;
+					  currentAmount = currentValue*productPrice;
+					  childElement.textContent = "$"+ currentAmount;
+					  console.log("decremented price:" + data);
+				  }
 			  }
-			  else if(action === "decrement" && currentValue>1){
-				  currentValue = currentValue-1;
-				  currentAmount = currentValue*productPrice;
-				  childElement.textContent = "$"+ currentAmount;
-				  console.log("decremented price:" + data);
-			  }
+			  inputElement.value=currentValue;
+			  console.log("After assigning the value: " + inputElement.value);
 		  }
-		  inputElement.value=currentValue;
-		  console.log("After assigning the value: " + inputElement.value);
-		}
 
   	</script>
 	
