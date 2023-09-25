@@ -210,8 +210,12 @@ public class CustomerController {
 //	Cart Management =============================================================================================
 	
 	@GetMapping("/shoppingCart")
-	public String shoppingCart() {
+	public String shoppingCart(Model model) {
 		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Customer customer = customerRepository.findByEmailId(authentication.getName());
+		List<CartItem> cartItemList = cartService.getAll(customer.getCart());
+		model.addAttribute("cartItemList", cartItemList);
 		return "cart";
 	}
 	
@@ -219,7 +223,7 @@ public class CustomerController {
 	@GetMapping("/addCart")
 	public String addToCart(@RequestParam("id") Integer productId,@RequestParam("quantity") Integer productQuantity) {
 		
-		System.out.println(productQuantity);
+		
 		Product product = productRepository.findById(productId).get();
 		CartItem cartItem = new CartItem(product,productQuantity);
 		cartItem.setCart(cartService.addCartItem(cartItem));
@@ -228,6 +232,14 @@ public class CustomerController {
 		productRepository.save(product);
 		
 		return"redirect:/user/shoppingCart";
-		
 	}
+	
+	@GetMapping("/deleteCart")
+	public String deleteCart(@RequestParam("id") Integer cartItemId) {
+		
+		CartItem cartItem = cartItemRepository.findById(cartItemId).get(); 
+		cartService.deleteCartItem(cartItem);
+		return"redirect:/user/shoppingCart";
+	}
+	
 }

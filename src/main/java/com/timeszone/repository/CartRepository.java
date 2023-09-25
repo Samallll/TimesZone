@@ -7,5 +7,5 @@ import com.timeszone.model.shared.Cart;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart,Integer>{
-
+	
 }

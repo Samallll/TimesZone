@@ -63,7 +63,7 @@ public class Product {
 	private LocalDate dateAdded;
 
 	@OneToMany(mappedBy = "product")
-    private List<CartItem> cartItems = new ArrayList<>();
+    private Set<CartItem> cartItems = new HashSet<>();
 	
 	public Product() {
 		super();
@@ -101,11 +101,11 @@ public class Product {
 		this.dateAdded = dateAdded;
 	}
 
-	public List<CartItem> getCartItems() {
+	public Set<CartItem> getCartItems() {
 		return cartItems;
 	}
 
-	public void setCartItems(List<CartItem> cartItems) {
+	public void setCartItems(Set<CartItem> cartItems) {
 		this.cartItems = cartItems;
 	}
 

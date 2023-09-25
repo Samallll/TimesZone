@@ -19,7 +19,7 @@ public class CartItem {
     private Integer id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",unique=true)
     private Product product;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -77,4 +77,7 @@ public class CartItem {
 	public void setCartItemQuantity(Integer cartItemQuantity) {
 		this.cartItemQuantity = cartItemQuantity;
 	}
+	
+	
+	
 }

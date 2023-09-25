@@ -1,7 +1,9 @@
 package com.timeszone.model.shared;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -27,14 +29,14 @@ public class Cart {
     private Customer customer;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<CartItem> cartItems = new ArrayList<>();
+    private Set<CartItem> cartItems = new HashSet<>();
 
     public Cart() {
     }
 
     public Cart(Customer customer) {
         this.customer = customer;
-        this.cartItems = new ArrayList<>();
+        this.cartItems = new HashSet<>();
     }
 
     public Integer getCartId() {
@@ -53,11 +55,11 @@ public class Cart {
         this.customer = customer;
     }
 
-    public List<CartItem> getCartItems() {
+    public Set<CartItem> getCartItems() {
         return cartItems;
     }
 
-    public void setCartItems(List<CartItem> cartItems) {
+    public void setCartItems(Set<CartItem> cartItems) {
         this.cartItems = cartItems;
     }
 
