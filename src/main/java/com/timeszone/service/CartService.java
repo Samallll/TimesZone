@@ -1,5 +1,6 @@
 package com.timeszone.service;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,11 @@ public class CartService {
 	@Autowired
 	private ProductRepository productRepository;
 	
-	public Cart addCartItem(CartItem cartItem) {
+	public Cart addCartItem(CartItem cartItem,Principal principal) {
 		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		String username = authentication.getName();
+		String username = principal.getName();
 		Customer customer = customerRepository.findByEmailId(username);
 		
 		Cart customerCart = customer.getCart();

@@ -1,5 +1,6 @@
 package com.timeszone.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -221,12 +222,12 @@ public class CustomerController {
 	
 //	adding product to the cart -----------------------------------------------------------
 	@GetMapping("/addCart")
-	public String addToCart(@RequestParam("id") Integer productId,@RequestParam("quantity") Integer productQuantity) {
+	public String addToCart(@RequestParam("id") Integer productId,@RequestParam("quantity") Integer productQuantity,Principal principal) {
 		
 		
 		Product product = productRepository.findById(productId).get();
 		CartItem cartItem = new CartItem(product,productQuantity);
-		cartItem.setCart(cartService.addCartItem(cartItem));
+		cartItem.setCart(cartService.addCartItem(cartItem,principal));
 		
 		product.getCartItems().add(cartItem);
 		productRepository.save(product);

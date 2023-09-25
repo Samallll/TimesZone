@@ -16,7 +16,7 @@ public class CartItem {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer cartItemId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id",unique=true)
@@ -28,9 +28,9 @@ public class CartItem {
 
 	private Integer cartItemQuantity;
 
-	public CartItem(Integer id, Product product, Cart cart, Integer cartItemQuantity) {
+	public CartItem(Integer cartItemId, Product product, Cart cart, Integer cartItemQuantity) {
 		super();
-		this.id = id;
+		this.cartItemId = cartItemId;
 		this.product = product;
 		this.cart = cart;
 		this.cartItemQuantity = cartItemQuantity;
@@ -46,12 +46,12 @@ public class CartItem {
 		super();
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getcartItemId() {
+		return cartItemId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setcartItemId(Integer cartItemId) {
+		this.cartItemId = cartItemId;
 	}
 
 	public Product getProduct() {
