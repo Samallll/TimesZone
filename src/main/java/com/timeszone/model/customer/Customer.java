@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -66,6 +67,9 @@ public class Customer implements UserDetails {
 	@Column(name="expirationTime",nullable=true)
 	private LocalDateTime expirationTime;
 	
+	@OneToOne(mappedBy = "customer")
+    private Cart cart;
+	
 	public Customer() {
 		super();
 	}
@@ -106,6 +110,14 @@ public class Customer implements UserDetails {
 		return this.password;
 	}
 	
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+
 	public String getFirstName() {
 		return this.firstName;
 	}

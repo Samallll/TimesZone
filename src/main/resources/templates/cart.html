@@ -27,11 +27,11 @@
 		      <div class="col-md-8">
 		        <div class="card mb-4">
 		          <div class="card-header py-3">
-		            <h5 class="mb-0">Cart - 2 items</h5>
+		            <h5 class="mb-0">Cart items</h5>
 		          </div>
 		          <div class="card-body">
 		            <!-- Single item -->
-		            <div class="row">
+		            <div class="row" th:object="cartItem:${cartItemList}">
 		              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
 		                <!-- Image -->
 		                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
@@ -92,63 +92,7 @@
 		            <hr class="my-4" />
 		
 		            <!-- Single item -->
-		            <div class="row">
-		              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
-		                <!-- Image -->
-		                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
-		                  <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/13a.webp"
-		                    class="w-100" />
-		                  <a href="#!">
-		                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
-		                  </a>
-		                </div>
-		                <!-- Image -->
-		              </div>
-		
-		              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
-		                <!-- Data -->
-		                <p><strong>Red hoodie</strong></p>
-		                <p>Color: red</p>
-		                <p>Size: M</p>
-		
-		                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
-		                  title="Remove item">
-		                  <i class="fas fa-trash"></i>
-		                </button>
-		                <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip"
-		                  title="Move to the wish list">
-		                  <i class="fas fa-heart"></i>
-		                </button>
-		                <!-- Data -->
-		              </div>
-		
-		              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-		                <!-- Quantity -->
-		                <div class="d-flex mb-4" style="max-width: 300px">
-		                  <button class="btn btn-primary px-3 me-2 downButton" 
-		                     >
-		                    <i class="fas fa-minus"></i>
-		                  </button>
-		
-		                  <div class="form-outline">
-		                    <input id="form1" min="0" name="quantity" value="1" type="number" class="form-control quantity" />
-		                    <label class="form-label" for="form1">Quantity</label>
-		                  </div>
-		
-		                  <button class="btn btn-primary px-3 ms-2 upButton"
-		                     id="increment">
-		                    <i class="fas fa-plus"></i>
-		                  </button>
-		                </div>
-		                <!-- Quantity -->
-		
-		                <!-- Price -->
-		                <p class="text-start text-md-center">
-		                  <strong class="productAmount">$17.99</strong>
-		                </p>
-		                <!-- Price -->
-		              </div>
-		            </div>
+		            
 		            <!-- Single item -->
 		          </div>
 		        </div>
@@ -210,32 +154,61 @@
 		  
 		  //for updating the quantity field
 		  const inputField = document.querySelectorAll(".quantity");
-		  const incrementButton = document.querySelectorAll(".upButton");
-		  const decrementButton = document.querySelectorAll(".downButton");
-		  
-		  //for making the changes in the product price based on the quantity
-		  const productPrice = 2000;
-		  
-		  //for checking whether coupon is applied or not
-		  
-		  console.log("Inside script");
-		  
-		  incrementButton.forEach((button,index) => {
-			  button.addEventListener("click",() => {
-				  count(inputField[index],"increment");
-				  console.log("Inside addEventListner increment");
-			  });
-			  console.log("Inside foreach increment");
-		  });
-		  
-		  decrementButton.forEach((button,index) => {
-			  button.addEventListener("click",() => {
-				  count(inputField[index],"decrement");
-				  console.log("Inside addEventListner decrement");
-			  });
-			  console.log("Inside foreach decrement");
-		  });
-		  
+		const incrementButton = document.querySelectorAll(".upButton");
+		const decrementButton = document.querySelectorAll(".downButton");
+		
+		// For making changes in the product price based on the quantity
+		const productPrice = document.querySelectorAll(".productAmount");
+		
+		console.log("Inside script");
+		
+		incrementButton.forEach((button, index) => {
+		    button.addEventListener("click", () => {
+		        count(inputField[index], "increment", productPrice[index].textContent);
+		        console.log("Inside addEventListener increment");
+		    });
+		    console.log("Inside foreach increment");
+		});
+		
+		decrementButton.forEach((button, index) => {
+		    button.addEventListener("click", () => {
+		        count(inputField[index], "decrement", productPrice[index].textContent);
+		        console.log("Inside addEventListener decrement");
+		    });
+		    console.log("Inside foreach decrement");
+		});
+
+		// For increment/decrement the quantity - function definition
+		function count(inputElement, action, productAmount) {
+	    // Current value stored in the selected input field from the input fields
+	    let currentValue = parseInt(inputElement.value);
+	
+	    // Convert productAmount to a numeric value (remove "$" and convert to float)
+	    const currentAmount = parseFloat(productAmount.replace("$", ""));
+	
+	    // Check if currentValue is a valid number
+	    if (!isNaN(currentValue)) {
+	        if (action === "increment") {
+	            currentValue = currentValue + 1;
+	        } else if (action === "decrement" && currentValue > 1) {
+	            currentValue = currentValue - 1;
+	        }
+	
+	        // Calculate the new finalAmount based on the updated currentValue
+	        //const finalAmount = currentValue * currentAmount;
+	        let value = 19
+			const finalAmount = currentValue * value;
+	        // Update the input value and display the new amount
+	        inputElement.value = currentValue;
+	        const parentElement = inputElement.parentElement;
+	        const parentElementParentElement = parentElement.parentElement;
+	        const siblingElement = parentElementParentElement.nextElementSibling;
+	        const childElement = siblingElement.querySelector('strong');
+	        childElement.textContent = "$" + finalAmount; // Format to two decimal places
+		    }
+		}
+
+
 		  //for applying coupon code
 		  $("#apply-coupon-apply").on('click', function() {
 			  const discountCoupon = document.querySelector("#discount-code").value;
@@ -248,6 +221,10 @@
 			  const alertElement = $(`<div class="alert alert-${discountCoupon === "hello" ? "success" : "danger"}" role="${discountCoupon === "hello" ? "success" : "error"}">
 			    ${discountCoupon === "hello" ? "Discount Code applied successfully" : "Entered Discount Code is invalid"}
 			  </div>`);
+			  
+			  let applied = discountCoupon === "hello";
+			  
+			  console.log(applied);
 			
 			  // Append the alert element to the flash notification element
 			  flashNotification.append(alertElement);
@@ -265,47 +242,8 @@
 			  }, 3000);
 		   });
 
-
-
-
-
-
-		 
+				 
 		  
-		  
-		  function count(inputElement,action) {
-			  
-			  // currentvalue stored in the selected input field from the input fields
-			  let currentValue = parseInt(inputElement.value);
-			  
-			  //for calculating the amount for the particular product
-			  var currentAmount;
-			  
-			  const parentElement = inputElement.parentElement;
-			  const parentElementParentElement = parentElement.parentElement;
-			  const siblingElement = parentElementParentElement.nextElementSibling; 
-			  const childElement = siblingElement.querySelector('strong'); 
-			  let data = childElement.textContent; 
-			  
-			  console.log("Before assigning the value : " + currentValue);
-			  
-			  if(!isNaN(currentValue)){
-				  if(action === "increment"){
-					  currentValue = currentValue+1;
-					  currentAmount = currentValue*productPrice;
-					  childElement.textContent = "$"+ currentAmount;
-					  console.log("incremented price:" + data);
-				  }
-				  else if(action === "decrement" && currentValue>1){
-					  currentValue = currentValue-1;
-					  currentAmount = currentValue*productPrice;
-					  childElement.textContent = "$"+ currentAmount;
-					  console.log("decremented price:" + data);
-				  }
-			  }
-			  inputElement.value=currentValue;
-			  console.log("After assigning the value: " + inputElement.value);
-		  }
 
   	</script>
 	

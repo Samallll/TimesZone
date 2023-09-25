@@ -1,6 +1,7 @@
 package com.timeszone.model.product;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.timeszone.model.customer.CartItem;
 
 
 @Entity
@@ -59,6 +62,9 @@ public class Product {
 	@Column(name="dateAdded",nullable=false)
 	private LocalDate dateAdded;
 
+	@OneToMany(mappedBy = "product")
+    private List<CartItem> cartItems = new ArrayList<>();
+	
 	public Product() {
 		super();
 	}
@@ -93,6 +99,14 @@ public class Product {
 		this.productImages = productImages;
 		this.isEnabled = isEnabled;
 		this.dateAdded = dateAdded;
+	}
+
+	public List<CartItem> getCartItems() {
+		return cartItems;
+	}
+
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
 	}
 
 	public Integer getProductId() {
