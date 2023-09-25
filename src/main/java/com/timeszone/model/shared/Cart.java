@@ -1,4 +1,4 @@
-package com.timeszone.model.customer;
+package com.timeszone.model.shared;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.timeszone.model.customer.Customer;
 
 
 @Entity

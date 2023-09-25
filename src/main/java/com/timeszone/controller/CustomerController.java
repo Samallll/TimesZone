@@ -24,9 +24,15 @@ import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.AddressDTO;
 import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.LoginDTO;
+import com.timeszone.model.product.Product;
+import com.timeszone.model.shared.Cart;
+import com.timeszone.model.shared.CartItem;
 import com.timeszone.repository.AddressRepository;
+import com.timeszone.repository.CartItemRepository;
 import com.timeszone.repository.CustomerRepository;
+import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.AddressService;
+import com.timeszone.service.CartService;
 import com.timeszone.service.CustomerService;
 
 @RequestMapping("/user")
@@ -47,6 +53,15 @@ public class CustomerController {
 	
 	@Autowired
 	private AddressService addressService;
+	
+	@Autowired
+	private ProductRepository productRepository;
+	
+	@Autowired
+	private CartItemRepository cartItemRepository;
+	
+	@Autowired
+	private CartService cartService;
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
 	
@@ -192,9 +207,27 @@ public class CustomerController {
 		return "redirect:/user/profile";
 	}
 	
+//	Cart Management =============================================================================================
+	
 	@GetMapping("/shoppingCart")
-	public String shoppingCart(@RequestParam("id") Integer productId) {
+	public String shoppingCart() {
 		
 		return "cart";
+	}
+	
+//	adding product to the cart -----------------------------------------------------------
+	@GetMapping("/addCart")
+	public String addToCart(@RequestParam("id") Integer productId,@RequestParam("quantity") Integer productQuantity) {
+		
+		Product product = productRepository.findById(productId).get();
+		CartItem cartItem = new CartItem(product,productQuantity);
+		cartItem.setCart(cartService.addCartItem(cartItem));
+		cartItemRepository.save(cartItem);
+		
+		product.getCartItems().add(cartItem);
+		productRepository.save(product);
+		
+		return"redirect:/user/shoppingCart";
+		
 	}
 }

@@ -29,6 +29,8 @@ import com.timeszone.model.dto.LoginDTO;
 import com.timeszone.model.dto.ProductDTO;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Product;
+import com.timeszone.model.shared.Cart;
+import com.timeszone.repository.CartRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.CustomerService;
@@ -62,6 +64,9 @@ public class MainController {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private CartRepository cartRepository;
 	
 	@GetMapping("/user")
 	public String userHome() {
@@ -116,7 +121,18 @@ public class MainController {
 		System.out.println(flag);
 		if(flag) {
 			Customer verifyCustomer = (Customer) session.getAttribute("verifyCustomer");
+			
+			Cart newCart = new Cart();
+			System.out.println("entering into cart save without setting customer");
+			cartRepository.save(newCart);
+			
+			verifyCustomer.setCart(newCart);
+			System.out.println("entering into customer save");
 			customerService.customerRepository.save(verifyCustomer);
+			
+			newCart.setCustomer(verifyCustomer);
+			System.out.println("entering into cart save");
+			cartRepository.save(newCart);
 			session.setAttribute("registerSuccess", otpService.getSuccessMessage());
 			session.removeAttribute("registerError");
 			return "redirect:/guest/user_registration";

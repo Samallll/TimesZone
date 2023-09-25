@@ -1,5 +1,6 @@
-package com.timeszone.model.customer;
+package com.timeszone.model.shared;
 
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,7 @@ import javax.persistence.OneToOne;
 
 import com.timeszone.model.product.Product;
 
+@Entity
 public class CartItem {
 	
 	@Id
@@ -31,6 +33,12 @@ public class CartItem {
 		this.id = id;
 		this.product = product;
 		this.cart = cart;
+		this.cartItemQuantity = cartItemQuantity;
+	}
+
+	public CartItem(Product product, Integer cartItemQuantity) {
+		super();
+		this.product = product;
 		this.cartItemQuantity = cartItemQuantity;
 	}
 

@@ -21,6 +21,8 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.timeszone.model.shared.Cart;
+
 @Entity
 @Table(name="Customer")
 public class Customer implements UserDetails {
@@ -72,10 +74,11 @@ public class Customer implements UserDetails {
 	
 	public Customer() {
 		super();
+		this.cart = new Cart(this);
 	}
 	
 	public Customer(String firstName, String lastName, String emailId, String phoneNumber,
-			String password, Set<Role> authorities) {
+			String password, Set<Role> authorities, Cart cart) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -83,6 +86,7 @@ public class Customer implements UserDetails {
 		this.phoneNumber = phoneNumber;
 		this.password = password;
 		this.authorities = authorities;
+		this.cart = cart;
 	}
 
 	public Customer(Integer customerId, String firstName, String lastName, String emailId, String phoneNumber,
@@ -96,6 +100,17 @@ public class Customer implements UserDetails {
 		this.password = password;
 		this.authorities = authorities;
 		this.addresses = addresses;
+	}
+
+	public Customer(String firstName, String lastName, String emailId, String phoneNumber,
+			String password, Set<Role> authorities) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.emailId = emailId;
+		this.phoneNumber = phoneNumber;
+		this.password = password;
+		this.authorities = authorities;
 	}
 
 	@Override

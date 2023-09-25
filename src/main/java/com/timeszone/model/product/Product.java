@@ -18,7 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.timeszone.model.customer.CartItem;
+import com.timeszone.model.shared.CartItem;
 
 
 @Entity

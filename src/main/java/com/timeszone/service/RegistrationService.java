@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.customer.Role;
 import com.timeszone.model.dto.RegistrationDTO;
+import com.timeszone.model.shared.Cart;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.RoleRepository;
 
