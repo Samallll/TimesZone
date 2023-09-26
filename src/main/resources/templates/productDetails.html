@@ -166,17 +166,20 @@
                             <div class="col-lg-4 col-md-6 mb-4 mb-lg-0 d-flex">
 				                <!-- Quantity -->
 				                <div class="d-flex mb-4 jutify-items-center" style="max-width: 200px">
-				                    <button onclick="countDecrement(this.getAttribute('data-product-id'))" th:data-product-id="${product.productId}" 
+				                    <button onclick="decrementItem(this.getAttribute('data-product-id'))" th:data-product-id="${product.productId}" 
 				                    class="btn btn-primary ps-2 pe-3 me-2" type="button" style="height: 40px;width: 40px;" >
+				                    
 				                    <i class="fas fa-minus fa-fw"></i>
 				                  </button>
 				
-				                  <p th:data-product-id="${product.productId}" type="text" name="quantity" th:id="'inputId-' + ${product.productId}"
-				                    th:text="${cartItemQuantity}" th:field="${cartItemQuantity}" class="py-2 mx-1" 
-				                    style="border-radius: 9px; text-align: center; border: 1px solid; font-size: 26px; width: 178px;margin-top: 15px;"></p>
+				                  <p th:data-product-id="${product.productId}" type="text" name="quantity"
+				                  th:id="'inputId-' + ${product.productId}"
+				                  th:text="${cartItemQuantity}"  
+				                  class="py-2 mx-1" 
+				                  style="border-radius: 9px; text-align: center; border: 1px solid; font-size: 26px; width: 178px;margin-top: 15px;"></p>
 		
 				
-				                  <button onclick="countIncrement(this.getAttribute('data-product-id'))" th:data-product-id="${product.productId}" 
+				                  <button onclick="incrementItem(this.getAttribute('data-product-id'))" th:data-product-id="${product.productId}" 
 				                    class="btn btn-primary ps-2 pe-3 me-2" type="button" style="height: 40px;width: 40px;" >
 				                    <i class="fas fa-plus fa-fw"></i>
 				                  </button>
@@ -186,6 +189,24 @@
                                 <li ><a href="#"><span class="icon_heart_alt"></span></a></li>
                             </ul>
                         </div>
+                        
+                        <!--Modal Code-->
+						<div class="modal fade" id="flash-notification" tabindex="-1" aria-labelledby="flash-notification-label" aria-hidden="true">
+						  <div class="modal-dialog">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="flash-notification-label">Oops!</h5>
+						        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						      </div>
+						      <div class="modal-body">
+						        <!-- The error message will be displayed here -->
+						      </div>
+						      <!--<div class="modal-footer">
+						        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+						      </div>-->
+						    </div>
+						  </div>
+						</div>
                         
                         
                         <!--<div class="product__details__widget">
@@ -251,6 +272,9 @@
             
         </div>
     </section>
+    
+
+    
     <!-- Product Details Section End -->
     
     <!-- Js Plugins -->
@@ -266,7 +290,7 @@
     <script src="../assets/js/owl.carousel.min.js"></script>
     <script src="../assets/js/jquery.nicescroll.min.js"></script>
     <script src="../assets/js/main.js"></script>
-
+	<script src="../assets/js/custom-cart.js" ></script>
 </body>
 
 </html>

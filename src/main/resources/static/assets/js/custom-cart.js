@@ -1,9 +1,71 @@
+function getProductQuantity(productId) {
+  return document.getElementById('inputId-' + productId).innerText;
+}
+
+
+
+/*productPage cartItem quantity increment*/	
+	function incrementItem(productId){
+
+		let productQuantity = document.getElementById('inputId-' + productId).innerText;
+		$.ajax({
+         type: "GET",
+         url: "/guest/cart/incrementItem",
+         data: {
+			 productId : productId,
+			 productQuantity : productQuantity
+			 },
+         success: function (response) { 
+			
+             if ("newQuantity" in response) {
+                document.getElementById('inputId-' + productId).innerText = response.newQuantity;
+             } else {
+
+                 $("#flash-notification").modal("show");
+			      $("#flash-notification .modal-body").html(
+			        `<div class="alert alert-danger" role="error">
+			          ${response.error}
+			        </div>`
+			      );
+
+             }
+         },
+         contentType: "text/plain"
+     });
+	}
+	
+/*productPage cartItem quantity decrement*/		
+	function decrementItem(productId){
+		console.log(productId);
+		console.log('inputId-' + productId);
+		let productQuantity = document.getElementById('inputId-' + productId).innerText;
+		console.log(productQuantity);
 		
+		$.ajax({
+         type: "GET",
+         url: "/guest/cart/decrementItem",
+         data: {
+			 productId : productId,
+			 productQuantity : productQuantity
+			 },
+         success: function (response) { 
+			
+             if ("newQuantity" in response) {
+                console.log(response.newQuantity)
+                document.getElementById('inputId-' + productId).innerText = response.newQuantity;
+             } 
+         },
+         contentType: "text/plain"
+     });
+		
+	}
+	
+
 	function countIncrement(cartItemId){
 		
 		console.log(cartItemId);
 		
-		$.ajax({
+		/*$.ajax({
          type: "GET",
          url: "/cart/countIncrement",
          data: {
@@ -59,29 +121,8 @@
          },
          contentType: "text/plain"
      });
+}*/
 }
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		const inputField = document.querySelectorAll(".quantity");

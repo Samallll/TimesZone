@@ -6,13 +6,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.LoginDTO;
@@ -30,6 +36,7 @@ import com.timeszone.model.dto.ProductDTO;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.shared.Cart;
+import com.timeszone.model.shared.CartItem;
 import com.timeszone.repository.CartRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductRepository;
@@ -320,5 +327,69 @@ public class MainController {
 		model.addAttribute("cartItemQuantity", cartItemQuantity);
 		return "productDetails";
 	}
-			
+	
+	
+	
+	
+//	Ajax backend methods =============================================================================================
+	
+//	Increment button for quantity page
+	@GetMapping("/cart/incrementItem")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> incrementItemQuantity(@RequestParam Integer productId,@RequestParam Integer productQuantity) {
+		
+		Map<String, Object> responseMap = new HashMap<>();
+		Product product = productRepository.findById(productId).get();
+		System.out.println("Inside increment controller");
+		Integer newQuantity;
+		try {
+			if(product!=null) {
+				newQuantity = productQuantity +1;
+				if(product.getQuantity()>newQuantity) {
+		
+					responseMap.put("newQuantity", newQuantity);
+					return ResponseEntity.ok(responseMap);
+				}
+				else {
+					responseMap.put("error", "Selected product is out of stock");
+					return ResponseEntity.ok(responseMap);
+				}
+			}
+		}
+		catch (Exception e) {
+            responseMap.put("error", "Exception happened");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
+        }
+		responseMap.put("error", "Internal server error.");
+		return ResponseEntity.ok(responseMap);
+	}
+	
+//	Decrement button for quantity page
+	@GetMapping("/cart/decrementItem")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> decrementItemQuantity(@RequestParam Integer productId,@RequestParam Integer productQuantity) {
+		
+		Map<String, Object> responseMap = new HashMap<>();
+		Product product = productRepository.findById(productId).get();
+		System.out.println("Inside decrement controller");
+		Integer newQuantity;
+		try {
+			if(product!=null) {
+				
+				if(productQuantity>1) {
+					newQuantity = productQuantity - 1;
+					responseMap.put("newQuantity", newQuantity);
+					return ResponseEntity.ok(responseMap);
+				}
+				
+			}
+		}
+		catch (Exception e) {
+            responseMap.put("error", "Exception happened");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
+        }
+		responseMap.put("error", "Internal server error.");
+		return ResponseEntity.ok(responseMap);
+	}
+	
 }
