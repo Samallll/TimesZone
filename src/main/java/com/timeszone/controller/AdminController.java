@@ -390,4 +390,42 @@ public class AdminController {
 		categoryService.changeStatus(id);
 		return "redirect:/admin/category_management";
 	}
+	
+//	Coupon Management =============================================================================================================================
+	
+//	viewing coupon management --------------------------------------------------------------
+	@GetMapping("/couponManagement")
+	public String couponManagement(Model model) {
+		return "couponManagement.html";
+	}
+	
+//	Adding coupon -------------------------------------------------------------------------
+	@GetMapping("/addCoupon")
+	public String addCouponPage() {
+		
+		return "addCoupon";
+	}
+	
+	@PostMapping("/addingCoupon")
+	public String addCoupon() {
+		return "redirect:/couponManagement";
+	}
+	
+//	Deleting Coupon ------------------------------------------------------------------------
+	@GetMapping("/deleteCoupon")
+	public String deleteCoupon() {
+		return "redirect:/couponManagement";
+	}
+	
+//	Edit coupon ------------------------------------------------------------------------------
+	@GetMapping("/editCoupon")
+	public String editCouponPage() {
+		return "editCoupon";
+	}
+	
+	@PostMapping("/modifyCoupon")
+	public String modificationCoupon() {
+		return "redirect:/couponManagement";
+	}
+	
 }
