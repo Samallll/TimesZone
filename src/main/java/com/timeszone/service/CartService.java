@@ -32,22 +32,7 @@ public class CartService {
 	@Autowired
 	private ProductRepository productRepository;
 	
-	public Cart addCartItem(CartItem cartItem,Principal principal) {
-		
-//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//		String username = authentication.getName();
-		String username = principal.getName();
-		Customer customer = customerRepository.findByEmailId(username);
-		
-		Cart customerCart = customer.getCart();
-		customerCart.getCartItems().add(cartItem);
-		cartItem.setCart(customerCart);
-		cartRepository.save(customerCart);
-		customerRepository.save(customer);
-		 
-		return customerCart;
-		
-	}
+	
 	
 	public void deleteCartItem(CartItem cartItem) {
 		
@@ -71,6 +56,19 @@ public class CartService {
 		
 		List<CartItem> cartItemList = cartItemRepository.findAllByCart(cart);
 		return cartItemList;
+	}
+
+	public Integer contains(Cart customerCart, CartItem cartItem) {
+		
+		Integer cartItemId = null;
+		for(CartItem ci:customerCart.getCartItems()) {
+			if(ci.getProduct().getProductName().equals(cartItem.getProduct().getProductName())) {
+				cartItemId = ci.getCartItemId();
+				break;
+			}
+		}
+	
+		return cartItemId;
 	}
 
 }

@@ -3,7 +3,7 @@
 		
 		console.log(cartItemId);
 		
-		/*$.ajax({
+		$.ajax({
          type: "GET",
          url: "/cart/countIncrement",
          data: {
@@ -59,7 +59,7 @@
          },
          contentType: "text/plain"
      });
-*/  }
+}
 
 		
 		

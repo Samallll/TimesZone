@@ -48,7 +48,7 @@
 		                <!-- Data -->
 		                <p><strong th:text="${cartItem.product.productName}"></strong></p>
 		                <p th:text="${cartItem.product.description}"></p>
-		                <a th:href="@{/user/deleteCart(id=${cartItem.id})}" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
+		                <a th:href="@{/user/deleteCart(id=${cartItem.cartItemId})}" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
 		                  title="Remove item">
 		                  <i class="fas fa-trash"></i>
 		                </a>
@@ -72,7 +72,7 @@
 		                    style="border-radius: 9px; text-align: center; border: 1px solid; font-size: 26px; width: 178px;margin-top: 15px;"></p>
 
 		
-		                  <button onclick="countIncrement(this.getAttribute('data-cartItem-id'))" th:data-cartItem-id="${cartItem.id}" 
+		                  <button onclick="countIncrement(this.getAttribute('data-cartItem-id'))" th:data-cartItem-id="${cartItem.cartItemId}" 
 		                    class="btn btn-primary ps-2 pe-3 me-2" type="button" style="height: 40px;width: 40px;" >
 		                    <i class="fas fa-plus fa-fw"></i>
 		                  </button>
@@ -81,11 +81,10 @@
 		
 		                <!-- Price -->
 		                <p class="text-start text-md-center">
-		                  <span style="font-size:24px;">'₹' 
+		                  <span style="font-size:24px;">₹ 
 							  <span th:id="'actualPrice-' + ${cartItem.cartItemId}" 
-							  style="font-size: 24px;margin-bottom: 21px;text-decoration-line: line-through;" 
-							  class="price-text strikethrough" 
-							  th:text="${ cartItem.product.price * cartItem.quantity}">
+							  style="font-size: 24px;margin-bottom: 21px;"  
+							  th:text="${ cartItem.product.price * cartItem.cartItemQuantity}">
 							  </span>
 						  </span>
 		                </p>

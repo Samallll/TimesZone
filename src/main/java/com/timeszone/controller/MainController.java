@@ -315,7 +315,9 @@ public class MainController {
 		
 		Product p = productRepository.findById(id).get();
 		ProductDTO showProduct = productService.convertToProduct(p);
+		Integer cartItemQuantity = 1;
 		model.addAttribute("product", showProduct);
+		model.addAttribute("cartItemQuantity", cartItemQuantity);
 		return "productDetails";
 	}
 			

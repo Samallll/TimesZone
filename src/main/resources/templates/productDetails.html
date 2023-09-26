@@ -163,21 +163,25 @@
                         <hr>
                         
                         <div class="product__details__button d-flex align-items-center">
-                            <div class="quantity d-flex align-items-center">
-                                <span class="mt-0">Quantity:</span>
-                                <input class="border border-rounded " type="number" value="1" min="1" max="10">
-                                <div>
-									<!--	<span class="dec qtybtn">-</span>
-                                    <input type="text" value="1">
-                                    <span class="inc qtybtn">+</span>-->
-                                    
-                                    <!--Need to figureout where is inc and dec-->
-                                    <!--<span class="inc qtybtn">+</span>
-                                	<input class="product_count_item input-number" type="text" value="1" min="0" max="10">
-                                	<span class="dec qtybtn">-</span>-->
-                                </div>
-                            </div>
-                            <a th:href="@{/user/addCart(id=${product.productId}, quantity=${product.quantity})}" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</a>
+                            <div class="col-lg-4 col-md-6 mb-4 mb-lg-0 d-flex">
+				                <!-- Quantity -->
+				                <div class="d-flex mb-4 jutify-items-center" style="max-width: 200px">
+				                    <button onclick="countDecrement(this.getAttribute('data-product-id'))" th:data-product-id="${product.productId}" 
+				                    class="btn btn-primary ps-2 pe-3 me-2" type="button" style="height: 40px;width: 40px;" >
+				                    <i class="fas fa-minus fa-fw"></i>
+				                  </button>
+				
+				                  <p th:data-product-id="${product.productId}" type="text" name="quantity" th:id="'inputId-' + ${product.productId}"
+				                    th:text="${cartItemQuantity}" th:field="${cartItemQuantity}" class="py-2 mx-1" 
+				                    style="border-radius: 9px; text-align: center; border: 1px solid; font-size: 26px; width: 178px;margin-top: 15px;"></p>
+		
+				
+				                  <button onclick="countIncrement(this.getAttribute('data-product-id'))" th:data-product-id="${product.productId}" 
+				                    class="btn btn-primary ps-2 pe-3 me-2" type="button" style="height: 40px;width: 40px;" >
+				                    <i class="fas fa-plus fa-fw"></i>
+				                  </button>
+				            </div>
+                            <a th:href="@{/user/addCart(id=${product.productId}, quantity=${cartItemQuantity})}" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</a>
                             <ul>
                                 <li ><a href="#"><span class="icon_heart_alt"></span></a></li>
                             </ul>

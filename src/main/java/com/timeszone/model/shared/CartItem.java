@@ -46,11 +46,11 @@ public class CartItem {
 		super();
 	}
 
-	public Integer getcartItemId() {
+	public Integer getCartItemId() {
 		return cartItemId;
 	}
 
-	public void setcartItemId(Integer cartItemId) {
+	public void setCartItemId(Integer cartItemId) {
 		this.cartItemId = cartItemId;
 	}
 

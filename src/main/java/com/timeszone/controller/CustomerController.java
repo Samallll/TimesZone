@@ -30,6 +30,7 @@ import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.repository.AddressRepository;
 import com.timeszone.repository.CartItemRepository;
+import com.timeszone.repository.CartRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.AddressService;
@@ -45,6 +46,9 @@ public class CustomerController {
 	
 	@Autowired
 	private AddressRepository addressRepository;
+	
+	@Autowired
+	private CartRepository cartRepository;
 	
 	@Autowired
 	private CustomerService customerService;
@@ -227,12 +231,29 @@ public class CustomerController {
 		
 		Product product = productRepository.findById(productId).get();
 		CartItem cartItem = new CartItem(product,productQuantity);
-		cartItem.setCart(cartService.addCartItem(cartItem,principal));
+//		Cart customerCart = cartService.addCartItem(cartItem,principal);
 		
-		product.getCartItems().add(cartItem);
-		productRepository.save(product);
+		String username = principal.getName();
+		Customer customer = customerRepository.findByEmailId(username);
 		
-		return"redirect:/user/shoppingCart";
+		Cart customerCart = customer.getCart();
+		Integer existingCartItemId = cartService.contains(customerCart,cartItem);
+		
+		if(existingCartItemId!=null) {
+			CartItem existingCartItem = cartItemRepository.findById(existingCartItemId).get();
+			existingCartItem.setCartItemQuantity(productQuantity + existingCartItem.getCartItemQuantity());
+			cartItemRepository.save(existingCartItem);
+		}
+		else {
+			customerCart.getCartItems().add(cartItem);
+			cartItem.setCart(customerCart);
+			cartRepository.save(customerCart);
+			customerRepository.save(customer);
+			cartItem.setCart(customerCart);
+			product.getCartItems().add(cartItem);
+			productRepository.save(product);
+		}
+		return"redirect:/user/shoppingCart";		
 	}
 	
 	@GetMapping("/deleteCart")
