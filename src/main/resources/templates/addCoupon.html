@@ -126,51 +126,47 @@
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
-					<h6 class="text-white text-capitalize ps-4">Product Details</h6>
+					<h6 class="text-white text-capitalize ps-4">Coupon Details</h6>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
                           
-            	<form class="row mx-5 my-2" method="post" action="/admin/registerProduct" th:object="${newProduct}">
+            	<form class="row mx-5 my-2" method="post" action="/admin/addingCoupon" th:object="${newCoupon}">
 				  
 				  <div class="col-md-6">
-				    <label for="inputProductName" class="form-label">Product Name</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputProductName" th:field="*{productName}">
+				    <label for="inputCouponCode" class="form-label">Coupon Code</label>
+				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCouponCode" th:field="*{couponCode}">
 				  </div>
 				  <div class="col-md-3">
-				    <label for="inputCaseSize" class="form-label">Case Size</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCaseSize" th:field="*{caseSize}">
+				    <label for="inputExpiryDate" class="form-label">Expiry Date</label>
+				    <input type="date" pattern="\d{4}-\d{2}-\d{2}" class="form-control border border-1 border-primary ps-3 mb-2" id="inputExpiryDate" th:field="*{expiryDate}">
+				  </div>
+				  <div class="col-md-3">
+				    <label for="inputPercentage" class="form-label">Percentage</label>
+				    <input type="number" class="form-control border border-1 border-primary ps-3 mb-2" id="inputPercentage" th:field="*{percentage}">
 				  </div>
 				  
-				  <div class="col-12">
-				    <label for="inputDescription" class="form-label">Product Description</label>
+				  <div class="col-md-6">
+				    <label for="inputDescription" class="form-label">Description</label>
 				    <textarea class="form-control border border-1 border-primary ps-3 mb-2" id="inputDescription" th:field="*{description}"></textarea>
 				    </div>
-				  <div class="col-md-3">
-				    <label for="inputPrice" class="form-label">Price</label>
-				    <input type="number" class="form-control border border-1 border-primary ps-3 mb-2" id="inputPrice" th:field="*{price}">
-				  </div>
 				  
 				  
 				  <div class="col-md-3">
-				    <label for="inputQuantity" class="form-label">Quantity</label>
-				    <input type="number" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCount" th:field="*{quantity}">
+				    <label for="inputMinimumPurchaseAmount" class="form-label">Minimun Purchase Amount</label>
+				    <input type="number" class="form-control border border-1 border-primary ps-3 mb-2" id="inputMinimumPurchaseAmount" th:field="*{minimumPurchaseAmount}">
 				  </div>
-
-
-				  <div class="col-md-6" th:each="category:${categories}">
-				    <label for="inputsubCategory" class="form-label" th:text="${category.categoryName}"></label>
-				    <select id="inputSubCategory" class="form-select ps-3 border border-1 border-primary mb-2" th:field="*{selectedSubCategories}">
-				      <option th:each="SubCategory:${category.subcategories}" th:text="${SubCategory.SubCategoryName}" th:value="${SubCategory.SubCategoryName}"></option>
-				    </select>
+				  <div class="col-md-3">
+				    <label for="inputCartItemsCount" class="form-label">Cart Items Count</label>
+				    <input type="number" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCartItemsCount" th:field="*{cartItemsCount}">
 				  </div>
 				  
-				  <!--Product Registration Completed-->
+				  <!--Coupon Registration Completed-->
 				  
 				  
 				  <div class="col-12">
 				    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-				    <a type="button" class="btn btn-info mt-3 ms-2" th:href="@{/admin/category_management}">Cancel</a>
+				    <a type="button" class="btn btn-info mt-3 ms-2" th:href="@{/admin/couponManagement}">Cancel</a>
 				  </div>
 				</form>
               

@@ -30,12 +30,14 @@ import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.product.SubCategory;
+import com.timeszone.model.shared.Coupon;
 import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductImageRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.repository.SubCategoryRepository;
 import com.timeszone.service.CategoryService;
+import com.timeszone.service.CouponService;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.ProductImageService;
 import com.timeszone.service.ProductService;
@@ -67,6 +69,9 @@ public class AdminController {
 	
 	@Autowired
 	private ProductImageService productImageService;
+	
+	@Autowired
+	private CouponService couponService;
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -396,36 +401,50 @@ public class AdminController {
 //	viewing coupon management --------------------------------------------------------------
 	@GetMapping("/couponManagement")
 	public String couponManagement(Model model) {
+		
+		List<Coupon> couponList = couponService.getAll();
+		model.addAttribute("couponList", couponList);
 		return "couponManagement.html";
 	}
 	
 //	Adding coupon -------------------------------------------------------------------------
 	@GetMapping("/addCoupon")
-	public String addCouponPage() {
-		
+	public String addCouponPage(Model model) {
+		logger.debug("InSide Add Coupon Controller");	
+		Coupon newCoupon = new Coupon();
+		model.addAttribute("newCoupon", newCoupon);
 		return "addCoupon";
 	}
 	
 	@PostMapping("/addingCoupon")
-	public String addCoupon() {
-		return "redirect:/couponManagement";
+	public String addCoupon(@ModelAttribute("newCoupon") Coupon newCoupon) {
+		logger.debug("Controller::Coupon registering");	
+		couponService.addCoupon(newCoupon);
+		return "redirect:/admin/couponManagement";
 	}
 	
 //	Deleting Coupon ------------------------------------------------------------------------
-	@GetMapping("/deleteCoupon")
-	public String deleteCoupon() {
-		return "redirect:/couponManagement";
+	@GetMapping("/deleteCoupon/{id}")
+	public String deleteCoupon(@PathVariable("id") Integer couponId) {
+		
+		couponService.deleteCoupon(couponId);
+		return "redirect:/admin/couponManagement";
 	}
 	
 //	Edit coupon ------------------------------------------------------------------------------
-	@GetMapping("/editCoupon")
-	public String editCouponPage() {
+	@GetMapping("/editCoupon/{id}")
+	public String editCouponPage(@PathVariable("id") Integer couponId,Model model) {
+		logger.debug("Controller::Coupon edit page");
+		Coupon editCoupon = couponService.getCoupon(couponId);
+		model.addAttribute("editCoupon", editCoupon);
 		return "editCoupon";
 	}
 	
 	@PostMapping("/modifyCoupon")
-	public String modificationCoupon() {
-		return "redirect:/couponManagement";
+	public String modificationCoupon(@ModelAttribute("editCoupon") Coupon editCoupon) {
+		logger.debug("Controller::Coupon updating");
+		couponService.updateCoupon(editCoupon);
+		return "redirect:/admin/couponManagement";
 	}
 	
 }

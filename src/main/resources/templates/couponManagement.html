@@ -153,7 +153,7 @@
       <div class="row">
 		  <div class="col-10"></div>
 		  <div class="col-2">
-			  <a th:href="@{/admin/addProduct}">
+			  <a th:href="@{/admin/addCoupon}">
 			  		<button class="btn bg-gradient-light mb-3 border border-1 border-secondary" type="button">Add Coupon</button>  
 			  </a>
 		  </div>
@@ -176,7 +176,8 @@
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Expiry Date</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Percentage</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Base Price</th>                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cart Items Count</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Base Price</th>  
+					  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cart Items Count</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Changes Available</th>
                     </tr>
@@ -193,7 +194,7 @@
                         <span class="text-secondary text-xs font-weight-bold" th:text="${coupon.expiryDate}"></span>
                       </td>
                       <td class="align-middle text-center text-sm">
-                        <span class="text-secondary text-xs font-weight-bold" th:text="${coupon.precentage}"></span>
+                        <span class="text-secondary text-xs font-weight-bold" th:text="${coupon.percentage}"></span>
                       </td>
                       <td class="align-middle text-center text-sm">
                         <span class="text-secondary text-xs font-weight-bold" th:text="${coupon.minimumPurchaseAmount}"></span>

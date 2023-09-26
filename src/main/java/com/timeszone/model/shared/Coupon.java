@@ -1,11 +1,13 @@
 package com.timeszone.model.shared;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class Coupon {
@@ -18,13 +20,14 @@ public class Coupon {
 	
 	private String description;
 	
-	private LocalDateTime expiryDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate expiryDate;
 	
 	private Double percentage;
 	
 	private Double minimumPurchaseAmount;
 	
-	private boolean isActive;
+	private boolean isActive=true;
 
 	private Integer cartItemsCount;
 
@@ -52,11 +55,11 @@ public class Coupon {
 		this.description = description;
 	}
 
-	public LocalDateTime getExpiryDate() {
+	public LocalDate getExpiryDate() {
 		return expiryDate;
 	}
 
-	public void setExpiryDate(LocalDateTime expiryDate) {
+	public void setExpiryDate(LocalDate expiryDate) {
 		this.expiryDate = expiryDate;
 	}
 
@@ -75,8 +78,12 @@ public class Coupon {
 	public void setMinimumPurchaseAmount(Double minimumPurchaseAmount) {
 		this.minimumPurchaseAmount = minimumPurchaseAmount;
 	}
+	
+	public boolean getIsActive() {
+		return this.isActive();
+	}
 
-	public boolean getIisActive() {
+	public boolean isActive() {
 		return isActive;
 	}
 
@@ -92,7 +99,7 @@ public class Coupon {
 		this.cartItemsCount = cartItemsCount;
 	}
 
-	public Coupon(String couponCode, String description, LocalDateTime expiryDate, Double percentage,
+	public Coupon(String couponCode, String description, LocalDate expiryDate, Double percentage,
 			Double minimumPurchaseAmount, boolean isActive, Integer cartItemsCount) {
 		super();
 		this.couponCode = couponCode;

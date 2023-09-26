@@ -1,5 +1,6 @@
 package com.timeszone.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,10 @@ public class CouponService {
 	@Autowired
 	private CouponRepository couponRepository;
 	
+	public Coupon getCoupon(Integer id) {
+		return couponRepository.findById(id).get();
+	}
+	
 	public Coupon addCoupon(Coupon coupon) {
 		
 		couponRepository.save(coupon);
@@ -25,13 +30,21 @@ public class CouponService {
 	public Coupon updateCoupon(Coupon coupon) {
 		
 //		write logic for editing the coupon
-		couponRepository.save(coupon);
+		Coupon editCoupon = couponRepository.findById(coupon.getCouponId()).get();
+		editCoupon.setCartItemsCount(coupon.getCartItemsCount());
+		editCoupon.setCouponCode(coupon.getCouponCode());
+		editCoupon.setDescription(coupon.getDescription());
+		editCoupon.setExpiryDate(coupon.getExpiryDate());
+		editCoupon.setIsActive(coupon.getIsActive());
+		editCoupon.setMinimumPurchaseAmount(coupon.getMinimumPurchaseAmount());
+		editCoupon.setPercentage(coupon.getPercentage());
+		couponRepository.save(editCoupon);
 		return coupon;
 	}
 	
-	public void deleteCoupon(Coupon coupon) {
+	public void deleteCoupon(Integer couponId) {
 		
-		couponRepository.delete(coupon);
+		couponRepository.deleteById(couponId);
 	}
 	
 	public void enableCoupon(Coupon coupon) {
@@ -51,8 +64,8 @@ public class CouponService {
 	
 	public List<Coupon> getAllNonExpired(){
 		
-		LocalDateTime expirationTime;
-    	LocalDateTime currentTime = LocalDateTime.now();
+		LocalDate expirationTime;
+    	LocalDate currentTime = LocalDate.now();
 		List<Coupon> nonExpiredCoupons = new ArrayList<>();
 		for(Coupon c:couponRepository.findAll()) {
 			expirationTime = c.getExpiryDate();
@@ -67,7 +80,7 @@ public class CouponService {
 		
 		List<Coupon> activeCoupons = new ArrayList<>();
 		for(Coupon c:couponRepository.findAll()) {
-			if(c.getIisActive()) {
+			if(c.getIsActive()) {
 				activeCoupons.add(c);
 			}
 		}
