@@ -114,6 +114,7 @@ public class ProductService {
 		}
 		pd.setSelectedSubCategories(pdSubCategoryList);
 		pd.setCategoryAndSubCategory(combo);
+		pd.setProductImages(p.getProductImages());
 		
 		return pd;
 	}

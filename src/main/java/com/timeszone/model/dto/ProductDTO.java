@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.timeszone.model.product.ProductImage;
+
 
 public class ProductDTO {		
 
@@ -28,6 +30,8 @@ public class ProductDTO {
 	private List<String> selectedSubCategories = new ArrayList<>();
 	
 	private Map<String,String> categoryAndSubCategory = new HashMap<>();
+	
+	private List<ProductImage> productImages = new ArrayList<>();
 
 	public ProductDTO() {
 		super();
@@ -129,6 +133,14 @@ public class ProductDTO {
 
 	public void setCategoryAndSubCategory(Map<String, String> categoryAndSubCategory) {
 		this.categoryAndSubCategory = categoryAndSubCategory;
+	}
+
+	public List<ProductImage> getProductImages() {
+		return productImages;
+	}
+
+	public void setProductImages(List<ProductImage> productImages) {
+		this.productImages = productImages;
 	}
 
 	

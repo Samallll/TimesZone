@@ -249,12 +249,14 @@ public class AdminController {
 		ProductImage newImage = new ProductImage();
 		Product imageProduct = productRepository.findById(p.getProductId()).get();		
 		String fileName = file.getOriginalFilename();
-		newImage.setImageName(fileName);
-		newImage.setImage(file.getBytes());
-		newImage.setSize(file.getSize());
-		newImage.setProduct(imageProduct);
-		productImageService.create(newImage);
-		productRepository.save(imageProduct);
+		if(!fileName.isEmpty()) {
+			newImage.setImageName(fileName);
+			newImage.setImage(file.getBytes());
+			newImage.setSize(file.getSize());
+			newImage.setProduct(imageProduct);
+			productImageService.create(newImage);
+			productRepository.save(imageProduct);
+		}
 		
 		// Redirect to another endpoint with a path variable
         RedirectView redirectView = new RedirectView();

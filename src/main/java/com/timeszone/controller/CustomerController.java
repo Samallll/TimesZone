@@ -32,6 +32,7 @@ import com.timeszone.model.dto.LoginDTO;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.CartItem;
+import com.timeszone.model.shared.Coupon;
 import com.timeszone.repository.AddressRepository;
 import com.timeszone.repository.CartItemRepository;
 import com.timeszone.repository.CartRepository;
@@ -39,6 +40,7 @@ import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.AddressService;
 import com.timeszone.service.CartService;
+import com.timeszone.service.CouponService;
 import com.timeszone.service.CustomerService;
 
 @RequestMapping("/user")
@@ -71,6 +73,9 @@ public class CustomerController {
 	
 	@Autowired
 	private CartService cartService;
+	
+	@Autowired
+	private CouponService couponService;
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
 	
@@ -219,12 +224,14 @@ public class CustomerController {
 //	Cart Management =============================================================================================
 	
 	@GetMapping("/shoppingCart")
-	public String shoppingCart(Model model) {
+	public String shoppingCart(Model model,Principal principal) {
 		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Customer customer = customerRepository.findByEmailId(authentication.getName());
+		List<Coupon> couponList = couponService.getAllNonExpired();
+		Customer customer = customerRepository.findByEmailId(principal.getName());
 		List<CartItem> cartItemList = cartService.getAll(customer.getCart());
 		model.addAttribute("cartItemList", cartItemList);
+		model.addAttribute("couponList", couponList);
+		System.out.println(couponList.size());
 		return "cart";
 	}
 	

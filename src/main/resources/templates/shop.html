@@ -202,8 +202,8 @@
 						<div class="col-lg-4 col-md-6" th:each="product:${productList}">
                             <div class="product__item border border-secondary rounded">
 								
-                                <div class="product__item__pic set-bg" data-setbg="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg">
-									<a th:href="@{/guest/productDetails(id=${product.productId})}"><img src="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg"></a>
+                                <div class="product__item__pic set-bg" data-setbg="@{'/admin/showImage/' + ${product.productImages[0].imageId}}">
+									<a th:href="@{/guest/productDetails(id=${product.productId})}"><img th:src="@{'/admin/showImage/' + ${product.productImages[0].imageId}}" ></a>
                                     <ul class="product__hover">
                                         <li><a href="../assets/img/watches/shreesha-bhat-lz6z9GZu8hk-unsplash.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
                                         <li><a href="#"><span class="icon_heart_alt"></span></a></li>
