@@ -3,8 +3,8 @@
 	var couponId = 0;
 	
 //	Function to display the errormessage
-	function displayFlashMessage(message) {
-	  const flashMessageElement = document.getElementById('flash-message');
+	function displayFlashMessageForStock(message,productId) {
+	  const flashMessageElement = document.getElementById('flash-message-' + productId);
 	  flashMessageElement.textContent = message;
 	  flashMessageElement.style.display = 'block'; // Show the flash message
 	
@@ -37,7 +37,7 @@
 				}
              } else {
 
-                 displayFlashMessage(response.error)
+                 displayFlashMessageForStock(response.error,productId)
              }
          },
          contentType: "text/plain"

@@ -257,8 +257,10 @@ public class CustomerController {
 		
 		if(existingCartItemId!=null) {
 			CartItem existingCartItem = cartItemRepository.findById(existingCartItemId).get();
-			existingCartItem.setCartItemQuantity(productQuantity + existingCartItem.getCartItemQuantity());
-			cartItemRepository.save(existingCartItem);
+			if(existingCartItem.getCartItemQuantity()<existingCartItem.getProduct().getQuantity()) {
+				existingCartItem.setCartItemQuantity(productQuantity + existingCartItem.getCartItemQuantity());
+				cartItemRepository.save(existingCartItem);
+			}
 		}
 		else {
 			customerCart.getCartItems().add(cartItem);
