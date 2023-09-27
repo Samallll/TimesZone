@@ -188,7 +188,7 @@
                         <p th:if="${img != null}" class="text-xs text-secondary mb-0" th:text="${img.imageName}"></p>
                       </td>
                       <td>
-						  <img th:src="@{'/admin/showImage/' + ${img.imageId}}" width="150px" height="200px">
+						  <img th:src="@{'/guest/showImage/' + ${img.imageId}}" width="150px" height="200px">
 					  </td>
                       <td class="align-middle d-flex align-items-center justify-content-center pe-0">
                         <a th:href="@{/admin/deleteProductImage/{id}(id=${img.imageId})}" class="btn bg-gradient-danger font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip">

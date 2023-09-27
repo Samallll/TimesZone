@@ -1,15 +1,18 @@
 package com.timeszone.controller;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +34,7 @@ import com.timeszone.model.dto.AddressDTO;
 import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.LoginDTO;
 import com.timeszone.model.product.Product;
+import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.model.shared.Coupon;
@@ -37,6 +42,7 @@ import com.timeszone.repository.AddressRepository;
 import com.timeszone.repository.CartItemRepository;
 import com.timeszone.repository.CartRepository;
 import com.timeszone.repository.CustomerRepository;
+import com.timeszone.repository.ProductImageRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.AddressService;
 import com.timeszone.service.CartService;
@@ -231,7 +237,6 @@ public class CustomerController {
 		List<CartItem> cartItemList = cartService.getAll(customer.getCart());
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("couponList", couponList);
-		System.out.println(couponList.size());
 		return "cart";
 	}
 	
@@ -275,5 +280,93 @@ public class CustomerController {
 		return"redirect:/user/shoppingCart";
 	}
 	
+//	Ajax backend methods =============================================================================================
 	
+//	Increment button for quantity page
+	@GetMapping("/cart/incrementItem")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> incrementItemQuantity(@RequestParam Integer cartItemId,@RequestParam Integer productQuantity,
+																		@RequestParam Boolean couponApplied,@RequestParam Integer couponId) {
+		
+		Map<String, Object> responseMap = new HashMap<>();
+		CartItem cartItem = cartItemRepository.findById(cartItemId).get();
+		Product product = cartItem.getProduct();
+		Integer newQuantity;
+		try {
+			if(product!=null) {
+				newQuantity = productQuantity +1;
+				
+				if(product.getQuantity()>newQuantity) {
+					
+					Double productAmount = newQuantity*product.getPrice();
+					Double finalAmount = productAmount;
+					
+					cartItem.setCartItemQuantity(newQuantity);
+					cartItemRepository.save(cartItem);
+					responseMap.put("newQuantity", newQuantity);
+					responseMap.put("productAmount", productAmount);
+					if(couponApplied) {
+						Coupon coupon = couponService.getCoupon(couponId);
+						if(coupon != null) {
+							finalAmount = (productAmount * coupon.getPercentage())/100;
+						}
+					}
+					responseMap.put("finalAmount", finalAmount);
+					return ResponseEntity.ok(responseMap);
+				}
+				else {
+					responseMap.put("error", "Out of stock");
+					return ResponseEntity.ok(responseMap);
+				}
+			}
+		}
+		catch (Exception e) {
+            responseMap.put("error", "Exception happened");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
+        }
+		responseMap.put("error", "Internal server error.");
+		return ResponseEntity.ok(responseMap);
+	}
+	
+//	Decrement button for quantity page
+	@GetMapping("/cart/decrementItem")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> decrementItemQuantity(@RequestParam Integer cartItemId,@RequestParam Integer productQuantity,
+			@RequestParam Boolean couponApplied,@RequestParam Integer couponId) {
+
+		Map<String, Object> responseMap = new HashMap<>();
+		CartItem cartItem = cartItemRepository.findById(cartItemId).get();
+		Product product = cartItem.getProduct();
+		Integer newQuantity;
+		try {
+			
+			if(product!=null) {
+				if(productQuantity>1) {
+					newQuantity = productQuantity - 1;
+					Double productAmount = newQuantity*product.getPrice();
+					Double finalAmount = productAmount;
+					
+					cartItem.setCartItemQuantity(newQuantity);
+					cartItemRepository.save(cartItem);
+					responseMap.put("newQuantity", newQuantity);
+					responseMap.put("productAmount", productAmount);
+					if(couponApplied) {
+						Coupon coupon = couponService.getCoupon(couponId);
+						if(coupon != null) {
+							finalAmount = (productAmount * coupon.getPercentage())/100;
+						}
+					}
+					responseMap.put("finalAmount", finalAmount);
+					return ResponseEntity.ok(responseMap);
+				}
+				
+			}
+		}
+		catch (Exception e) {
+            responseMap.put("error", "Exception happened");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
+        }
+		responseMap.put("error", "Internal server error.");
+		return ResponseEntity.ok(responseMap);
+	}
 }

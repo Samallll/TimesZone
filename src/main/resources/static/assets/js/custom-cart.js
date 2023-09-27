@@ -1,58 +1,73 @@
-function getProductQuantity(productId) {
-  return document.getElementById('inputId-' + productId).innerText;
-}
-
-
-
-/*productPage cartItem quantity increment*/	
-	function incrementItem(productId){
+	
+	var couponApplied = false;
+	var couponId = 0;
+	
+//	Function to display the errormessage
+	function displayFlashMessage(message) {
+	  const flashMessageElement = document.getElementById('flash-message');
+	  flashMessageElement.textContent = message;
+	  flashMessageElement.style.display = 'block'; // Show the flash message
+	
+	  setTimeout(() => {
+	    flashMessageElement.style.display = 'none'; // Hide the flash message after 3 seconds (adjust as needed)
+	  },2000);
+	}
+	
+//  productPage cartItem quantity increment	
+	function countIncrement(productId){
 
 		let productQuantity = document.getElementById('inputId-' + productId).innerText;
+		
 		$.ajax({
          type: "GET",
-         url: "/guest/cart/incrementItem",
+         url: "/user/cart/incrementItem",
          data: {
-			 productId : productId,
-			 productQuantity : productQuantity
+			 cartItemId : productId,
+			 productQuantity : productQuantity,
+			 couponApplied : couponApplied,
+			 couponId : couponId
 			 },
          success: function (response) { 
 			
              if ("newQuantity" in response) {
-                document.getElementById('inputId-' + productId).innerText = response.newQuantity;
+                document.getElementById('inputId-' + productId).innerText = response.newQuantity ;
+                document.getElementById('productAmountId-' + productId ).innerText = response.productAmount;
+                if(document.getElementById('finalAmount')!= null){
+					document.querySelectorAll('.finalAmount').innerText = response.finalAmount;
+				}
              } else {
 
-                 $("#flash-notification").modal("show");
-			      $("#flash-notification .modal-body").html(
-			        `<div class="alert alert-danger" role="error">
-			          ${response.error}
-			        </div>`
-			      );
-
+                 displayFlashMessage(response.error)
              }
          },
          contentType: "text/plain"
      });
 	}
 	
-/*productPage cartItem quantity decrement*/		
-	function decrementItem(productId){
-		console.log(productId);
-		console.log('inputId-' + productId);
+	
+//  productPage cartItem quantity decrement*/		
+	function countDecrement(productId){
+
 		let productQuantity = document.getElementById('inputId-' + productId).innerText;
-		console.log(productQuantity);
+		console.log("Inside decerment cart"+productQuantity);
 		
 		$.ajax({
          type: "GET",
-         url: "/guest/cart/decrementItem",
+         url: "/user/cart/decrementItem",
          data: {
-			 productId : productId,
-			 productQuantity : productQuantity
+			 cartItemId : productId,
+			 productQuantity : productQuantity,
+			 couponApplied : couponApplied,
+			 couponId : couponId
 			 },
          success: function (response) { 
 			
              if ("newQuantity" in response) {
-                console.log(response.newQuantity)
-                document.getElementById('inputId-' + productId).innerText = response.newQuantity;
+                document.getElementById('inputId-' + productId).innerText = response.newQuantity ;
+                document.getElementById('productAmountId-' + productId).innerText = response.productAmount;
+                if(document.getElementById('finalAmount')!= null){
+					document.querySelectorAll('.finalAmount').innerText = response.finalAmount;
+				}
              } 
          },
          contentType: "text/plain"
@@ -61,9 +76,9 @@ function getProductQuantity(productId) {
 	}
 	
 
-	function countIncrement(cartItemId){
+	/*function countIncrement(cartItemId){
 		
-		console.log(cartItemId);
+		console.log(cartItemId);*/
 		
 		/*$.ajax({
          type: "GET",
@@ -122,7 +137,8 @@ function getProductQuantity(productId) {
          contentType: "text/plain"
      });
 }*/
-}
+
+
 		
 		
 		const inputField = document.querySelectorAll(".quantity");

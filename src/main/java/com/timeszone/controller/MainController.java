@@ -1,5 +1,6 @@
 package com.timeszone.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -35,10 +37,12 @@ import com.timeszone.model.dto.LoginDTO;
 import com.timeszone.model.dto.ProductDTO;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Product;
+import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.repository.CartRepository;
 import com.timeszone.repository.CustomerRepository;
+import com.timeszone.repository.ProductImageRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.OtpService;
@@ -53,6 +57,9 @@ public class MainController {
 	
 	@Autowired
 	private OtpService otpService;
+	
+	@Autowired
+	private ProductImageRepository productImageRepository;
 	
 	@Autowired
 	private CustomerService customerService;
@@ -328,68 +335,14 @@ public class MainController {
 		return "productDetails";
 	}
 	
-	
-	
-	
-//	Ajax backend methods =============================================================================================
-	
-//	Increment button for quantity page
-	@GetMapping("/cart/incrementItem")
-	@ResponseBody
-	public ResponseEntity<Map<String, Object>> incrementItemQuantity(@RequestParam Integer productId,@RequestParam Integer productQuantity) {
+//	for displaying the data -------------------
+	@GetMapping("/showImage/{id}")
+	public void showImagePage(@PathVariable("id") Integer id,HttpServletResponse response,ProductImage productImage) throws IOException {
 		
-		Map<String, Object> responseMap = new HashMap<>();
-		Product product = productRepository.findById(productId).get();
-		System.out.println("Inside increment controller");
-		Integer newQuantity;
-		try {
-			if(product!=null) {
-				newQuantity = productQuantity +1;
-				if(product.getQuantity()>newQuantity) {
-		
-					responseMap.put("newQuantity", newQuantity);
-					return ResponseEntity.ok(responseMap);
-				}
-				else {
-					responseMap.put("error", "Selected product is out of stock");
-					return ResponseEntity.ok(responseMap);
-				}
-			}
-		}
-		catch (Exception e) {
-            responseMap.put("error", "Exception happened");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
-        }
-		responseMap.put("error", "Internal server error.");
-		return ResponseEntity.ok(responseMap);
+		productImage = productImageRepository.findByImageId(id);
+		response.setContentType("image/jpg");
+		response.getOutputStream().write(productImage.getImage());
+		response.getOutputStream().close();
 	}
-	
-//	Decrement button for quantity page
-	@GetMapping("/cart/decrementItem")
-	@ResponseBody
-	public ResponseEntity<Map<String, Object>> decrementItemQuantity(@RequestParam Integer productId,@RequestParam Integer productQuantity) {
-		
-		Map<String, Object> responseMap = new HashMap<>();
-		Product product = productRepository.findById(productId).get();
-		System.out.println("Inside decrement controller");
-		Integer newQuantity;
-		try {
-			if(product!=null) {
-				
-				if(productQuantity>1) {
-					newQuantity = productQuantity - 1;
-					responseMap.put("newQuantity", newQuantity);
-					return ResponseEntity.ok(responseMap);
-				}
-				
-			}
-		}
-		catch (Exception e) {
-            responseMap.put("error", "Exception happened");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
-        }
-		responseMap.put("error", "Internal server error.");
-		return ResponseEntity.ok(responseMap);
-	}
-	
+
 }

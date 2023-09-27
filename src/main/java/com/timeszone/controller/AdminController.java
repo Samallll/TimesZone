@@ -266,15 +266,7 @@ public class AdminController {
         return redirectView;
 	}
 	
-//	for displaying the data -------------------
-	@GetMapping("/showImage/{id}")
-	public void showImagePage(@PathVariable("id") Integer id,HttpServletResponse response,ProductImage productImage) throws IOException {
-		
-		productImage = productImageRepository.findByImageId(id);
-		response.setContentType("image/jpg");
-		response.getOutputStream().write(productImage.getImage());
-		response.getOutputStream().close();
-	}
+
 	
 	@GetMapping("/deleteProductImage/{id}")
 	public String deleteProductImage(@PathVariable("id") Integer productImageId) {

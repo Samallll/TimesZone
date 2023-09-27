@@ -115,12 +115,12 @@
 						  </div>
 						  <div class="carousel-inner">
 						    <div class="carousel-item active">
-						      <img th:src="@{'/admin/showImage/' + ${product.productImages[0].imageId}}" class="d-block w-75 img-fluid" alt="..." 
-						      style="max-width: 100%; height: auto; margin:0 auto">
+						      <img th:src="@{'/guest/showImage/' + ${product.productImages[0].imageId}}" class="d-block  img-fluid" alt="..." 
+						      style="min-width: 75%; max-width: 400px; max-height: 500px;min-height: 400px; margin:0 auto">
 						    </div>
-						    <div class="carousel-item" th:each="image:${product.productImages}">
-						      <img th:src="@{'/admin/showImage/' + ${image.imageId}}" class="d-block w-75" alt="..."
-						      style="max-width: 100%; height: auto; margin:0 auto">
+						    <div class="carousel-item" th:each="image, imageIndex:${product.productImages}" >
+						      <img th:src="@{'/guest/showImage/' + ${image.imageId}}" class="d-block w-75" alt="..."
+						      style="min-width: 75%; max-width: 400px; max-height: 500px; min-height: 400px; margin:0 auto" th:if="${#numbers.sequence(2, imageIndex.index)}" >
 						    </div>
 						  </div>
 						  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
