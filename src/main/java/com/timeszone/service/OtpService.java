@@ -65,11 +65,11 @@ public class OtpService {
         LocalDateTime expirationTime = LocalDateTime.now().plus(2, ChronoUnit.MINUTES);
         
         String emailBody = "Your OTP is: " + randomNumber;
-//        try {
-//            emailSender.sendEmail(customer.getEmailId(), "OTP Verification", emailBody);
-//        } catch (MessagingException e) {
-//            logger.error("Failed to send email", e);
-//        }
+        try {
+            emailSender.sendEmail(customer.getEmailId(), "OTP Verification", emailBody);
+        } catch (MessagingException e) {
+            logger.error("Failed to send email", e);
+        }
         
         customer.setOtp(randomNumber);
         customer.setExpirationTime(expirationTime);
@@ -119,7 +119,7 @@ public class OtpService {
     
     
     
-//    For user validation through registred phone number ----------------------------------------
+//    For user validation through registred email id ----------------------------------------
     public void sendRegistrationOtp(String emailId) {
     	
     	
@@ -133,11 +133,11 @@ public class OtpService {
         LocalDateTime expirationTime = LocalDateTime.now().plus(4, ChronoUnit.MINUTES);
         
         String emailBody = "Your OTP is: " + randomNumber;
-//        try {
-//            emailSender.sendEmail(emailId, "OTP Verification", emailBody);
-//        } catch (MessagingException e) {
-//            logger.error("Failed to send email", e);
-//        }
+        try {
+            emailSender.sendEmail(emailId, "OTP Verification", emailBody);
+        } catch (MessagingException e) {
+            logger.error("Failed to send email", e);
+        }
         
         
         Otp newOtp = otpRepository.findByEmailId(emailId);

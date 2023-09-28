@@ -234,9 +234,14 @@ public class CustomerController {
 		
 		List<Coupon> couponList = couponService.getAllNonExpired();
 		Customer customer = customerRepository.findByEmailId(principal.getName());
+		if(customer==null) {
+			return "guest/login";
+		}
 		List<CartItem> cartItemList = cartService.getAll(customer.getCart());
+		Cart customerCart = customer.getCart();
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("couponList", couponList);
+		model.addAttribute("customerCart", customerCart);
 		return "cart";
 	}
 	
@@ -287,8 +292,7 @@ public class CustomerController {
 //	Increment button for quantity page
 	@GetMapping("/cart/incrementItem")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> incrementItemQuantity(@RequestParam Integer cartItemId,@RequestParam Integer productQuantity,
-																		@RequestParam Boolean couponApplied,@RequestParam Integer couponId) {
+	public ResponseEntity<Map<String, Object>> incrementItemQuantity(@RequestParam Integer cartItemId,@RequestParam Integer productQuantity,HttpSession session) {
 		
 		Map<String, Object> responseMap = new HashMap<>();
 		CartItem cartItem = cartItemRepository.findById(cartItemId).get();
@@ -298,7 +302,7 @@ public class CustomerController {
 			if(product!=null) {
 				newQuantity = productQuantity +1;
 				
-				if(product.getQuantity()>newQuantity) {
+				if(product.getQuantity()>=newQuantity) {
 					
 					Double productAmount = newQuantity*product.getPrice();
 					Double finalAmount = productAmount;
@@ -307,12 +311,7 @@ public class CustomerController {
 					cartItemRepository.save(cartItem);
 					responseMap.put("newQuantity", newQuantity);
 					responseMap.put("productAmount", productAmount);
-					if(couponApplied) {
-						Coupon coupon = couponService.getCoupon(couponId);
-						if(coupon != null) {
-							finalAmount = (productAmount * coupon.getPercentage())/100;
-						}
-					}
+					finalAmount = cartItem.getCart().getTotalPrice();
 					responseMap.put("finalAmount", finalAmount);
 					return ResponseEntity.ok(responseMap);
 				}
@@ -333,13 +332,13 @@ public class CustomerController {
 //	Decrement button for quantity page
 	@GetMapping("/cart/decrementItem")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> decrementItemQuantity(@RequestParam Integer cartItemId,@RequestParam Integer productQuantity,
-			@RequestParam Boolean couponApplied,@RequestParam Integer couponId) {
+	public ResponseEntity<Map<String, Object>> decrementItemQuantity(@RequestParam Integer cartItemId,@RequestParam Integer productQuantity,HttpSession session) {
 
 		Map<String, Object> responseMap = new HashMap<>();
 		CartItem cartItem = cartItemRepository.findById(cartItemId).get();
 		Product product = cartItem.getProduct();
 		Integer newQuantity;
+		session.removeAttribute("checkOutAmount");
 		try {
 			
 			if(product!=null) {
@@ -352,16 +351,42 @@ public class CustomerController {
 					cartItemRepository.save(cartItem);
 					responseMap.put("newQuantity", newQuantity);
 					responseMap.put("productAmount", productAmount);
-					if(couponApplied) {
-						Coupon coupon = couponService.getCoupon(couponId);
-						if(coupon != null) {
-							finalAmount = (productAmount * coupon.getPercentage())/100;
-						}
-					}
+					finalAmount = cartItem.getCart().getTotalPrice();
 					responseMap.put("finalAmount", finalAmount);
 					return ResponseEntity.ok(responseMap);
 				}
 				
+			}
+		}
+		catch (Exception e) {
+            responseMap.put("error", "Exception happened");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMap);
+        }
+		responseMap.put("error", "Internal server error.");
+		return ResponseEntity.ok(responseMap);
+	}
+	
+	
+//	Apply the coupon
+	@GetMapping("/coupon/applyCoupon")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> applyCoupon(@RequestParam Integer couponId,HttpSession session,Principal principal) {
+
+		Map<String, Object> responseMap = new HashMap<>();
+		Coupon coupon = couponService.getCoupon(couponId);
+		Customer customer = customerRepository.findByEmailId(principal.getName());
+		session.removeAttribute("checkOutAmount");
+		try {
+			
+			if(coupon!=null) {
+				
+				Double cartPrice = customer.getCart().getTotalPrice();
+				Double couponAmount = cartPrice * (coupon.getPercentage()/100);
+				Double grandTotal = cartPrice - (cartPrice * (coupon.getPercentage()/100));
+				session.setAttribute("checkOutAmount", grandTotal);
+				responseMap.put("couponAmount", couponAmount);
+				responseMap.put("grandTotal", grandTotal);
+				return ResponseEntity.ok(responseMap);
 			}
 		}
 		catch (Exception e) {
