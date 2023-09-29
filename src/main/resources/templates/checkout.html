@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zxx">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Watch shop | eCommers</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">    
+  
+  <link rel="stylesheet" href="../assets/css/fontawesome-all.min.css"> 
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  
+    
+      
+</head>
+
+<body>
+	<div class="bg-gray-300">
+	    <div class="py-12">
+	        <div class="col-md-10 mx-auto bg-white shadow-lg rounded-lg my-5 d-flex">
+	            <div class="col-md-8">
+					<div class="card my-5 mx-5 border border-secondary">
+			            <div class="card-header p-0 position-relative mt-n4 z-index-2">
+			              <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
+								<h6 class="text-black text-capitalize ps-4">Shipping Address</h4>
+			              </div>
+			            </div>
+			            <div class="card-body px-0 pb-2">
+			                <p class="card-text ms-5 mt-3 fs-6">Enter your shipping address details here :</p>
+			            	<form class="row mx-5 my-2"  method="post" th:action="@{/user/newAddress}">
+									
+							<!--  Contact Details  -->
+								<div class="col-md-6 mt-2">
+								    <label for="inputName" class="form-label">Full Name</label>
+								    <input type="text" id="inputName" class="form-control ps-3 border border-1 border-secondary mb-2" required>
+								</div>
+								<div class="col-md-6 mt-2">
+								    <label for="inputContactNumber" class="form-label">Contact Number</label>
+								    <input type="text" id="inputContactNumber" class="form-control ps-3 border border-1 border-secondary mb-2" required>
+								</div>
+							  
+			  
+							  <!-- Address Starting -->
+							  <div class="col-12">
+							    <label for="inputAddress" class="form-label">Address 1</label>
+							    <input type="text" class="form-control border border-1 border-secondary ps-3 mb-2" id="inputAddress"  placeholder="1234 Main St" required>
+							  </div>
+							  <div class="col-12">
+							    <label for="inputAddress2" class="form-label">Address 2</label>
+							    <input type="text" class="form-control border border-1 border-secondary ps-3 mb-2" id="inputAddress2" placeholder="Apartment, studio, or floor" required>
+							  </div>
+							  <div class="col-md-4">
+							    <label for="inputCity" class="form-label">City</label>
+							    <input type="text" class="form-control border border-1 border-secondary ps-3 mb-2" id="inputCity" required>
+							  </div>
+							  <div class="col-md-4">
+							    <label for="inputState" class="form-label">State</label>
+							    <input type="text" id="inputState" class="form-control ps-3 border border-1 border-secondary mb-2" required>
+							  </div>
+							  <div class="col-md-4">
+							    <label for="inputZip" class="form-label">Zip</label>
+							    <input type="text" class="form-control border border-1 border-secondary ps-3 mb-2" id="inputZip" required>
+							  </div>
+							 
+							  <!--Address Registration Completed-->				  
+							  
+							  <div class="col-12  d-flex justify-content-between">
+							    <a th:href="@{/user/profile}" type="button" class="btn btn-primary mt-4 ms-2 my-3" >Add Address</a>
+							  </div>
+							</form>                   
+			            </div>
+			        </div>
+			        
+			        <div>
+						<div class="card mb-5 mx-5 border border-secondary">
+				            <div class="card-header p-0 position-relative mt-n4 z-index-2">
+				              <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
+									<h6 class="text-black text-capitalize ps-4 text-center">Available Addresses</h4>
+				              </div>
+				            </div>
+				            <div class="card-body p-4">
+				                <div class="card col-md-4">
+								  <div class="card-body">
+								    <p class="card-text">Some  on the card title and make up the bulk of the card's content.</p>
+								  </div>
+								</div>
+				            </div>
+				        </div>    
+				    </div>  
+			    </div>
+			    
+			    <div class="col-md-4 pt-5 pe-5">
+			        <div class="row">
+			            <div class="col">
+			                <div class="card mb-4">
+						          <div class="card-header py-3">
+						            <h5 class="mb-0">Order Details</h5>
+						          </div>
+						          <div class="card-body">
+						            <ul class="list-group list-group-flush">
+						              <li
+						                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+						                SubTotal
+						                <span id="subTotal">getPrice()</span>
+						              </li>
+						              
+									  <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-0 pb-0">
+						                Shipping Cost
+						                <span>0.0 Rs</span>
+						              </li>
+						              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+										  Discount
+						                  <span id="couponAmount">0.0 Rs</span>
+									  </li>
+									  <li class="list-group-item d-flex justify-content-between align-items-center px-0  border-0 pb-0">
+										  <strong>Grand Total</strong>
+										  <div>
+						                  <strong id="grandTotal" >th:text="${customerCart.getTotalPrice()}+' Rs'"</strong>
+						                </div>
+									  </li>
+						            </ul>
+					          </div>
+					        </div>
+			            </div>
+			        </div>
+			        <div class="col">
+		                <div class="card mt-4">
+						  <div class="card-body">
+						    <h5 class="card-title">Payment Details</h5>
+						    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+						    <div class="d-flex justify-content-around">
+								<a class="btn btn-warning">Proceed to Payment</a>
+							</div>
+						  </div>
+						</div>
+		            </div>
+			        <div class="d-flex justify-content-around">
+						<a class="btn btn-primary mt-4 my-3">Return to Cart</a>
+					</div>
+			    </div>
+			    
+				
+	        </div> 
+	    </div>
+	</div>
+			
+-->	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<script src="../assets/js/custom-cart.js" ></script>
+	
+	
+</body>
+</html>
+
+
+
+
+
+
+
+

@@ -287,7 +287,18 @@ public class CustomerController {
 		return"redirect:/user/shoppingCart";
 	}
 	
+//	CheckoutPage ----------------------------------------------
+	
+	@GetMapping("/checkout")
+	public String checkoutPage() {
+		return "checkout";
+	}
+	
+	
+	
+	
 //	Ajax backend methods =============================================================================================
+//	==================================================================================================================
 	
 //	Increment button for quantity page
 	@GetMapping("/cart/incrementItem")
@@ -339,6 +350,7 @@ public class CustomerController {
 		Product product = cartItem.getProduct();
 		Integer newQuantity;
 		session.removeAttribute("checkOutAmount");
+		session.setAttribute("couponApplied", false);
 		try {
 			
 			if(product!=null) {
@@ -376,6 +388,7 @@ public class CustomerController {
 		Coupon coupon = couponService.getCoupon(couponId);
 		Customer customer = customerRepository.findByEmailId(principal.getName());
 		session.removeAttribute("checkOutAmount");
+		session.setAttribute("couponApplied", false);
 		try {
 			
 			if(coupon!=null) {
@@ -384,6 +397,7 @@ public class CustomerController {
 				Double couponAmount = cartPrice * (coupon.getPercentage()/100);
 				Double grandTotal = cartPrice - (cartPrice * (coupon.getPercentage()/100));
 				session.setAttribute("checkOutAmount", grandTotal);
+				session.setAttribute("couponApplied", true);
 				responseMap.put("couponAmount", couponAmount);
 				responseMap.put("grandTotal", grandTotal);
 				return ResponseEntity.ok(responseMap);
