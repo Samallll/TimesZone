@@ -76,16 +76,27 @@
 			        </div>
 			        
 			        <div>
+						<div id="flash-notification"></div>
+						
 						<div class="card mb-5 mx-5 border border-secondary">
 				            <div class="card-header p-0 position-relative mt-n4 z-index-2">
-				              <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
-									<h6 class="text-black text-capitalize ps-4 text-center">Available Addresses</h4>
+				              <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center justify-content-center">
+									<h5 class="text-black text-capitalize ps-4 text-center">Available Addresses</h4>
 				              </div>
 				            </div>
-				            <div class="card-body p-4">
+				            <div class="card-body p-4" th:each="address,addressIndex :${addressList}">
+								<h6 class="mb-4 text-capitalize">Select one address and proceed further :</h6>
 				                <div class="card col-md-4">
-								  <div class="card-body">
-								    <p class="card-text">Some  on the card title and make up the bulk of the card's content.</p>
+								  <div class="card-body" onclick="myFunction(this.getAttribute('data-addressCard-id'))" style="cursor: pointer;" th:data-addressCard-id-="${address.addressId}">
+										<h6 class="card-text text-center" th:text="'Address : ' + ${addressIndex.index + 1}"></h6>
+										<hr>
+										<p class="card-text mb-0" th:id="'addressId-' + ${address.addressId}" style="display: none;"></p>
+									    <p class="card-text mb-0" th:text="${address.addressLineOne}+ ','"></p>
+									    <p class="card-text mb-0" th:text="${address.addressLineTwo}+ ','"></p>
+									    <p class="card-text mb-0" th:text="${address.city}+ ','"></p>
+									    <p class="card-text mb-0" th:text="${address.state}+ ','"></p>
+									    <p class="card-text mb-0" th:text="${address.pinCode}"></p>
+								    
 								  </div>
 								</div>
 				            </div>
@@ -133,7 +144,7 @@
 						    <h5 class="card-title">Payment Details</h5>
 						    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
 						    <div class="d-flex justify-content-around">
-								<a class="btn btn-warning">Proceed to Payment</a>
+								<a onclick="payment()" class="btn btn-warning">Proceed to Payment</a>
 							</div>
 						  </div>
 						</div>
@@ -148,8 +159,8 @@
 	    </div>
 	</div>
 			
--->	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-	<script src="../assets/js/custom-cart.js" ></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+	<script src="../assets/js/custom-checkout.js" ></script>
 	
 	
 </body>

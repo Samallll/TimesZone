@@ -22,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.timeszone.model.shared.Cart;
+import com.timeszone.model.shared.PurchaseOrder;
 
 @Entity
 @Table(name="Customer")
@@ -71,6 +72,9 @@ public class Customer implements UserDetails {
 	
 	@OneToOne(mappedBy = "customer")
     private Cart cart;
+	
+	@OneToMany(mappedBy="customer",cascade=CascadeType.REMOVE)
+	private List<PurchaseOrder> orders;
 	
 	public Customer() {
 		super();
@@ -214,6 +218,15 @@ public class Customer implements UserDetails {
 
 	public void setExpirationTime(LocalDateTime expirationTime) {
 		this.expirationTime = expirationTime;
+	}
+
+
+	public List<PurchaseOrder> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<PurchaseOrder> orders) {
+		this.orders = orders;
 	}
 
 	public List<Address> getAddresses() {

@@ -17,6 +17,10 @@ public class AddressDTO {
 	private boolean isDefault;
 	
 	private Integer customerId;
+	
+	private String contactName;
+	
+	private String contactNumber;
 
 	public AddressDTO(String addressLineOne, String addressLineTwo, String city, String state, Integer pinCode,
 			boolean isDefault, Integer customerId) {
@@ -30,8 +34,42 @@ public class AddressDTO {
 		this.customerId = customerId;
 	}
 
+	
+	
+	public AddressDTO(String addressLineOne, String addressLineTwo, String city, String state, Integer pinCode,
+			boolean isDefault, Integer customerId, String contactName, String contactNumber) {
+		super();
+		this.addressLineOne = addressLineOne;
+		this.addressLineTwo = addressLineTwo;
+		this.city = city;
+		this.state = state;
+		this.pinCode = pinCode;
+		this.isDefault = isDefault;
+		this.customerId = customerId;
+		this.contactName = contactName;
+		this.contactNumber = contactNumber;
+	}
+
+
+
 	public AddressDTO() {
 		super();
+	}
+
+	public String getContactName() {
+		return contactName;
+	}
+
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
+	}
+
+	public String getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
 	}
 
 	public Integer getAddressId() {

@@ -20,11 +20,27 @@ public class AddressService {
 	@Autowired
 	private AddressRepository addressRepository;
 	
+	public List<Address> getAllAddress(Customer customer) {
+		return addressRepository.findAllByCustomer(customer);
+	}
+	
 	public void newAddress(Integer customerId, AddressDTO address) {
 		
 		Customer customer = customerRepository.findById(customerId).get();
 		
 		Address newAddress = new Address();
+		if(address.getContactName()==null) {
+			newAddress.setContactName(customer.getFirstName());
+		}
+		else {
+			newAddress.setContactName(address.getContactName());
+		}
+		if(address.getContactNumber()==null) {
+			newAddress.setContactNumber(customer.getPhoneNumber());
+		}
+		else {
+			newAddress.setContactNumber(address.getContactNumber());
+		}
 		newAddress.setAddressLineOne(address.getAddressLineOne());
 		newAddress.setAddressLineTwo(address.getAddressLineTwo());
 		newAddress.setCity(address.getCity());

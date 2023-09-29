@@ -8,7 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.timeszone.model.shared.PurchaseOrder;
+
 
 
 @Entity
@@ -38,8 +42,17 @@ public class Address {
 	@Column(name="isDefault",nullable=false)
 	private boolean isDefault;
 	
+	@Column(name="contactName",nullable=false)
+	private String contactName;
+	
+	@Column(name="contactNumber",nullable=false,unique=true)
+	private String contactNumber;
+	
 	@ManyToOne
     private Customer customer;
+	
+	@OneToOne
+    private PurchaseOrder order;
 	
 	public Address() {
 		super();
@@ -55,6 +68,22 @@ public class Address {
 		this.state = state;
 		this.pinCode = pinCode;
 		this.isDefault = isDefault;
+		this.customer = customer;
+	}
+	
+
+	public Address(Integer addressId, String addressLineOne, String addressLineTwo, String city, String state,
+			Integer pinCode, boolean isDefault, String contactName, String contactNumber, Customer customer) {
+		super();
+		this.addressId = addressId;
+		this.addressLineOne = addressLineOne;
+		this.addressLineTwo = addressLineTwo;
+		this.city = city;
+		this.state = state;
+		this.pinCode = pinCode;
+		this.isDefault = isDefault;
+		this.contactName = contactName;
+		this.contactNumber = contactNumber;
 		this.customer = customer;
 	}
 
@@ -126,10 +155,28 @@ public class Address {
 		this.customer = customer;
 	}
 
+	public String getContactName() {
+		return contactName;
+	}
+
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
+	}
+
+	public String getContactNumber() {
+		return contactNumber;
+	}
+
+	public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
+
 	@Override
 	public String toString() {
-		return "Address =" + addressId + ", addressLineOne=" + addressLineOne + ", addressLineTwo="
+		return "Address [addressId=" + addressId + ", addressLineOne=" + addressLineOne + ", addressLineTwo="
 				+ addressLineTwo + ", city=" + city + ", state=" + state + ", pinCode=" + pinCode + ", isDefault="
-				+ isDefault + ", customer=" + customer.getFirstName();
+				+ isDefault + ", contactName=" + contactName + ", contactNumber=" + contactNumber + ", customer="
+				+ customer + "]";
 	}
+
 }

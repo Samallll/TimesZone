@@ -290,7 +290,11 @@ public class CustomerController {
 //	CheckoutPage ----------------------------------------------
 	
 	@GetMapping("/checkout")
-	public String checkoutPage() {
+	public String checkoutPage(Model model,Principal principal) {
+		
+		Customer customer = customerRepository.findByEmailId(principal.getName());
+		List<Address> addressList = addressService.getAllAddress(customer);
+		model.addAttribute("addressList", addressList);
 		return "checkout";
 	}
 	
