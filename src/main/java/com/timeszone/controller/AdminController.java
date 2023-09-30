@@ -2,8 +2,10 @@ package com.timeszone.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -11,12 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +36,7 @@ import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.product.SubCategory;
 import com.timeszone.model.shared.Coupon;
+import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductImageRepository;
@@ -39,6 +45,7 @@ import com.timeszone.repository.SubCategoryRepository;
 import com.timeszone.service.CategoryService;
 import com.timeszone.service.CouponService;
 import com.timeszone.service.CustomerService;
+import com.timeszone.service.PaymentMethodService;
 import com.timeszone.service.ProductImageService;
 import com.timeszone.service.ProductService;
 import com.timeszone.service.SubCategoryService;
@@ -72,6 +79,9 @@ public class AdminController {
 	
 	@Autowired
 	private CouponService couponService;
+	
+	@Autowired
+	private PaymentMethodService paymentMethodService;
 	
 	@Autowired
 	private CategoryRepository categoryRepository;
@@ -441,4 +451,49 @@ public class AdminController {
 		return "redirect:/admin/couponManagement";
 	}
 	
+//	PaymentMethod ===============================================================================================
+	
+//	adding payment method -------------------------------------------------------------------
+	@GetMapping("/paymentMethods")
+	public String paymentMethods(Model model) {
+		
+		List<PaymentMethod> paymentMethodsList = paymentMethodService.getAll();
+		PaymentMethod paymentMethod = new PaymentMethod();
+		model.addAttribute("paymentMethodsList", paymentMethodsList);
+		model.addAttribute("paymentMethod", paymentMethod);
+		return "paymentMethods";
+	}
+	
+//	add paymentMethod -----------------------------------------------------------------------
+	@PostMapping("/addPaymentMethod")
+	public ResponseEntity<Map<String, Object>> addPaymentMethod(@RequestParam("data") String methodName) {
+
+	  // Validate the payment method
+	  Map<String, Object> responseMap = new HashMap<>();
+	  if (methodName.isEmpty()) {
+		  responseMap.put("error", "Payment method name cannot be empty.");
+	      return ResponseEntity.ok(responseMap);
+	  }
+	  if(paymentMethodService.contains(methodName)) {
+		  responseMap.put("error", "Payment method exists");
+	      return ResponseEntity.ok(responseMap);
+	  }
+	  
+	  PaymentMethod newMethod = new PaymentMethod(methodName);
+	  // Save the payment method to the database
+	  paymentMethodService.createPaymentMethod(newMethod);
+	  
+	  responseMap.put("success", "Payment Method Added Successfully");
+
+	  // Return a success response
+	  return ResponseEntity.ok(responseMap);
+	}
+	
+//	edit payment --------------------------------------------------------------------------------
+	@GetMapping("/editPaymentMethod")
+	public String editPaymentMethod(@RequestParam("id") Integer id,Model model) {
+		PaymentMethod paymentMethod = paymentMethodService.getPaymentMethod(id);
+		model.addAttribute("paymentMethod", paymentMethod);
+		return "editPaymentMethod";
+	}
 }

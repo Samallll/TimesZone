@@ -2,6 +2,7 @@ package com.timeszone.model.shared;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class PaymentMethod {
 	
 	private boolean isEnabled=true;
 	
+	@Column(unique=true,nullable=true)
 	private String paymentMethodName;
 	
 	@OneToMany(mappedBy="paymentMethod")
@@ -31,7 +33,7 @@ public class PaymentMethod {
 		this.paymentMethodId = paymentMethodId;
 	}
 
-	public boolean isEnabled() {
+	public boolean  getIsEnabled() {
 		return isEnabled;
 	}
 
