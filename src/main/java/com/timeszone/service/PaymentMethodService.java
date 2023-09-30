@@ -30,7 +30,7 @@ public class PaymentMethodService {
 	public void editPaymentMethod(Integer paymentMethodId,PaymentMethod editMethod) {
 		
 		PaymentMethod paymentMethod = paymentMethodRepository.findById(paymentMethodId).get();
-		paymentMethod.setEnabled(editMethod.getIsEnabled());
+		paymentMethod.setIsEnabled(editMethod.getIsEnabled());
 		paymentMethod.setPaymentMethodName(editMethod.getPaymentMethodName());
 		paymentMethodRepository.save(paymentMethod);
 	}

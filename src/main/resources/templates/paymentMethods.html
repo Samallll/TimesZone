@@ -200,6 +200,7 @@
                           Delete
                         </a>
                       </td>
+                      <td></td>
                     </tr>
                   </tbody>
                 </table>
@@ -220,8 +221,7 @@
 				  <div class="form-group">
 				    <label for="inputMethodName" class="form-label">Payment Name</label>
 				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputMethodName">
-				    
-				  </div>		  
+				  </div>	
 				  
 				  <div class="form-group d-flex align-items-end justify-content-center">
 				    <button id="submitButton" class="btn btn-primary mt-2">Add Method</button>
@@ -265,6 +265,7 @@
 					  // Display a success message
 				        alert(responseMap.success);
 				        $('#inputMethodName').val('');
+				        window.location.reload();
 				  }
 				  else{
 					    alert(responseMap.error);

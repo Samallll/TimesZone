@@ -126,32 +126,39 @@
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
-					<h6 class="text-white text-capitalize ps-4">Category</h4>
+					<h6 class="text-white text-capitalize ps-4">Payment Method Details</h4>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
                           
-            	<form class="row mx-5 my-2" th:action="@{/admin/registerCategory}" method="post">
+            	<form class="row mx-5 my-2" th:action="@{/admin/modifyPaymentMethod}" method="post" th:object="${paymentMethod}">
 		
-				  <div class="col-12">
-				    <label for="inputDescription" class="form-label">Category Description</label>
-				    <textarea class="form-control border border-1 border-primary ps-3 mb-2" id="inputDescription" name="description"></textarea>
-				  </div>
+					<input type="hidden" th:field="${paymentMethod.paymentMethodId}" th:value="${paymentMethod.paymentMethodId}">
+					
 				  <div class="col-md-6">
-				    <label for="inputCategoryName" class="form-label">Category Name</label>
-				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCategoryName" name="categoryName">
+				    <label for="inputPaymentMethodName" class="form-label">Payment Method Name</label>
+				    <input type="text" class="form-control border border-1 border-primary ps-3 mb-2"
+				    	 id="inputPaymentMethodName" name="paymentMethodName" th:value="${paymentMethod.paymentMethodName}">
 				  </div>
 				  
-					<div class="col-md-6">
-					  <label for="quantity" class="form-label">Number of Sub Categories</label>
-					  <input type="text" class="form-control border border-1 border-primary ps-3 mb-2" id="quantity" name="noOfSubCategories">
-					</div>			 
-				  <!--Category Registration Completed-->
+					<div class="col-md-6 form-check form-check-inline px-2 py-4">
+						<label for="inputMethodName" class="form-label">Enable?</label>
+				        <label>
+				            <input class="form-check-input" type="radio" name="isEnabled" value="true"
+				                th:checked="${paymentMethod.isEnabled == true}" /><span class="fs-6 ps-2">True</span>
+				        </label>
+				        <label>
+				            <input class="form-check-input" type="radio" name="isEnabled" value="false"
+				                th:checked="${paymentMethod.isEnabled == false}" /><span class="fs-6 ps-2">False</span>
+				        </label>
+				    </div>
+				  	
+			 		<input type="hidden" name="isEnabled" th:value="${paymentMethod.isEnabled}" />
 				  
 				  
 				  <div class="col-12">
-				    <button type="submit" class="btn btn-primary mt-3">Add Category</button>
-				    <a type="button" class="btn btn-info mt-3 ms-2" th:href="@{/admin/category_management}">Cancel</a>
+				    <button type="submit" class="btn btn-primary mt-3">Submit Changes</button>
+				    <a type="button" class="btn btn-info mt-3 ms-2" th:href="@{/admin/paymentMethods}">Cancel</a>
 				  </div>
 				</form>         
                           

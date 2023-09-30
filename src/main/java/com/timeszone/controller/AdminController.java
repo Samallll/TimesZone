@@ -31,6 +31,7 @@ import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.ProductDTO;
+import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductImage;
@@ -495,5 +496,19 @@ public class AdminController {
 		PaymentMethod paymentMethod = paymentMethodService.getPaymentMethod(id);
 		model.addAttribute("paymentMethod", paymentMethod);
 		return "editPaymentMethod";
+	}
+	
+	@PostMapping("/modifyPaymentMethod")
+	public String modifyMethod(@ModelAttribute("paymentMethod") PaymentMethod paymentMethod) {
+		
+		paymentMethodService.editPaymentMethod(paymentMethod.getPaymentMethodId(), paymentMethod);
+		return "redirect:/admin/paymentMethods";
+	}
+	
+//	delete payment ------------------------------------------------------------------------------
+	@GetMapping("/deletePaymentMethod")
+	public String deleteMethod(@RequestParam("id") Integer paymentMethodId) {
+		paymentMethodService.deletePaymentMethod(paymentMethodId);
+		return "redirect:/admin/paymentMethods";
 	}
 }

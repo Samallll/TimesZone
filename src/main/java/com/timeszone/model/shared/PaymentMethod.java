@@ -37,7 +37,7 @@ public class PaymentMethod {
 		return isEnabled;
 	}
 
-	public void setEnabled(boolean isEnabled) {
+	public void setIsEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
 
