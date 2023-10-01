@@ -1,6 +1,7 @@
 package com.timeszone.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,5 +94,14 @@ public class AddressService {
 		customerRepository.save(customer);
 		addressRepository.delete(deleteAddress);
 	}
+	
+	public void addAddress(Address address) {
+		addressRepository.save(address);
+	}
 
+	public Address getAddress(Integer addressId) {
+		
+		return addressRepository.findById(addressId).orElseThrow(() -> new NoSuchElementException("Address not found with ID: " + addressId));
+	}
+	
 }

@@ -112,43 +112,6 @@
          contentType: "text/plain"
      });
 	}
-	
-
-
-
-
-	  //for applying coupon code
-	  $("#apply-coupon-apply").on('click', function() {
-		  const discountCoupon = document.querySelector("#discount-code").value;
-		  const flashNotification = $("#flash-notification");
-		
-		  // Remove any existing alert elements
-		  flashNotification.empty();
-		
-		  // Create the alert element
-		  const alertElement = $(`<div class="alert alert-${discountCoupon === "hello" ? "success" : "danger"}" role="${discountCoupon === "hello" ? "success" : "error"}">
-		    ${discountCoupon === "hello" ? "Discount Code applied successfully" : "Entered Discount Code is invalid"}
-		  </div>`);
-		  
-		  let applied = discountCoupon === "hello";
-		  
-		  console.log(applied);
-		
-		  // Append the alert element to the flash notification element
-		  flashNotification.append(alertElement);
-		  
-		 
-		
-		  // Show the flash notification
-		  flashNotification.fadeIn("slow");
-		  
-		  $("#discount-code").val("");
-		
-		  // Hide the flash notification after 3 seconds
-		  setTimeout(function() {
-		    flashNotification.fadeOut("slow");
-		  }, 3000);
-	   });
 
 	
 	const inputField = document.querySelectorAll(".quantity");

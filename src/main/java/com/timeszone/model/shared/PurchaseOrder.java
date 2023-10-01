@@ -38,12 +38,12 @@ public class PurchaseOrder {
 	
 	private Integer orderedQuantity;
 	
-	private Double price;
+	private Double orderAmount;
 
 	private String transcationId;
 	
 	public PurchaseOrder( Address address, Cart cart, Customer customer, PaymentMethod paymentMethod,
-			LocalDate orderedDate, String orderStatus, Integer orderedQuantity, Double price) {
+			LocalDate orderedDate, String orderStatus, Integer orderedQuantity, Double orderAmount) {
 		super();
 		this.address = address;
 		this.cart = cart;
@@ -52,11 +52,11 @@ public class PurchaseOrder {
 		this.orderedDate = orderedDate;
 		this.orderStatus = orderStatus;
 		this.orderedQuantity = orderedQuantity;
-		this.price = price;
+		this.orderAmount = orderAmount;
 	}
 
 	public PurchaseOrder(Address address, Cart cart, Customer customer, PaymentMethod paymentMethod, LocalDate orderedDate,
-			String orderStatus, Integer orderedQuantity, Double price, String transcationId) {
+			String orderStatus, Integer orderedQuantity, Double orderAmount, String transcationId) {
 		super();
 		this.address = address;
 		this.cart = cart;
@@ -65,7 +65,7 @@ public class PurchaseOrder {
 		this.orderedDate = orderedDate;
 		this.orderStatus = orderStatus;
 		this.orderedQuantity = orderedQuantity;
-		this.price = price;
+		this.orderAmount = orderAmount;
 		this.transcationId = transcationId;
 	}
 
@@ -145,12 +145,12 @@ public class PurchaseOrder {
 		this.orderedQuantity = orderedQuantity;
 	}
 
-	public Double getPrice() {
-		return price;
+	public Double getOrderAmount() {
+		return orderAmount;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setOrderAmount(Double orderAmount) {
+		this.orderAmount = orderAmount;
 	}
 	
 	

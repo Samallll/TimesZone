@@ -87,6 +87,19 @@ public class Address {
 		this.customer = customer;
 	}
 
+	public Address(String contactName, String contactNumber, String addressLineOne, String addressLineTwo, String city,
+			String state, Integer pinCode, Customer customer) {
+
+		this.addressLineOne = addressLineOne;
+		this.addressLineTwo = addressLineTwo;
+		this.city = city;
+		this.state = state;
+		this.pinCode = pinCode;
+		this.contactName = contactName;
+		this.contactNumber = contactNumber;
+		this.customer = customer;
+	}
+
 	public Integer getAddressId() {
 		return addressId;
 	}

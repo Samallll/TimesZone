@@ -511,4 +511,16 @@ public class AdminController {
 		paymentMethodService.deletePaymentMethod(paymentMethodId);
 		return "redirect:/admin/paymentMethods";
 	}
+	
+	
+//	Order Management ============================================================================================
+	
+//	Order table rendering -------------------------------------------------------------------------
+	@GetMapping("/orderManagement")
+	public String getOrderPage() {
+		return "orderManagement";
+	}
+	
+	
+	
 }

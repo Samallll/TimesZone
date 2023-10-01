@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +39,7 @@ import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.model.shared.Coupon;
+import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.repository.AddressRepository;
 import com.timeszone.repository.CartItemRepository;
 import com.timeszone.repository.CartRepository;
@@ -48,6 +50,7 @@ import com.timeszone.service.AddressService;
 import com.timeszone.service.CartService;
 import com.timeszone.service.CouponService;
 import com.timeszone.service.CustomerService;
+import com.timeszone.service.PaymentMethodService;
 
 @RequestMapping("/user")
 @Controller
@@ -82,6 +85,9 @@ public class CustomerController {
 	
 	@Autowired
 	private CouponService couponService;
+	
+	@Autowired
+	private PaymentMethodService paymentMethodService;
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
 	
@@ -252,7 +258,6 @@ public class CustomerController {
 		
 		Product product = productRepository.findById(productId).get();
 		CartItem cartItem = new CartItem(product,productQuantity);
-//		Cart customerCart = cartService.addCartItem(cartItem,principal);
 		
 		String username = principal.getName();
 		Customer customer = customerRepository.findByEmailId(username);
@@ -294,11 +299,40 @@ public class CustomerController {
 		
 		Customer customer = customerRepository.findByEmailId(principal.getName());
 		List<Address> addressList = addressService.getAllAddress(customer);
+		List<PaymentMethod> paymentMethodList = paymentMethodService.getAll();
 		model.addAttribute("addressList", addressList);
+		model.addAttribute("paymentMethodList", paymentMethodList);
 		return "checkout";
 	}
 	
-	
+	@ResponseBody
+	@PostMapping("/shippingAddress")
+	public ResponseEntity<Map<String, Object>> addAddress(@RequestBody Map<String, Object> formData,Principal principal) {
+
+	  Map<String, Object> responseMap = new HashMap<>();
+
+	  String fullName = (String) formData.get("fullName");
+	  String contactNumber = (String) formData.get("contactNumber");
+	  String addressLineOne = (String) formData.get("address1");
+	  String addressLineTwo = (String) formData.get("address2");
+	  String city = (String) formData.get("city");
+	  String state = (String) formData.get("state");
+	  String pin = (String) formData.get("zip");
+	  Integer zip = pin.isBlank()?null:Integer.parseInt(pin);
+
+	  if (fullName == null || contactNumber == null || addressLineOne == null || addressLineTwo == null ||
+	      city == null || state == null || zip == null) {
+	    responseMap.put("message", "Please fill the fields.");
+	    return new ResponseEntity<>(responseMap, HttpStatus.ACCEPTED);
+	  }
+	  Customer customer = customerRepository.findByEmailId(principal.getName());
+	  
+	  Address newAddress = new Address(fullName, contactNumber, addressLineOne, addressLineTwo, city, state, zip,customer);
+	  addressService.addAddress(newAddress);
+
+	  responseMap.put("message", "Address added successfully.");
+	  return new ResponseEntity<>(responseMap, HttpStatus.CREATED);
+	}
 	
 	
 //	Ajax backend methods =============================================================================================

@@ -117,6 +117,10 @@ public class CustomerService implements UserDetailsService{
 		}
 	}
 
+	public Customer getCustomer(Integer customerId) {
+		return customerRepository.findById(customerId).orElseThrow(() -> new UsernameNotFoundException("UserName Not Found with the given Id"));
+	}
+
 
 
 }
