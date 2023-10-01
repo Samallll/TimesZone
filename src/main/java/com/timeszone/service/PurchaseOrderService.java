@@ -4,19 +4,34 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 import com.timeszone.model.customer.Address;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.OrderDTO;
 import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.model.shared.PurchaseOrder;
+import com.timeszone.model.shared.TransactionDetails;
 import com.timeszone.repository.PurchaseOrderRepository;
 
 @Service
 public class PurchaseOrderService {
+	
+	@Value("${razorpay.keyId}")
+    private String razorpayKeyId;
+
+    @Value("${razorpay.keySecret}")
+    private String razorpayKeySecret;
+    
+    @Value("${razorpay.razorpay.currency}")
+    private String currency;
 	
 	@Autowired
 	private PurchaseOrderRepository purchaseOrderRepository;
@@ -117,5 +132,35 @@ public class PurchaseOrderService {
 		orderDto.setOrderStatus(order.getOrderStatus());
 		orderDto.setPaymentMethodName(order.getPaymentMethod().getPaymentMethodName());
 		return orderDto;
+	}
+	
+	public TransactionDetails createTransaction(Double amount) {
+		
+		try {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("amount", amount * 100);
+			jsonObject.put("currency", currency);
+			
+			RazorpayClient razorpayClient = new RazorpayClient(razorpayKeyId,razorpayKeySecret);
+			Order order = razorpayClient.orders.create(jsonObject);
+			
+			return prepareTransactionDetails(order);
+			
+			
+		} catch (RazorpayException e) {
+
+			System.out.println(e.getMessage());
+		}
+		return null;
+	}
+	
+	private TransactionDetails prepareTransactionDetails(Order order) {
+		
+		String orderId = order.get("id");
+		String currency = order.get("currency");
+		String amount = order.get("amouont");
+		
+		TransactionDetails transactionDetails = new TransactionDetails(orderId,currency,amount);
+		return transactionDetails;
 	}
 }
