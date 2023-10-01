@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.timeszone.model.customer.Customer;
 import com.timeszone.model.shared.Coupon;
 import com.timeszone.repository.CouponRepository;
 
@@ -108,5 +110,15 @@ public class CouponService {
 			}
 		}
 		return basedOnAmount;
+	}
+	
+	public boolean containsCoupon(Customer customer,Coupon coupon) {
+		
+		for(Coupon c:customer.getCoupons()) {
+			if(c.getCouponCode().equals(coupon.getCouponCode())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -1,13 +1,18 @@
 package com.timeszone.model.shared;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.timeszone.model.customer.Customer;
 
 @Entity
 public class Coupon {
@@ -30,6 +35,17 @@ public class Coupon {
 	private boolean isActive=true;
 
 	private Integer cartItemsCount;
+	
+	@ManyToMany(mappedBy = "coupons")
+    private Set<Customer> customers = new HashSet<>();
+
+	public Set<Customer> getCustomers() {
+		return customers;
+	}
+
+	public void setCustomers(Set<Customer> customers) {
+		this.customers = customers;
+	}
 
 	public Integer getCouponId() {
 		return couponId;

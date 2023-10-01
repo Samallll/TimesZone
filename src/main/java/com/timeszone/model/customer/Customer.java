@@ -2,6 +2,7 @@ package com.timeszone.model.customer;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -22,6 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.timeszone.model.shared.Cart;
+import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.PurchaseOrder;
 
 @Entity
@@ -72,6 +75,12 @@ public class Customer implements UserDetails {
 	
 	@OneToOne(mappedBy = "customer")
     private Cart cart;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "customer_coupon",
+               joinColumns = @JoinColumn(name = "customer_id"),
+               inverseJoinColumns = @JoinColumn(name = "coupon_id"))
+    private Set<Coupon> coupons = new HashSet<>();
 	
 	@OneToMany(mappedBy="customer",cascade=CascadeType.REMOVE)
 	private List<PurchaseOrder> orders;
@@ -272,6 +281,14 @@ public class Customer implements UserDetails {
 		for(Address address:addresses) {
 			address.toString();
 		}
+	}
+
+	public Set<Coupon> getCoupons() {
+		return coupons;
+	}
+
+	public void setCoupons(Set<Coupon> coupons) {
+		this.coupons = coupons;
 	}
 
 	@Override
