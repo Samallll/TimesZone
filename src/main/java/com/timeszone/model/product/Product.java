@@ -1,7 +1,6 @@
 package com.timeszone.model.product;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.timeszone.model.shared.CartItem;
+import com.timeszone.model.shared.OrderItem;
 
 
 @Entity
@@ -46,6 +46,9 @@ public class Product {
 	
 	@ManyToMany(mappedBy = "products", cascade = CascadeType.MERGE)
     private Set<Category> categories;
+	
+	@OneToMany(mappedBy = "product")
+    private List<OrderItem> orderItems;
 	
 	@ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "product_subcategories",
@@ -107,6 +110,14 @@ public class Product {
 
 	public void setCartItems(Set<CartItem> cartItems) {
 		this.cartItems = cartItems;
+	}
+
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
 
 	public Integer getProductId() {
@@ -200,6 +211,4 @@ public class Product {
 	public void setDateAdded(LocalDate dateAdded) {
 		this.dateAdded = dateAdded;
 	}
-
-	
 }

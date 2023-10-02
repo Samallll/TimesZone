@@ -14,7 +14,7 @@
   
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   
-    
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>  
       
 </head>
 
@@ -85,9 +85,10 @@
 				              </div>
 				            </div>
 				            <div class="card-body p-3" >
+								<div id="flash-notification"></div>
 								<h6 class="mb-2 text-capitalize">Select one address and proceed further :</h6>
 				                <div class="card col-md-5 d-inline-flex m-2 px-2" th:each="address,addressIndex :${addressList}">
-								  <div class="card-body"  onclick="myFunction(this.getAttribute('data-addressCard-id'))" style="cursor: pointer;" th:data-addressCard-id-="${address.addressId}">
+								  <div class="card-body"  onclick="myFunction(this.getAttribute('data-addressCard-id'))" style="cursor: pointer;" th:data-addressCard-id="${address.addressId}">
 										<h6 class="card-text text-center" th:text="'Address : ' + ${addressIndex.index + 1}"></h6>
 										<hr>
 										<p class="card-text mb-0" th:id="'addressId-' + ${address.addressId}" style="display: none;"></p>
@@ -116,7 +117,7 @@
 						              <li
 						                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
 						                SubTotal
-						                <span id="subTotal">getPrice()</span>
+						                <span id="subTotal" th:text="${subTotal}+' Rs'"></span>
 						              </li>
 						              
 									  <li class="list-group-item d-flex justify-content-between align-items-center px-0 border-0 pb-0">
@@ -125,12 +126,12 @@
 						              </li>
 						              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
 										  Discount
-						                  <span id="couponAmount">0.0 Rs</span>
+						                  <span id="couponAmount" th:text="${couponAmount}+' Rs'"></span>
 									  </li>
 									  <li class="list-group-item d-flex justify-content-between align-items-center px-0  border-0 pb-0">
 										  <strong>Grand Total</strong>
 										  <div>
-						                  <strong id="grandTotal" >th:text="${customerCart.getTotalPrice()}+' Rs'"</strong>
+						                  <strong id="grandTotal" th:text="${grandTotal}+' Rs'"></strong>
 						                </div>
 									  </li>
 						            </ul>
@@ -143,17 +144,19 @@
 						  <div class="card-body">
 						    <h5 class="card-title text-center">Payment Details</h5>
 						    <hr>
-							
+						    <form id="paymentForm">
 							<div th:each="paymentMethod : ${paymentMethodList}" class="px-2 py-2">
 					            <label>
-					                <input type="radio" th:name="isEnabled" th:value="${paymentMethod.paymentMethodName}" th:text="${paymentMethod.paymentMethodName}" /> 
+					                <input type="radio" th:name="paymentMethodId" th:value="${paymentMethod.paymentMethodName}" th:text="${paymentMethod.paymentMethodName}" /> 
 					            </label>
 					            <br>
 					        </div>
 
 						    <div class="d-flex justify-content-around mt-2">
-								<a onclick="payment()" class="btn btn-warning">Proceed to Payment</a>
+							    <input type="hidden" id="grandTotal1" name="grandTotal" th:value="${grandTotal}" >
+							    <input id="proceedCheckout" type="submit" class="btn btn-warning" value="Proceed to Payment">
 							</div>
+							</form>
 						  </div>
 						</div>
 		            </div>

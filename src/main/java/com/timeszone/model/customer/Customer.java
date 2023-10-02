@@ -295,7 +295,7 @@ public class Customer implements UserDetails {
 	public String toString() {
 		return "Customer [customerId=" + customerId + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", emailId=" + emailId + ", phoneNumber=" + phoneNumber + ", password=" + password + ", authorities="
-				+ authorities + ", addresses=" + addresses + ", isLocked=" + isLocked + ", otp=" + otp
+				+ authorities  + ", isLocked=" + isLocked + ", otp=" + otp
 				+ ", expirationTime=" + expirationTime + "]";
 	}
 }

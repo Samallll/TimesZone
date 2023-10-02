@@ -1,5 +1,6 @@
 package com.timeszone.service;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,8 @@ import com.razorpay.RazorpayException;
 import com.timeszone.model.customer.Address;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.OrderDTO;
-import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.model.shared.PurchaseOrder;
-import com.timeszone.model.shared.TransactionDetails;
 import com.timeszone.repository.PurchaseOrderRepository;
 
 @Service
@@ -30,7 +29,7 @@ public class PurchaseOrderService {
     @Value("${razorpay.keySecret}")
     private String razorpayKeySecret;
     
-    @Value("${razorpay.razorpay.currency}")
+    @Value("${razorpay.currency}")
     private String currency;
 	
 	@Autowired
@@ -44,6 +43,12 @@ public class PurchaseOrderService {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Value("${razorpay.keyId}")
+	private String SECRET_ID; 
+	
+	@Value("${razorpay.keySecret}")
+	private String SECRET_KEY;
 	
 	public PurchaseOrder getOrder(Integer orderId) {
 		return purchaseOrderRepository.findById(orderId).orElseThrow(
@@ -108,13 +113,10 @@ public class PurchaseOrderService {
 		Address address = addressService.getAddress(order.getAddressId());
 		PaymentMethod paymentMethod = paymentMethodService.getPaymentMethod(order.getPaymentMethodName());
 		Customer customer = customerService.getCustomer(order.getCustomerId());
-		Cart customerCart = customer.getCart();
 		purchaseOrder.setAddress(address);
 		purchaseOrder.setPaymentMethod(paymentMethod);
-		purchaseOrder.setCart(customerCart);
 		purchaseOrder.setCustomer(customer);
-		purchaseOrder.setOrderAmount(order.getOrderAmount());
-		purchaseOrder.setOrderedQuantity(order.getOrderedQuantity());
+		purchaseOrder.setOrderItems(order.getOrderItems());
 		return purchaseOrder;
 	}
 	
@@ -123,44 +125,50 @@ public class PurchaseOrderService {
 		
 		OrderDTO orderDto = new OrderDTO();
 		orderDto.setAddressId(order.getAddress().getAddressId());
-		orderDto.setCartId(order.getCart().getCartId());
 		orderDto.setCustomerId(order.getCustomer().getCustomerId());
 		orderDto.setOrderAmount(order.getOrderAmount());
 		orderDto.setOrderedDate(order.getOrderedDate());
-		orderDto.setOrderedQuantity(order.getOrderedQuantity());
 		orderDto.setOrderId(order.getOrderId());
 		orderDto.setOrderStatus(order.getOrderStatus());
+		orderDto.setOrderItems(order.getOrderItems());
 		orderDto.setPaymentMethodName(order.getPaymentMethod().getPaymentMethodName());
 		return orderDto;
 	}
 	
-	public TransactionDetails createTransaction(Double amount) {
+	public Order createTransaction(Double amount) {
 		
 		try {
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("amount", amount * 100);
-			jsonObject.put("currency", currency);
+			  RazorpayClient client = new RazorpayClient(SECRET_ID,SECRET_KEY);
+			  JSONObject orderRequest = new JSONObject();
+			  orderRequest.put("amount", amount * 100); // amount in the smallest currency unit
+			  orderRequest.put("currency", "INR");
+			  orderRequest.put("receipt", generateRandomString(15));
+			  
+			  Order order = client.orders.create(orderRequest);
+			  return order;
 			
-			RazorpayClient razorpayClient = new RazorpayClient(razorpayKeyId,razorpayKeySecret);
-			Order order = razorpayClient.orders.create(jsonObject);
-			
-			return prepareTransactionDetails(order);
-			
-			
-		} catch (RazorpayException e) {
-
-			System.out.println(e.getMessage());
-		}
+			} catch (RazorpayException e) {
+			  // Handle Exception
+			  System.out.println(e.getMessage());
+			}
 		return null;
 	}
 	
-	private TransactionDetails prepareTransactionDetails(Order order) {
+	private String generateRandomString(int length) {
 		
-		String orderId = order.get("id");
-		String currency = order.get("currency");
-		String amount = order.get("amouont");
+		final String PREFIX = "order_";
+	    final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    final SecureRandom random = new SecureRandom();
 		
-		TransactionDetails transactionDetails = new TransactionDetails(orderId,currency,amount);
-		return transactionDetails;
-	}
+        StringBuilder randomString = new StringBuilder(PREFIX);
+        
+        for (int i = PREFIX.length(); i < length; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            char randomChar = CHARACTERS.charAt(randomIndex);
+            randomString.append(randomChar);
+        }
+        
+        return randomString.toString();
+    }
+	
 }

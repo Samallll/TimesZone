@@ -1,6 +1,9 @@
 package com.timeszone.model.dto;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.timeszone.model.shared.OrderItem;
 
 public class OrderDTO {
 	
@@ -12,8 +15,6 @@ public class OrderDTO {
 	
 	private String paymentMethodName;
 	
-	private Integer orderedQuantity;
-	
 	private String orderStatus;
 	
 	private String[] orderStatusList = {"Shipped","Pending","Delivered","Cancelled","Refunded","Returned"};
@@ -22,19 +23,12 @@ public class OrderDTO {
 	
 	private Integer customerId;
 	
-	private Integer cartId;
+	private List<OrderItem> orderItems;
 
 	public OrderDTO() {
 		super();
 	}
 
-	public Integer getCartId() {
-		return cartId;
-	}
-
-	public void setCartId(Integer cartId) {
-		this.cartId = cartId;
-	}
 
 	public Integer getCustomerId() {
 		return customerId;
@@ -81,14 +75,6 @@ public class OrderDTO {
 		this.paymentMethodName = paymentMethodName;
 	}
 
-	public Integer getOrderedQuantity() {
-		return orderedQuantity;
-	}
-
-	public void setOrderedQuantity(Integer orderedQuantity) {
-		this.orderedQuantity = orderedQuantity;
-	}
-
 	public String getOrderStatus() {
 		return orderStatus;
 	}
@@ -107,6 +93,16 @@ public class OrderDTO {
 
 	public void setAddressId(Integer addressId) {
 		this.addressId = addressId;
+	}
+
+
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
 	
 }

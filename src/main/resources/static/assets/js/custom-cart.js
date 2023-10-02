@@ -68,15 +68,6 @@
 //  for applying the coupon
 	function applyCoupon(id){
 		
-/*		if(couponId != 0){
-			const flashNotification = $("#flash-notification");
-			const alertElement = $(`<div class="alert alert-success" role="success">
-				 Coupon has been applied once
-				 </div>`);
-			return
-		}
-		couponId = id;*/
-		
 		$.ajax({
          type: "GET",
          url: "/user/coupon/applyCoupon",
@@ -85,8 +76,8 @@
 			 },
          success: function (response) { 
 			
-			document.getElementById('couponAmount').innerText = response.couponAmount + ' Rs';
-			document.getElementById('grandTotal').innerText = response.grandTotal + ' Rs';
+			document.getElementById('couponAmount').innerText = response.couponAmount + '.0 Rs';
+			document.getElementById('grandTotal').innerText = response.grandTotal + '.0 Rs';
 			
 			const flashNotification = $("#flash-notification");
 			// Remove any existing alert elements
@@ -112,7 +103,8 @@
          contentType: "text/plain"
      });
 	}
-
+	
+	
 	
 	const inputField = document.querySelectorAll(".quantity");
 	const incrementButton = document.querySelectorAll(".upButton");
@@ -165,5 +157,6 @@
         childElement.textContent = "$" + finalAmount; // Format to two decimal places
 	    }
 	}
+
 
 	   

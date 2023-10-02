@@ -1,6 +1,7 @@
 package com.timeszone.model.shared;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.timeszone.model.customer.Address;
@@ -23,8 +25,8 @@ public class PurchaseOrder {
 	@OneToOne(mappedBy="order",cascade=CascadeType.ALL)
     private Address address;
 	
-	@OneToOne
-    private Cart cart;
+	@OneToMany(mappedBy="order",cascade=CascadeType.ALL)
+    private List<OrderItem> orderItems;
 	
 	@ManyToOne
     private Customer customer;
@@ -36,37 +38,39 @@ public class PurchaseOrder {
 	
 	private String orderStatus;
 	
-	private Integer orderedQuantity;
-	
 	private Double orderAmount;
 
 	private String transcationId;
 	
-	public PurchaseOrder( Address address, Cart cart, Customer customer, PaymentMethod paymentMethod,
-			LocalDate orderedDate, String orderStatus, Integer orderedQuantity, Double orderAmount) {
+	public PurchaseOrder( Address address, Customer customer, PaymentMethod paymentMethod,
+			LocalDate orderedDate, String orderStatus,Double orderAmount) {
 		super();
 		this.address = address;
-		this.cart = cart;
 		this.customer = customer;
 		this.paymentMethod = paymentMethod;
 		this.orderedDate = orderedDate;
 		this.orderStatus = orderStatus;
-		this.orderedQuantity = orderedQuantity;
 		this.orderAmount = orderAmount;
 	}
 
-	public PurchaseOrder(Address address, Cart cart, Customer customer, PaymentMethod paymentMethod, LocalDate orderedDate,
-			String orderStatus, Integer orderedQuantity, Double orderAmount, String transcationId) {
+	public PurchaseOrder(Address address, Customer customer, PaymentMethod paymentMethod, LocalDate orderedDate,
+			String orderStatus, Double orderAmount, String transcationId) {
 		super();
 		this.address = address;
-		this.cart = cart;
 		this.customer = customer;
 		this.paymentMethod = paymentMethod;
 		this.orderedDate = orderedDate;
 		this.orderStatus = orderStatus;
-		this.orderedQuantity = orderedQuantity;
 		this.orderAmount = orderAmount;
 		this.transcationId = transcationId;
+	}
+
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
+	}
+
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
 
 	public PurchaseOrder() {
@@ -89,13 +93,6 @@ public class PurchaseOrder {
 		this.address = address;
 	}
 
-	public Cart getCart() {
-		return cart;
-	}
-
-	public void setCart(Cart cart) {
-		this.cart = cart;
-	}
 
 	public Customer getCustomer() {
 		return customer;
@@ -137,12 +134,13 @@ public class PurchaseOrder {
 		this.orderStatus = orderStatus;
 	}
 
-	public Integer getOrderedQuantity() {
-		return orderedQuantity;
-	}
-
-	public void setOrderedQuantity(Integer orderedQuantity) {
-		this.orderedQuantity = orderedQuantity;
+	public Integer getTotalOrderedQuantity() {
+		
+		Integer count=0;
+		for(OrderItem orderItem:this.orderItems) {
+			count = orderItem.getOrderItemCount()+count;
+		}
+		return count;
 	}
 
 	public Double getOrderAmount() {

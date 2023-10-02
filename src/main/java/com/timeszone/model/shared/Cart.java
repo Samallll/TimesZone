@@ -31,9 +31,6 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private Set<CartItem> cartItems = new HashSet<>();
     
-    @OneToOne(mappedBy = "cart", cascade = CascadeType.ALL)
-    private PurchaseOrder order; 
-    
     private Double finalAmount;
 
     public Cart() {
@@ -75,15 +72,7 @@ public class Cart {
 	public void setFinalAmount(Double finalAmount) {
 		this.finalAmount = finalAmount;
 	}
-
-	public PurchaseOrder getOrder() {
-		return order;
-	}
-
-	public void setOrder(PurchaseOrder order) {
-		this.order = order;
-	}
-
+	
 	public double getTotalPrice() {
         double totalPrice = 0;
         for (CartItem cartItem : cartItems) {
