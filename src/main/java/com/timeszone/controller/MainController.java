@@ -164,7 +164,7 @@ public class MainController {
 //		To hold the data
 		LoginDTO userLoginAccount = new LoginDTO();
 		model.addAttribute("userLoginAccount", userLoginAccount);
-		return "login.html";
+		return "login";
 	}
 	
 	

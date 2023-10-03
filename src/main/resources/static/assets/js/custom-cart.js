@@ -1,6 +1,6 @@
 
 	
-//	Function to display the errormessage
+//	Function to display the errormessage ---------------------------------------------------------------
 	function displayFlashMessageForStock(message,productId) {
 	  const flashMessageElement = document.getElementById('flash-message-' + productId);
 	  flashMessageElement.textContent = message;
@@ -11,6 +11,8 @@
 	  },2000);
 	}
 	
+	
+//Quantity Increment and Decrement ================================================================================	
 //  productPage cartItem quantity increment	
 	function countIncrement(productId){
 
@@ -63,9 +65,9 @@
          contentType: "text/plain"
      });	
 	}
+//Quantity Increment and Decrement completes ================================================================================			
 		
-		
-//  for applying the coupon
+//  for applying the coupon -----------------------------------------------------------------
 	function applyCoupon(id){
 		
 		$.ajax({
@@ -105,58 +107,6 @@
 	}
 	
 	
-	
-	const inputField = document.querySelectorAll(".quantity");
-	const incrementButton = document.querySelectorAll(".upButton");
-	const decrementButton = document.querySelectorAll(".downButton");
-	
-	// For making changes in the product price based on the quantity
-	const productPrice = document.querySelectorAll(".productAmount");
-	
-	console.log("Inside script");
-	
-	incrementButton.forEach((button, index) => {
-	    button.addEventListener("click", () => {
-	        count(inputField[index], "increment", productPrice[index]);
-	        console.log("Inside addEventListener increment");
-	    });
-	    console.log("Inside foreach increment");
-	});
-	
-	decrementButton.forEach((button, index) => {
-	    button.addEventListener("click", () => {
-	        count(inputField[index], "decrement", productPrice[index]);
-	        console.log("Inside addEventListener decrement");
-	    });
-	    console.log("Inside foreach decrement");
-	});
-
-	// For increment/decrement the quantity - function definition
-	function count(inputElement, action, productField) {
-    // Current value stored in the selected input field from the input fields
-    let currentValue = parseInt(inputElement.value);
-	const productAmount = productField.textContent;
-	console.log(productAmount);
-    // Convert productAmount to a numeric value (remove "$" and convert to float)
-    const currentAmount = parseFloat(productAmount.replace("$", ""));
-    console.log(currentAmount);
-
-    // Check if currentValue is a valid number
-    if (!isNaN(currentValue)) {
-        if (action === "increment") {
-            currentValue = currentValue + 1;
-        } else if (action === "decrement" && currentValue > 1) {
-            currentValue = currentValue - 1;
-        }
-
-        inputElement.value = currentValue;
-        const parentElement = inputElement.parentElement;
-        const parentElementParentElement = parentElement.parentElement;
-        const siblingElement = parentElementParentElement.nextElementSibling;
-        const childElement = siblingElement.querySelector('strong');
-        childElement.textContent = "$" + finalAmount; // Format to two decimal places
-	    }
-	}
 
 
 	   

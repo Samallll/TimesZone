@@ -245,9 +245,10 @@ public class CustomerController {
 //	Cart Management =============================================================================================
 	
 	@GetMapping("/shoppingCart")
-	public String shoppingCart(Model model,Principal principal) {
+	public String shoppingCart(Model model,Principal principal,HttpSession session) {
 		
 		List<Coupon> couponList = couponService.getAllNonExpired();
+		session.removeAttribute("addressId");
 		Customer customer = customerRepository.findByEmailId(principal.getName());
 		if(customer==null) {
 			return "guest/login";
@@ -359,39 +360,51 @@ public class CustomerController {
 	}
 	
 //	Payment Initialization ------------------------------------------------------------------------
-	@PostMapping("/payment/")
-	public String paymentPage(@RequestParam("paymentMethodId") Integer selectedPaymentMethodId,
-            @RequestParam("grandTotal") double grandTotal,HttpSession session,Model model) throws RazorpayException{
-		
-		
-		
-		
-		return "paymentPage";
-	}
-	
 	@ResponseBody
 	@PostMapping("/payment")
-	public ResponseEntity<Map<String, Object>> proceedToCheckout(@RequestBody Map<String, Object> formData) {
+	public ResponseEntity<Map<String, Object>> proceedToCheckout(@RequestBody Map<String, Object> formData,HttpSession session,Principal principal) {
 
 	  Map<String, Object> response = new HashMap<>();
 
 	  String methodId = (String) formData.get("selectedPaymentMethod");
-	  System.out.println(methodId);
 	  String amount = (String) formData.get("grandTotal");
-	  System.out.println(amount);
 	  Double grandTotal = amount.isBlank()?null:Double.parseDouble(amount);
-
+	  
 	  if (methodId == null ) {
 	    response.put("message", "Please select a payment method.");
 	    return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 	  }
+	  if (session.getAttribute("addressId") == null ) {
+	    response.put("message", "Please select a shipping address.");
+	    return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+	  }
 	  
 	  Order order = purchaseOrderService.createTransaction(grandTotal);
-
+	  Customer customer = customerRepository.findByEmailId(principal.getName());
+	  
+	  response.put("amount", grandTotal);
+	  response.put("customer_name", customer.getFirstName());
+	  response.put("email_id", customer.getEmailId());
+	  response.put("phone_number", customer.getPhoneNumber());
 	  response.put("order_id",order.get("id"));
+	  response.put("secret_id",purchaseOrderService.getSecretId());
+	  response.put("currency",purchaseOrderService.getCurrency());
 	  return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
+//	Payment Success -----------------------------------------------------------------------
+	
+	@ResponseBody
+	@GetMapping("/paymentSuccess")
+	public ResponseEntity<Map<String, Object>> paymentSuccess(@RequestParam(name = "razorPaymentId") String razorPaymentId,
+	                                                         @RequestParam(name = "razorSignature") String razorSignature){
+		
+		Map<String,Object> response = new HashMap<>();
+		boolean transactionCreated = purchaseOrderService.completeTransaction(razorPaymentId,razorSignature);
+		System.out.println("Transcation created or not: " + transactionCreated);
+		response.put("message", "completed the process");
+		return ResponseEntity.ok(response);
+	}
 	
 //	Ajax backend methods =============================================================================================
 //	==================================================================================================================

@@ -19,6 +19,21 @@
 </head>
 
 <body>
+	<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="myModalLabel">Alert</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body"></div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 	<div class="bg-gray-300">
 	    <div class="py-12">
 	        <div class="col-md-10 mx-auto bg-white shadow-lg rounded-lg my-5 d-flex">
@@ -76,7 +91,7 @@
 			        </div>
 			        
 			        <div>
-						<div id="flash-notification"></div>
+						<div id="flash-notification" class="px-5"></div>
 						
 						<div class="card mb-5 mx-5 border border-secondary">
 				            <div class="card-header p-0 position-relative mt-n4 z-index-2">

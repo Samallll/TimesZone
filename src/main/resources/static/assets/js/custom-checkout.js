@@ -1,8 +1,10 @@
 	
+//Payment Integration with razorpay ============================================================================	
+//The button to call the endpoint to fire the api call to razorpay to get the order id --------------------------
 	$(document).ready(function () {
 	        // Capture form submission
 	        $("#proceedCheckout").click(function (event) {
-	            // Prevent the default button click behavior
+
 	            event.preventDefault();
 	            
 	            grandTotal = $("#grandTotal1").val(),
@@ -28,6 +30,13 @@
 		                   //function call to execute the razorpay popup;
 		                   razorpayCall(response);
 						}
+						else{
+							var message = response.message;
+							var modal = $('#myModal');
+							modal.find('.modal-title').text('Alert');
+							modal.find('.modal-body').html(message);
+							modal.modal('show');
+						}
 	                },
 	                error: function (error) {
 	                    // Handle errors
@@ -36,26 +45,29 @@
 	            });
 	        });
 	    });
-	
+	    
+
+//The function that will trigger the razorpay checkoutform ---------------------------------------------------
 	function razorpayCall(response){
 		
 		var options = {
-		    "key": "rzp_test_hSHWQL2mOj2hsn", // Enter the Key ID generated from the Dashboard
-		    "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-		    "currency": "INR",
-		    "name": "Acme Corp", //your business name
-		    "description": "Test Transaction",
-		    "image": "https://example.com/your_logo",
-		    "order_id": response.order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-		    "handler": function (response){
-		        alert(response.razorpay_payment_id);
-		        alert(response.razorpay_order_id);
-		        alert(response.razorpay_signature)
+		    "key": response.secret_id, // Enter the Key ID generated from the Dashboard
+		    "amount": response.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+		    "currency": response.currency,
+		    "name": "TimeZone", 
+		    "description": "Please continue with payment",
+		    "order_id": response.order_id, //Pass the `order_id` obtained in the response of from razorpay
+		    "handler": function (responseMap){
+		        alert(responseMap.razorpay_payment_id);
+		        alert(responseMap.razorpay_order_id);
+		        alert(responseMap.razorpay_signature);
+		        //payment completed successfully
+		        verifyTranscation(responseMap.razorpay_payment_id,responseMap.razorpay_signature);
 		    },
-		    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
-		        "name": "Gaurav Kumar", //your customer's name
-		        "email": "gaurav.kumar@example.com", 
-		        "contact": "9000090000"  //Provide the customer's phone number for better conversion rates 
+		    "prefill": { 
+		        "name": response.customer_name, 
+		        "email": response.email_id, 
+		        "contact": response.phone_number  
 		    },
 		    "notes": {
 		        "address": "Razorpay Corporate Office"
@@ -65,20 +77,51 @@
 		    }
 		};
 		var rzp1 = new Razorpay(options);
-		rzp1.on('payment.failed', function (response){
-		        alert(response.error.code);
-		        alert(response.error.description);
-		        alert(response.error.source);
-		        alert(response.error.step);
-		        alert(response.error.reason);
-		        alert(response.error.metadata.order_id);
-		        alert(response.error.metadata.payment_id);
+		rzp1.on('payment.failed', function (responseMap){
+
+		        alert(responseMap.error.description);
+		        alert(responseMap.error.reason);
 		});
 		rzp1.open();
 	}
 	
 	
+//The function that will verify the transcation using the paymentid after the transaction has been committed. -------
+	function verifyTranscation(paymentId,signature){
+		$.ajax({
+                type: "GET", 
+                url: "/user/paymentSuccess", 
+                data: {
+					razorPaymentId : paymentId,
+					razorSignature : signature
+				},
+                contentType: "application/json", 
+                success: function (response) {
+					
+					if("success" in response){
+						window.location.href = "/viewOrders";
+					}
+					else{
+						var message = response.message;
+						var modal = $('#myModal');
+						modal.find('.modal-title').text('Alert');
+						modal.find('.modal-body').html(message);
+						modal.modal('show');
+					}
+					
+                },
+                error: function (error) {
+                    // Handle errors
+                    console.log("Error:", error);
+                }
+            });
+	}
 
+//Payment Integraion completed =======================================================================================
+
+
+
+//For submitting the shipping address -----------------------------------------
 	$(document).ready(function () {
 	        // Capture form submission
 	        $("#addressBtn").click(function (event) {
@@ -117,9 +160,8 @@
 	    });
 	    
     
+//for selecting one address from the address list as shipping address --------------------------------------    
     function myFunction(addressId){
-		
-		console.log(addressId)
 		$.ajax({
 			type:"GET",
 			url:"/user/selectAddress",
