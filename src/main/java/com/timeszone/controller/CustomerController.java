@@ -422,11 +422,16 @@ public class CustomerController {
 		return ResponseEntity.ok(response);
 	}
 	
-	
 	@GetMapping("/viewOrders")
-	public String viewOrders() {
+	public String viewOrders(Model model,Principal principal) {
+		
+		String userName = principal.getName();
+		Customer customer = customerRepository.findByEmailId(userName);
+		List<PurchaseOrder> orderList = purchaseOrderService.getAllByCustomer(customer);
+		model.addAttribute("orderList", orderList);
 		return "new";
 	}
+	
 	
 //	Ajax backend methods =============================================================================================
 //	==================================================================================================================

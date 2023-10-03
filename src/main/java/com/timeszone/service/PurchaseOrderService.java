@@ -133,6 +133,10 @@ public class PurchaseOrderService {
 		purchaseOrderRepository.deleteById(orderId);
 	}
 	
+	public List<PurchaseOrder> getAllOrders(){
+		return purchaseOrderRepository.findAll();
+	}	
+	
 //	convert OrderDTO to purchaseOrder
 	public PurchaseOrder convertToPurchaseOrder(OrderDTO order) {
 		
@@ -269,11 +273,6 @@ public class PurchaseOrderService {
 		PurchaseOrder newOrder = new PurchaseOrder();
 		int orderedQuantity = 0;
 		
-		System.out.println("couponId: " + couponId);
-		System.out.println("addressId: " + addressId);
-		System.out.println("payementMethod: " + paymentMethod);
-		System.out.println("finalAmount: " + finalAmount);
-		
 		String userName = principal.getName();
 		Customer customer = customerService.getCustomerByEmailId(userName);
 		newOrder.setCustomer(customer);
@@ -321,15 +320,15 @@ public class PurchaseOrderService {
 			createOrderItem(orderItem);
 			//cart items deletion
 			cartService.deleteCartItem(cartItem);
-			System.out.println("Cart Item count: "+ cartItem.getCartItemQuantity());
 			orderedQuantity = orderedQuantity + cartItem.getCartItemQuantity();
 		}
 		
 		newOrder.setOrderedQuantity(orderedQuantity);
 		
-		System.out.println("Total count: "+ orderedQuantity);
-		purchaseOrderRepository.save(newOrder);
-		System.out.println("newOrder saved after saving coupon");
-		
+		purchaseOrderRepository.save(newOrder);	
+	}
+	
+	public List<PurchaseOrder> getOrdersForCustomer(Customer customer){
+		return purchaseOrderRepository.findAllByCustomer(customer);
 	}
 }

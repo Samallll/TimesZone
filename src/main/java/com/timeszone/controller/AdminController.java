@@ -1,6 +1,7 @@
 package com.timeszone.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.product.SubCategory;
 import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.PaymentMethod;
+import com.timeszone.model.shared.PurchaseOrder;
 import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductImageRepository;
@@ -49,6 +51,7 @@ import com.timeszone.service.CustomerService;
 import com.timeszone.service.PaymentMethodService;
 import com.timeszone.service.ProductImageService;
 import com.timeszone.service.ProductService;
+import com.timeszone.service.PurchaseOrderService;
 import com.timeszone.service.SubCategoryService;
 
 @RequestMapping("/admin")
@@ -80,6 +83,9 @@ public class AdminController {
 	
 	@Autowired
 	private CouponService couponService;
+	
+	@Autowired
+	private PurchaseOrderService purchaseOrderService;
 	
 	@Autowired
 	private PaymentMethodService paymentMethodService;
@@ -517,10 +523,23 @@ public class AdminController {
 	
 //	Order table rendering -------------------------------------------------------------------------
 	@GetMapping("/orderManagement")
-	public String getOrderPage() {
+	public String orderManagement(Model model) {
+		
+		List<PurchaseOrder> orderList = purchaseOrderService.getAllOrders();
+		model.addAttribute("orderList", orderList);
 		return "orderManagement";
 	}
 	
-	
+	@GetMapping("/changeOrderStatus")
+	public ResponseEntity<Map<String,Object>> changeOrderStatus(@RequestParam("selectedValue") String orderStatus,
+								@RequestParam("orderId") Integer orderId){
+		
+		PurchaseOrder order = purchaseOrderService.getOrder(orderId);
+		order.setOrderStatus(orderStatus);
+		purchaseOrderService.createOrder(order);
+		Map<String,Object> response = new HashMap<>();
+		response.put("success", "completed");
+		return ResponseEntity.ok(response);
+	}
 	
 }
