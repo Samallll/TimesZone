@@ -51,9 +51,6 @@ public class Address {
 	@ManyToOne
     private Customer customer;
 	
-	@OneToOne
-    private PurchaseOrder order;
-	
 	public Address() {
 		super();
 	}

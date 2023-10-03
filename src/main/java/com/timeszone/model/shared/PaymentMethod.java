@@ -58,6 +58,14 @@ public class PaymentMethod {
 		super();
 		this.paymentMethodName = paymentMethodName;
 	}
+
+	public List<PurchaseOrder> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<PurchaseOrder> orders) {
+		this.orders = orders;
+	}
 	
 	
 }

@@ -106,7 +106,7 @@ public class ProductService {
 		pd.setPrice(p.getPrice());
 		pd.setProductId(p.getProductId());
 		pd.setProductName(p.getProductName());
-		pd.setQuantity(p.getQuantity());
+		pd.setQuantity(p.getQuantity()); 
 		for(SubCategory sc:p.getSubcategories()) {
 			pdSubCategoryList.add(sc.getSubCategoryName());
 			combo.put(sc.getCategory().getCategoryName(), sc.getSubCategoryName());

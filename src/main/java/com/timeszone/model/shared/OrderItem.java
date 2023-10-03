@@ -21,8 +21,7 @@ public class OrderItem {
 	@ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-	
-	private String strapColor;
+
 	
 	@ManyToOne
     @JoinColumn(name = "order_id")
@@ -44,13 +43,6 @@ public class OrderItem {
 		this.product = product;
 	}
 
-	public String getStrapColor() {
-		return strapColor;
-	}
-
-	public void setStrapColor(String strapColor) {
-		this.strapColor = strapColor;
-	}
 
 	public PurchaseOrder getOrder() {
 		return order;
@@ -64,8 +56,12 @@ public class OrderItem {
 		super();
 		this.orderItemCount = orderItemCount;
 		this.product = product;
-		this.strapColor = strapColor;
 		this.order = order;
 	}
+
+	public OrderItem() {
+		super();
+	}
+
 
 }

@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.timeszone.model.shared.CartItem;
@@ -34,9 +35,6 @@ public class Product {
 	
 	@Column(name="description",nullable=false)
 	private String description;
-	
-	@Column(name="quantity",nullable=false)
-	private Integer quantity;
 	
 	@Column(name="caseSize",nullable=false)
 	private Double caseSize;
@@ -68,17 +66,20 @@ public class Product {
 	@OneToMany(mappedBy = "product")
     private Set<CartItem> cartItems = new HashSet<>();
 	
+	@Column(name="quantity",nullable=false)
+	private Integer quantity;
+	
 	public Product() {
 		super();
 	}
 
-	public Product(String productName, String description, Integer quantity, Double caseSize, Double price,
+	public Product(String productName, String description,Integer quantity, Double caseSize, Double price,
 			Set<Category> categories, Set<SubCategory> subcategories, List<ProductImage> productImages,
 			LocalDate dateAdded) {
 		super();
 		this.productName = productName;
-		this.description = description;
 		this.quantity = quantity;
+		this.description = description;
 		this.caseSize = caseSize;
 		this.price = price;
 		this.categories = categories;
@@ -87,14 +88,13 @@ public class Product {
 		this.dateAdded = dateAdded;
 	}
 
-	public Product(Integer productId, String productName, String description, Integer quantity, Double caseSize,
+	public Product(Integer productId, String productName, String description, Double caseSize,
 			Double price, Set<Category> categories, Set<SubCategory> subcategories, List<ProductImage> productImages,
 			boolean isEnabled, LocalDate dateAdded) {
 		super();
 		this.productId = productId;
 		this.productName = productName;
 		this.description = description;
-		this.quantity = quantity;
 		this.caseSize = caseSize;
 		this.price = price;
 		this.categories = categories;
@@ -142,14 +142,6 @@ public class Product {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
 	}
 
 	public Double getCaseSize() {
@@ -211,4 +203,12 @@ public class Product {
 	public void setDateAdded(LocalDate dateAdded) {
 		this.dateAdded = dateAdded;
 	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}	
 }

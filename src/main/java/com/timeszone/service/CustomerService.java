@@ -121,6 +121,8 @@ public class CustomerService implements UserDetailsService{
 		return customerRepository.findById(customerId).orElseThrow(() -> new UsernameNotFoundException("UserName Not Found with the given Id"));
 	}
 
-
+	public Customer getCustomerByEmailId(String emailId) {
+		return customerRepository.findByEmailId(emailId);
+	}
 
 }

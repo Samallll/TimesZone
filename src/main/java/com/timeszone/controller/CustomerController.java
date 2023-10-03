@@ -2,6 +2,7 @@ package com.timeszone.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,9 @@ import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.model.shared.Coupon;
+import com.timeszone.model.shared.OrderItem;
 import com.timeszone.model.shared.PaymentMethod;
+import com.timeszone.model.shared.PurchaseOrder;
 import com.timeszone.repository.AddressRepository;
 import com.timeszone.repository.CartItemRepository;
 import com.timeszone.repository.CartRepository;
@@ -277,10 +280,11 @@ public class CustomerController {
 		
 		if(existingCartItemId!=null) {
 			CartItem existingCartItem = cartItemRepository.findById(existingCartItemId).get();
-			if(existingCartItem.getCartItemQuantity()<existingCartItem.getProduct().getQuantity()) {
-				existingCartItem.setCartItemQuantity(productQuantity + existingCartItem.getCartItemQuantity());
-				cartItemRepository.save(existingCartItem);
-			}
+			 if(existingCartItem.getCartItemQuantity()<existingCartItem.getProduct().getQuantity()) 
+			 { 
+				 existingCartItem.setCartItemQuantity(productQuantity + existingCartItem.getCartItemQuantity());
+				 cartItemRepository.save(existingCartItem); 
+			 }
 		}
 		else {
 			customerCart.getCartItems().add(cartItem);
@@ -312,6 +316,7 @@ public class CustomerController {
 		List<PaymentMethod> paymentMethodList = paymentMethodService.getAll();
 		Double grandTotal;
 		
+		session.removeAttribute("paymentMethodId");
 		Integer couponId = (Integer) session.getAttribute("couponApplied");
 		if(couponId!=null) {
 			Coupon coupon = couponService.getCoupon(couponId);
@@ -381,6 +386,8 @@ public class CustomerController {
 	  
 	  Order order = purchaseOrderService.createTransaction(grandTotal);
 	  Customer customer = customerRepository.findByEmailId(principal.getName());
+	  session.setAttribute("paymentMethodId", methodId);
+	  session.setAttribute("finalAmount", grandTotal);
 	  
 	  response.put("amount", grandTotal);
 	  response.put("customer_name", customer.getFirstName());
@@ -396,14 +403,29 @@ public class CustomerController {
 	
 	@ResponseBody
 	@GetMapping("/paymentSuccess")
-	public ResponseEntity<Map<String, Object>> paymentSuccess(@RequestParam(name = "razorPaymentId") String razorPaymentId,
-	                                                         @RequestParam(name = "razorSignature") String razorSignature){
+	public ResponseEntity<Map<String, Object>> paymentSuccess(@RequestParam(name = "razorPaymentId") String razorPaymentId,Principal principal,
+	                                                         @RequestParam(name = "razorSignature") String razorSignature,HttpSession session){
 		
 		Map<String,Object> response = new HashMap<>();
+		
 		boolean transactionCreated = purchaseOrderService.completeTransaction(razorPaymentId,razorSignature);
-		System.out.println("Transcation created or not: " + transactionCreated);
-		response.put("message", "completed the process");
+		if(transactionCreated) {
+			
+			purchaseOrderService.createOrderAfterPayment(razorPaymentId,razorSignature,session,principal);
+			response.put("success", "transaction success");
+		}
+		else {
+			response.put("message", "transactionFailed");
+		}
+		
+		
 		return ResponseEntity.ok(response);
+	}
+	
+	
+	@GetMapping("/viewOrders")
+	public String viewOrders() {
+		return "new";
 	}
 	
 //	Ajax backend methods =============================================================================================
@@ -439,6 +461,7 @@ public class CustomerController {
 					responseMap.put("error", "Out of stock");
 					return ResponseEntity.ok(responseMap);
 				}
+				
 			}
 		}
 		catch (Exception e) {
@@ -505,7 +528,7 @@ public class CustomerController {
 				Double couponAmount = cartPrice * (coupon.getPercentage()/100);
 				Double grandTotal = cartPrice - (cartPrice * (coupon.getPercentage()/100));
 				session.setAttribute("checkOutAmount", grandTotal);
-				session.setAttribute("couponApplied", true);
+				session.setAttribute("couponApplied", null);
 				responseMap.put("couponAmount", couponAmount);
 				responseMap.put("grandTotal", grandTotal);
 //				storing the coupon id in the session to proceed with checkout page

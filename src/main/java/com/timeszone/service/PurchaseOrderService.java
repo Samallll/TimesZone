@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpSession;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,13 @@ import com.razorpay.RazorpayException;
 import com.timeszone.model.customer.Address;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.OrderDTO;
+import com.timeszone.model.shared.Cart;
+import com.timeszone.model.shared.CartItem;
+import com.timeszone.model.shared.Coupon;
+import com.timeszone.model.shared.OrderItem;
 import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.model.shared.PurchaseOrder;
+import com.timeszone.repository.OrderItemRepository;
 import com.timeszone.repository.PurchaseOrderRepository;
 
 @Service
@@ -45,6 +52,9 @@ public class PurchaseOrderService {
 	private PurchaseOrderRepository purchaseOrderRepository;
 	
 	@Autowired
+	private OrderItemRepository orderItemRepository;
+	
+	@Autowired
 	private AddressService addressService;
 	
 	@Autowired
@@ -52,6 +62,12 @@ public class PurchaseOrderService {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private CouponService couponService;
+	
+	@Autowired
+	private CartService cartService;
 	
 	@Value("${razorpay.keyId}")
 	private String SECRET_ID; 
@@ -146,8 +162,8 @@ public class PurchaseOrderService {
 		return orderDto;
 	}
 	
-	public Order createTransaction(Double amount) {
-		
+//	sending request to razorpay for order_id creation ------------------------------------------------
+	public Order createTransaction(Double amount) {	
 		try {
 			  RazorpayClient client = new RazorpayClient(SECRET_ID,SECRET_KEY);
 			  JSONObject orderRequest = new JSONObject();
@@ -166,6 +182,7 @@ public class PurchaseOrderService {
 		return null;
 	}
 	
+//	random order id generation for this server ---------------------------------------------------------
 	private String generateRandomString(int length) {
 		
 		final String PREFIX = "order_";
@@ -183,8 +200,8 @@ public class PurchaseOrderService {
         return randomString.toString();
     }
 
-	public boolean completeTransaction(String razorPaymentId, String razorSignature) {
-		
+//	signature verification ---------------------------------------------------------------------------
+	public boolean completeTransaction(String razorPaymentId, String razorSignature) {	
 		boolean verified = verifyTranscation(razorPaymentId,razorSignature);
 		if(verified) {
 			return true;
@@ -194,8 +211,7 @@ public class PurchaseOrderService {
 		}
 	}
 	
-	private boolean verifyTranscation(String razorPaymentId, String razorSignature) {
-		
+	private boolean verifyTranscation(String razorPaymentId, String razorSignature) {	
 		try {
 			String generatedSignature;
 			
@@ -237,5 +253,83 @@ public class PurchaseOrderService {
 	
 	public String getCurrency() {
 		return currency;
+	}
+	
+	public void createOrderItem(OrderItem orderItem) {
+		orderItemRepository.save(orderItem);
+	}
+	
+//	method to create an order once a payment is successfull  ---------------------------------------
+	public void createOrderAfterPayment(String razorPaymentId,String razorSignature,HttpSession session,Principal principal) {
+		
+		Integer couponId = (Integer) session.getAttribute("couponApplied");
+		Integer addressId = (Integer) session.getAttribute("addressId");
+		String paymentMethod = (String) session.getAttribute("paymentMethodId");
+		Double finalAmount = (Double) session.getAttribute("finalAmount");
+		PurchaseOrder newOrder = new PurchaseOrder();
+		int orderedQuantity = 0;
+		
+		System.out.println("couponId: " + couponId);
+		System.out.println("addressId: " + addressId);
+		System.out.println("payementMethod: " + paymentMethod);
+		System.out.println("finalAmount: " + finalAmount);
+		
+		String userName = principal.getName();
+		Customer customer = customerService.getCustomerByEmailId(userName);
+		newOrder.setCustomer(customer);
+		
+		Address address = addressService.getAddress(addressId);
+		newOrder.setAddress(address);
+		
+		PaymentMethod getPaymentMethod = paymentMethodService.getPaymentMethod(paymentMethod);
+		newOrder.setPaymentMethod(getPaymentMethod);
+		
+		newOrder.setOrderedDate(LocalDate.now());
+		
+		newOrder.setOrderStatus("Pending");
+		
+		newOrder.setOrderAmount(finalAmount);
+		session.removeAttribute("finalAmount");
+		
+		newOrder.setTranscationId(razorPaymentId);
+		
+		purchaseOrderRepository.save(newOrder);
+		System.out.println("newOrder saved without saving coupon");
+		
+		if(couponId != null) {
+//			update both order and coupon
+			Coupon coupon = couponService.getCoupon(couponId);
+			newOrder.setCoupon(coupon);
+			coupon.getOrdersList().add(newOrder);
+			session.removeAttribute("couponApplied");
+			couponService.addCoupon(coupon);
+		}
+		
+		getPaymentMethod.getOrders().add(newOrder);
+		paymentMethodService.createPaymentMethod(getPaymentMethod);
+		
+		customer.getOrders().add(newOrder);
+		customerService.customerRepository.save(customer);
+		
+//		convert cartitems into orderitems only after saving the purchase order
+		OrderItem orderItem = new OrderItem();
+		List<CartItem> cartItemsList = new ArrayList<>(customer.getCart().getCartItems());
+		for (CartItem cartItem: cartItemsList) {
+			orderItem.setOrderItemCount(cartItem.getCartItemQuantity());
+			orderItem.setProduct(cartItem.getProduct());
+			orderItem.setOrder(newOrder);
+			createOrderItem(orderItem);
+			//cart items deletion
+			cartService.deleteCartItem(cartItem);
+			System.out.println("Cart Item count: "+ cartItem.getCartItemQuantity());
+			orderedQuantity = orderedQuantity + cartItem.getCartItemQuantity();
+		}
+		
+		newOrder.setOrderedQuantity(orderedQuantity);
+		
+		System.out.println("Total count: "+ orderedQuantity);
+		purchaseOrderRepository.save(newOrder);
+		System.out.println("newOrder saved after saving coupon");
+		
 	}
 }

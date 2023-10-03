@@ -99,7 +99,7 @@
                 success: function (response) {
 					
 					if("success" in response){
-						window.location.href = "/viewOrders";
+						window.location.href = "/user/viewOrders";
 					}
 					else{
 						var message = response.message;

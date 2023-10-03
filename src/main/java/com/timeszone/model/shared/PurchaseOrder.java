@@ -22,7 +22,7 @@ public class PurchaseOrder {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer orderId;
 	
-	@OneToOne(mappedBy="order",cascade=CascadeType.ALL)
+	@OneToOne
     private Address address;
 	
 	@OneToMany(mappedBy="order",cascade=CascadeType.ALL)
@@ -41,6 +41,11 @@ public class PurchaseOrder {
 	private Double orderAmount;
 
 	private String transcationId;
+	
+	private Integer orderedQuantity;
+	
+	@ManyToOne
+	private Coupon coupon;
 	
 	public PurchaseOrder( Address address, Customer customer, PaymentMethod paymentMethod,
 			LocalDate orderedDate, String orderStatus,Double orderAmount) {
@@ -149,6 +154,22 @@ public class PurchaseOrder {
 
 	public void setOrderAmount(Double orderAmount) {
 		this.orderAmount = orderAmount;
+	}
+
+	public Coupon getCoupon() {
+		return coupon;
+	}
+
+	public void setCoupon(Coupon coupon) {
+		this.coupon = coupon;
+	}
+
+	public Integer getOrderedQuantity() {
+		return orderedQuantity;
+	}
+
+	public void setOrderedQuantity(Integer orderedQuantity) {
+		this.orderedQuantity = orderedQuantity;
 	}
 	
 	

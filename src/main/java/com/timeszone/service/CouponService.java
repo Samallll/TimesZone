@@ -12,12 +12,16 @@ import org.springframework.stereotype.Service;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.shared.Coupon;
 import com.timeszone.repository.CouponRepository;
+import com.timeszone.repository.CustomerCouponRepository;
 
 @Service
 public class CouponService {
 	
 	@Autowired
 	private CouponRepository couponRepository;
+	
+	@Autowired
+	private CustomerCouponRepository CustomerCouponRepository;
 	
 	public Coupon getCoupon(Integer id) {
 		return couponRepository.findById(id).get();
@@ -60,12 +64,10 @@ public class CouponService {
 	}
 	
 	public List<Coupon> getAll(){
-		
 		return couponRepository.findAll();
 	}
 	
 	public List<Coupon> getAllNonExpired(){
-		
 		LocalDate expirationTime;
     	LocalDate currentTime = LocalDate.now();
 		List<Coupon> nonExpiredCoupons = new ArrayList<>();
@@ -79,7 +81,6 @@ public class CouponService {
 	}
 	
 	public List<Coupon> getAllIsActive(){
-		
 		List<Coupon> activeCoupons = new ArrayList<>();
 		for(Coupon c:couponRepository.findAll()) {
 			if(c.getIsActive()) {
@@ -90,7 +91,6 @@ public class CouponService {
 	}
 	
 	public List<Coupon> getAllBelowCartItemsCount(Integer count){
-		
 		List<Coupon> basedOnCount = new ArrayList<>();
 		for(Coupon c:couponRepository.findAll()) {
 			if(c.getCartItemsCount()<=count) {
@@ -102,7 +102,6 @@ public class CouponService {
 	
 	
 	public List<Coupon> getAllBelowMinimumPurchaseAmount(Double amount){
-		
 		List<Coupon> basedOnAmount = new ArrayList<>();
 		for(Coupon c:couponRepository.findAll()) {
 			if(c.getMinimumPurchaseAmount()<=amount) {
@@ -113,7 +112,6 @@ public class CouponService {
 	}
 	
 	public boolean containsCoupon(Customer customer,Coupon coupon) {
-		
 		for(Coupon c:customer.getCoupons()) {
 			if(c.getCouponCode().equals(coupon.getCouponCode())) {
 				return true;
@@ -121,4 +119,5 @@ public class CouponService {
 		}
 		return false;
 	}
+
 }
