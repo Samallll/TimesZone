@@ -118,4 +118,9 @@ public class ProductService {
 		
 		return pd;
 	}
+
+	public void modifyProduct(Product product) {
+		
+		productRepository.save(product);
+	}
 }

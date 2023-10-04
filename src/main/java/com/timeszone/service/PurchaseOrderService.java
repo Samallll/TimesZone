@@ -27,6 +27,7 @@ import com.razorpay.RazorpayException;
 import com.timeszone.model.customer.Address;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.OrderDTO;
+import com.timeszone.model.product.Product;
 import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.model.shared.Coupon;
@@ -68,6 +69,9 @@ public class PurchaseOrderService {
 	
 	@Autowired
 	private CartService cartService;
+	
+	@Autowired
+	private ProductService productService;
 	
 	@Value("${razorpay.keyId}")
 	private String SECRET_ID; 
@@ -264,13 +268,46 @@ public class PurchaseOrderService {
 	}
 	
 //	method to create an order once a payment is successfull  ---------------------------------------
-	public void createOrderAfterPayment(String razorPaymentId,String razorSignature,HttpSession session,Principal principal) {
+	public void createOrderAfterRazorPayment(String razorPaymentId,String razorSignature,HttpSession session,Principal principal) {
+		
+		PurchaseOrder newOrder = new PurchaseOrder();
+		newOrder.setTranscationId(razorPaymentId);
+		createOrder(session,principal,newOrder);	
+	}
+	
+	public List<PurchaseOrder> getOrdersForCustomer(Customer customer){
+		return purchaseOrderRepository.findAllByCustomer(customer);
+	}
+	
+//	Order creation based on the payment method ================================================
+	
+	public void createOrderForCodTransaction(Double grandTotal, Customer customer, HttpSession session,
+			Principal principal) {
+		
+		PurchaseOrder newOrder = new PurchaseOrder();
+		createOrder(session,principal,newOrder);
+;	}
+	
+	//order creation for wallet transaction ----------------------------
+	public boolean createOrderForWalletTransaction(Double grandTotal, Customer customer,HttpSession session,Principal principal) {
+		
+		if(customer.getWallet()<grandTotal) {
+			return false;
+		}
+		PurchaseOrder newOrder = new PurchaseOrder();
+		createOrder(session,principal,newOrder);
+//		reducing the wallet amount
+		customer.setWallet(customer.getWallet() - grandTotal);
+		return true;
+	}
+	
+//	for creating order for any type of paymentmethod -----------------------
+	private void createOrder(HttpSession session,Principal principal,PurchaseOrder newOrder) {
 		
 		Integer couponId = (Integer) session.getAttribute("couponApplied");
 		Integer addressId = (Integer) session.getAttribute("addressId");
 		String paymentMethod = (String) session.getAttribute("paymentMethodId");
 		Double finalAmount = (Double) session.getAttribute("finalAmount");
-		PurchaseOrder newOrder = new PurchaseOrder();
 		int orderedQuantity = 0;
 		
 		String userName = principal.getName();
@@ -290,10 +327,7 @@ public class PurchaseOrderService {
 		newOrder.setOrderAmount(finalAmount);
 		session.removeAttribute("finalAmount");
 		
-		newOrder.setTranscationId(razorPaymentId);
-		
 		purchaseOrderRepository.save(newOrder);
-		System.out.println("newOrder saved without saving coupon");
 		
 		if(couponId != null) {
 //			update both order and coupon
@@ -304,7 +338,7 @@ public class PurchaseOrderService {
 			couponService.addCoupon(coupon);
 		}
 		
-		getPaymentMethod.getOrders().add(newOrder);
+		getPaymentMethod.getOrders().add(newOrder); 
 		paymentMethodService.createPaymentMethod(getPaymentMethod);
 		
 		customer.getOrders().add(newOrder);
@@ -312,10 +346,15 @@ public class PurchaseOrderService {
 		
 //		convert cartitems into orderitems only after saving the purchase order
 		OrderItem orderItem = new OrderItem();
+		Product product = new Product();
 		List<CartItem> cartItemsList = new ArrayList<>(customer.getCart().getCartItems());
 		for (CartItem cartItem: cartItemsList) {
 			orderItem.setOrderItemCount(cartItem.getCartItemQuantity());
-			orderItem.setProduct(cartItem.getProduct());
+			product = cartItem.getProduct();
+			//reducing the product quantity
+			product.setQuantity(product.getQuantity()-cartItem.getCartItemQuantity());
+			productService.modifyProduct(product);
+			orderItem.setProduct(product);
 			orderItem.setOrder(newOrder);
 			createOrderItem(orderItem);
 			//cart items deletion
@@ -327,8 +366,5 @@ public class PurchaseOrderService {
 		
 		purchaseOrderRepository.save(newOrder);	
 	}
-	
-	public List<PurchaseOrder> getOrdersForCustomer(Customer customer){
-		return purchaseOrderRepository.findAllByCustomer(customer);
-	}
+
 }

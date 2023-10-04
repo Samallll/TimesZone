@@ -370,7 +370,8 @@ public class CustomerController {
 	public ResponseEntity<Map<String, Object>> proceedToCheckout(@RequestBody Map<String, Object> formData,HttpSession session,Principal principal) {
 
 	  Map<String, Object> response = new HashMap<>();
-
+	  
+	  //payment method name
 	  String methodId = (String) formData.get("selectedPaymentMethod");
 	  String amount = (String) formData.get("grandTotal");
 	  Double grandTotal = amount.isBlank()?null:Double.parseDouble(amount);
@@ -383,11 +384,27 @@ public class CustomerController {
 	    response.put("message", "Please select a shipping address.");
 	    return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 	  }
-	  
-	  Order order = purchaseOrderService.createTransaction(grandTotal);
-	  Customer customer = customerRepository.findByEmailId(principal.getName());
+	  String userName = principal.getName();
+	  Customer customer = customerService.getCustomerByEmailId(userName);
 	  session.setAttribute("paymentMethodId", methodId);
 	  session.setAttribute("finalAmount", grandTotal);
+	  
+	  if(methodId.equals("Wallet")) {
+		  if(purchaseOrderService.createOrderForWalletTransaction(grandTotal,customer,session,principal)) {
+			  response.put("message", "Order has been placed successfully");
+		  }
+		  else {
+			  response.put("message", "Insufficient Balance in Wallet");
+		  }
+		  return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+	  }
+	  if(methodId.equals("Cash On Delivery (COD)")) {
+		  purchaseOrderService.createOrderForCodTransaction(grandTotal,customer,session,principal);
+		  response.put("message", "Order has been placed successfully");
+		  return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+	  }
+	  
+	  Order order = purchaseOrderService.createTransaction(grandTotal);
 	  
 	  response.put("amount", grandTotal);
 	  response.put("customer_name", customer.getFirstName());
@@ -407,18 +424,15 @@ public class CustomerController {
 	                                                         @RequestParam(name = "razorSignature") String razorSignature,HttpSession session){
 		
 		Map<String,Object> response = new HashMap<>();
-		
 		boolean transactionCreated = purchaseOrderService.completeTransaction(razorPaymentId,razorSignature);
 		if(transactionCreated) {
 			
-			purchaseOrderService.createOrderAfterPayment(razorPaymentId,razorSignature,session,principal);
+			purchaseOrderService.createOrderAfterRazorPayment(razorPaymentId,razorSignature,session,principal);
 			response.put("success", "transaction success");
 		}
 		else {
 			response.put("message", "transactionFailed");
 		}
-		
-		
 		return ResponseEntity.ok(response);
 	}
 	
@@ -445,6 +459,8 @@ public class CustomerController {
 		CartItem cartItem = cartItemRepository.findById(cartItemId).get();
 		Product product = cartItem.getProduct();
 		Integer newQuantity;
+		session.removeAttribute("checkOutAmount");
+		session.setAttribute("couponApplied", null);
 		try {
 			if(product!=null) {
 				newQuantity = productQuantity +1;
@@ -487,7 +503,7 @@ public class CustomerController {
 		Product product = cartItem.getProduct();
 		Integer newQuantity;
 		session.removeAttribute("checkOutAmount");
-		session.setAttribute("couponApplied", false);
+		session.setAttribute("couponApplied", null);
 		try {
 			
 			if(product!=null) {
@@ -528,7 +544,10 @@ public class CustomerController {
 		try {
 			
 			if(coupon!=null) {
-				
+				if(couponService.couoponApplied(customer,coupon)) {
+					responseMap.put("error", "The selected coupon has already been applied and can only be used once.");
+					return ResponseEntity.ok(responseMap);
+				}
 				Double cartPrice = customer.getCart().getTotalPrice();
 				Double couponAmount = cartPrice * (coupon.getPercentage()/100);
 				Double grandTotal = cartPrice - (cartPrice * (coupon.getPercentage()/100));

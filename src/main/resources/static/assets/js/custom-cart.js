@@ -77,30 +77,52 @@
 			 couponId : id
 			 },
          success: function (response) { 
-			
-			document.getElementById('couponAmount').innerText = response.couponAmount + '.0 Rs';
-			document.getElementById('grandTotal').innerText = response.grandTotal + '.0 Rs';
-			
-			const flashNotification = $("#flash-notification");
-			// Remove any existing alert elements
-			flashNotification.empty();
-			
-			 const alertElement = $(`<div class="alert alert-success" role="success">
-			 Discount Code applied successfully
-			 </div>`); 
 			 
-			 // Append the alert element to the flash notification element
-			flashNotification.append(alertElement);
-		  
-			// Show the flash notification
-			flashNotification.fadeIn("slow");
-		  
-			$("#discount-code").val("");
-		
-			// Hide the flash notification after 3 seconds
-			setTimeout(function() {
-		  	flashNotification.fadeOut("slow");
-			}, 3000);
+			if("error" in response){				
+				const flashNotification = $("#flash-notification");
+				// Remove any existing alert elements
+				flashNotification.empty();
+				
+				 const alertElement = $(`<div class="alert alert-danger" role="success">
+				 ${response.error}
+				 </div>`);
+				 
+				 // Append the alert element to the flash notification element
+				flashNotification.append(alertElement);
+			  
+				// Show the flash notification
+				flashNotification.fadeIn("slow");
+			
+				// Hide the flash notification after 3 seconds
+				setTimeout(function() {
+			  	flashNotification.fadeOut("slow");
+				}, 3000);
+			}
+			else{
+				document.getElementById('couponAmount').innerText = response.couponAmount + '.0 Rs';
+				document.getElementById('grandTotal').innerText = response.grandTotal + '.0 Rs';
+				
+				const flashNotification = $("#flash-notification");
+				// Remove any existing alert elements
+				flashNotification.empty();
+				
+				 const alertElement = $(`<div class="alert alert-success" role="success">
+				 Discount Code applied successfully
+				 </div>`);
+				 
+				 // Append the alert element to the flash notification element
+				flashNotification.append(alertElement);
+			  
+				// Show the flash notification
+				flashNotification.fadeIn("slow");
+			
+				// Hide the flash notification after 3 seconds
+				setTimeout(function() {
+			  	flashNotification.fadeOut("slow");
+				}, 3000);
+			}
+						 
+			 
          },
          contentType: "text/plain"
      });

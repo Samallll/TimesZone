@@ -11,17 +11,14 @@ import org.springframework.stereotype.Service;
 
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.shared.Coupon;
+import com.timeszone.model.shared.PurchaseOrder;
 import com.timeszone.repository.CouponRepository;
-import com.timeszone.repository.CustomerCouponRepository;
 
 @Service
 public class CouponService {
 	
 	@Autowired
 	private CouponRepository couponRepository;
-	
-	@Autowired
-	private CustomerCouponRepository CustomerCouponRepository;
 	
 	public Coupon getCoupon(Integer id) {
 		return couponRepository.findById(id).get();
@@ -114,6 +111,17 @@ public class CouponService {
 	public boolean containsCoupon(Customer customer,Coupon coupon) {
 		for(Coupon c:customer.getCoupons()) {
 			if(c.getCouponCode().equals(coupon.getCouponCode())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean couoponApplied(Customer customer, Coupon coupon) {
+		
+		List<PurchaseOrder> orderList = coupon.getOrdersList();
+		for(PurchaseOrder order: orderList) {
+			if(order.getCustomer().getEmailId().equals(customer.getEmailId())) {
 				return true;
 			}
 		}

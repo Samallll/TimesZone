@@ -58,9 +58,6 @@
 		    "description": "Please continue with payment",
 		    "order_id": response.order_id, //Pass the `order_id` obtained in the response of from razorpay
 		    "handler": function (responseMap){
-		        alert(responseMap.razorpay_payment_id);
-		        alert(responseMap.razorpay_order_id);
-		        alert(responseMap.razorpay_signature);
 		        //payment completed successfully
 		        verifyTranscation(responseMap.razorpay_payment_id,responseMap.razorpay_signature);
 		    },
@@ -79,8 +76,11 @@
 		var rzp1 = new Razorpay(options);
 		rzp1.on('payment.failed', function (responseMap){
 
-		        alert(responseMap.error.description);
-		        alert(responseMap.error.reason);
+		        var message = "Something wrong happened. Please try again after sometimes";
+				var modal = $('#myModal');
+				modal.find('.modal-title').text('Alert');
+				modal.find('.modal-body').html(message);
+				modal.modal('show');
 		});
 		rzp1.open();
 	}

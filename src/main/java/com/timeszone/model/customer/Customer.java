@@ -76,6 +76,8 @@ public class Customer implements UserDetails {
 	@OneToOne(mappedBy = "customer")
     private Cart cart;
 	
+	private Double wallet = 0.0;
+	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "customer_coupon",
                joinColumns = @JoinColumn(name = "customer_id"),
@@ -289,6 +291,14 @@ public class Customer implements UserDetails {
 
 	public void setCoupons(Set<Coupon> coupons) {
 		this.coupons = coupons;
+	}
+
+	public Double getWallet() {
+		return wallet;
+	}
+
+	public void setWallet(Double wallet) {
+		this.wallet = wallet;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.timeszone.model.shared;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -23,7 +24,7 @@ public class PaymentMethod {
 	private String paymentMethodName;
 	
 	@OneToMany(mappedBy="paymentMethod")
-	private List<PurchaseOrder> orders;
+	private List<PurchaseOrder> orders = new ArrayList<>();
 
 	public Integer getPaymentMethodId() {
 		return paymentMethodId;
