@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
@@ -39,6 +41,7 @@ import com.timeszone.model.customer.Address;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.AddressDTO;
 import com.timeszone.model.dto.CustomerDTO;
+import com.timeszone.model.dto.InvoiceDTO;
 import com.timeszone.model.dto.LoginDTO;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductImage;
@@ -100,6 +103,9 @@ public class CustomerController {
 	
 	@Autowired
 	private PurchaseOrderService purchaseOrderService;
+	
+	@Autowired
+	private SpringTemplateEngine springTemplateEngine;
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
 	
@@ -444,6 +450,30 @@ public class CustomerController {
 		List<PurchaseOrder> orderList = purchaseOrderService.getAllByCustomer(customer);
 		model.addAttribute("orderList", orderList);
 		return "new";
+	}
+	
+	@GetMapping("/orderDetails")
+	public String orderDetails(@RequestParam("id") Integer orderId,Model model) {
+		
+		PurchaseOrder order = purchaseOrderService.getOrder(orderId);
+		model.addAttribute("orderItemList", order.getOrderItems());
+		model.addAttribute("order", order);
+		return "orderDetails";
+	}
+	
+	@GetMapping("/invoice")
+	public String generateInvoice(@RequestParam("id") Integer orderId) {
+		
+		String finalHtml = null;
+		InvoiceDTO invoice = purchaseOrderService.createInvoice(orderId);
+		Context dataContext = purchaseOrderService.setData(invoice);
+		
+		finalHtml = springTemplateEngine.process("invoice", dataContext);
+		
+		purchaseOrderService.htmlToPdf(finalHtml);
+		
+		return "finalHtml";
+		
 	}
 	
 	

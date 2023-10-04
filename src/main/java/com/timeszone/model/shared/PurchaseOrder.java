@@ -1,6 +1,7 @@
 package com.timeszone.model.shared;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,7 +27,7 @@ public class PurchaseOrder {
     private Address address;
 	
 	@OneToMany(mappedBy="order",cascade=CascadeType.ALL)
-    private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems= new ArrayList<>();
 	
 	@ManyToOne
     private Customer customer;
@@ -172,6 +173,12 @@ public class PurchaseOrder {
 		this.orderedQuantity = orderedQuantity;
 	}
 	
-	
+	public double getActualAmount() {
+        double totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getProduct().getPrice() * orderItem.getOrderItemCount();
+        }
+        return totalPrice;
+    }
 	
 }

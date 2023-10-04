@@ -1,5 +1,12 @@
 package com.timeszone.service;
 
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
+import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.itextpdf.kernel.pdf.PdfWriter;
+
+import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
@@ -8,9 +15,13 @@ import java.security.Principal;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -20,15 +31,17 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.timeszone.model.customer.Address;
 import com.timeszone.model.customer.Customer;
+import com.timeszone.model.dto.InvoiceDTO;
 import com.timeszone.model.dto.OrderDTO;
 import com.timeszone.model.product.Product;
-import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.OrderItem;
@@ -345,20 +358,25 @@ public class PurchaseOrderService {
 		customerService.customerRepository.save(customer);
 		
 //		convert cartitems into orderitems only after saving the purchase order
-		OrderItem orderItem = new OrderItem();
 		Product product = new Product();
 		List<CartItem> cartItemsList = new ArrayList<>(customer.getCart().getCartItems());
+		
 		for (CartItem cartItem: cartItemsList) {
+			OrderItem orderItem = new OrderItem();
 			orderItem.setOrderItemCount(cartItem.getCartItemQuantity());
+			
 			product = cartItem.getProduct();
 			//reducing the product quantity
 			product.setQuantity(product.getQuantity()-cartItem.getCartItemQuantity());
 			productService.modifyProduct(product);
+			
 			orderItem.setProduct(product);
 			orderItem.setOrder(newOrder);
 			createOrderItem(orderItem);
+			
 			//cart items deletion
 			cartService.deleteCartItem(cartItem);
+			newOrder.getOrderItems().add(orderItem);
 			orderedQuantity = orderedQuantity + cartItem.getCartItemQuantity();
 		}
 		
@@ -366,5 +384,82 @@ public class PurchaseOrderService {
 		
 		purchaseOrderRepository.save(newOrder);	
 	}
-
+	
+	
+//	Invoice creation -----------------------------------
+	public InvoiceDTO createInvoice(Integer orderId) {
+		
+		InvoiceDTO invoice = new InvoiceDTO();
+		Double productAmount = (double) 0;
+		Double couponAmount = (double) 0;
+		PurchaseOrder order = purchaseOrderRepository.findById(orderId).get();
+		Address address = order.getAddress();
+		Coupon coupon = order.getCoupon();
+		Customer customer = order.getCustomer();
+		
+		invoice.setCustomerName(customer.getFirstName()+" "+customer.getLastName());
+		invoice.setAddressLineOne(address.getAddressLineOne());
+		invoice.setAddressLineOne(address.getAddressLineTwo());
+		invoice.setCity(address.getCity());
+		invoice.setZipCode(address.getPinCode().toString());
+		invoice.setPhoneNumber(address.getContactNumber());
+		
+		LocalDate date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+        String formattedDate = date.format(formatter);
+		invoice.setDate(formattedDate);
+		
+		Random random = new Random();
+        int min = 100000000;
+        int max = 999999999; 
+        int randomNumber = random.nextInt(max - min + 1) + min;
+        String randomString = String.valueOf(randomNumber);
+		invoice.setInvoiceNumber(randomString);
+		
+		for(OrderItem orderItem: order.getOrderItems()) {
+			invoice.getProducts().add(orderItem.getProduct());
+			productAmount = productAmount + (orderItem.getProduct().getPrice()*orderItem.getOrderItemCount());
+		}
+		invoice.setOrderedQuantity(order.getOrderedQuantity());
+		invoice.setSubTotal(productAmount);
+		
+		if(coupon!=null) {
+			couponAmount = (coupon.getPercentage()*productAmount)/100;
+			invoice.setCouponAmount(couponAmount);
+		}
+		invoice.setGrandTotal(couponAmount+productAmount);
+		return invoice;
+	}
+	
+	public Context setData(InvoiceDTO invoice) {
+		
+		Context context = new Context();
+		Map<String, Object> data = new HashMap<>();
+		data.put("invoice", invoice);
+		context.setVariables(data);
+		return context;
+	}
+	
+	public String htmlToPdf(String processedHtml) {
+		
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		try {
+			PdfWriter pdfwriter = new PdfWriter(byteArrayOutputStream);
+			DefaultFontProvider defaultFont = new DefaultFontProvider(false, true, false);
+			ConverterProperties converterProperties = new ConverterProperties();
+			converterProperties.setFontProvider(defaultFont);
+			HtmlConverter.convertToPdf(processedHtml, pdfwriter, converterProperties);
+			FileOutputStream fout = new FileOutputStream("/Users/User/Downloads/employee.pdf");
+			byteArrayOutputStream.writeTo(fout);
+			byteArrayOutputStream.close();
+			byteArrayOutputStream.flush();
+			fout.close();
+			return null;
+			
+		} catch(Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+		
+		return null;
+	}
 }

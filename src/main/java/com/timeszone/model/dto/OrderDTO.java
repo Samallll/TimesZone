@@ -17,7 +17,7 @@ public class OrderDTO {
 	
 	private String orderStatus;
 	
-	private String[] orderStatusList = {"Shipped","Pending","Delivered","Cancelled","Refunded","Returned"};
+	private String[] orderStatusList = {"Requested for Return","Shipped","Pending","Delivered","Cancelled","Refunded","Returned"};
 	
 	private Integer addressId;
 	
