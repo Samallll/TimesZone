@@ -31,6 +31,11 @@
         
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 d-flex justify-content-end" id="navbar">
           <ul class="navbar-nav  justify-content-end">
+		    <li class="nav-item d-flex align-items-center">
+              <a th:href="@{/guest/shop}" class="nav-link text-body font-weight-bold px-0 me-3">
+                <span class="d-sm-inline d-none">Shop</span>
+              </a>
+            </li> 
             <li class="nav-item d-flex align-items-center">
               <a th:href="@{/logout}" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
@@ -112,6 +117,7 @@
               
               <div class="col-12 col-xl-8">
 				  <div class="col-12 d-flex justify-content-end">
+					  <a th:href="@{/user/viewOrders}" class="btn btn-outline-secondary me-2 mb-2">View Orders</a>
 					  <a th:href="@{/user/addAddress(id=${customerData.customerId})}" class="btn btn-success me-4 mb-2">Add Address</a>
 				  </div>
 	              <div class="card card-plain border border-secondary mt-3" th:each="address:${addressList}">

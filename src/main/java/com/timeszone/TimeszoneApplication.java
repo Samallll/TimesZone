@@ -2,6 +2,7 @@ package com.timeszone;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -15,9 +16,12 @@ import com.timeszone.model.customer.Role;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.SubCategory;
+import com.timeszone.model.shared.PurchaseOrder;
 import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
+import com.timeszone.repository.OrderItemRepository;
 import com.timeszone.repository.ProductRepository;
+import com.timeszone.repository.PurchaseOrderRepository;
 import com.timeszone.repository.RoleRepository;
 import com.timeszone.repository.SubCategoryRepository;
 
@@ -34,7 +38,8 @@ public class TimeszoneApplication {
 			PasswordEncoder encoder,
 			ProductRepository productRepository,
 			CategoryRepository categoryRepository,
-			SubCategoryRepository subCategoryRepository
+			SubCategoryRepository subCategoryRepository,
+			PurchaseOrderRepository orderRepository
 			) {
 		
 		return args -> {
@@ -52,6 +57,7 @@ public class TimeszoneApplication {
 			
 			Customer admin = new Customer("root","root","root@example.com","+917907208032",encoder.encode("root"),roles);
 			customerRepository.save(admin);
+			
 			
 			};
 		}

@@ -448,8 +448,11 @@ public class CustomerController {
 		String userName = principal.getName();
 		Customer customer = customerRepository.findByEmailId(userName);
 		List<PurchaseOrder> orderList = purchaseOrderService.getAllByCustomer(customer);
+		if(orderList.size()<1) {
+			return "redirect:/guest/shop";
+		}
 		model.addAttribute("orderList", orderList);
-		return "new";
+		return "viewOrders";
 	}
 	
 	@GetMapping("/orderDetails")

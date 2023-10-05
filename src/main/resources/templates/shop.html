@@ -72,23 +72,8 @@
                                     <li><a href="about.html">about</a></li>
                                     <li class="hot"><a href="#">Latest</a>
                                         <ul class="submenu">
-                                            <li><a href="shop.html"> Product list</a></li>
-                                            <li><a href="product_details.html"> Product Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="blog.html">Blog</a>
-                                        <ul class="submenu">
-                                            <li><a href="blog.html">Blog</a></li>
-                                            <li><a href="blog-details.html">Blog Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Pages</a>
-                                        <ul class="submenu">
-                                            <li><a th:href="@{/guest/login}">Login</a></li>
-                                            <li><a href="cart.html">Cart</a></li>
-                                            <li><a href="elements.html">Element</a></li>
-                                            <li><a href="confirmation.html">Confirmation</a></li>
-                                            <li><a href="checkout.html">Product Checkout</a></li>
+                                            <li><a th:href="@{/guest/shop}"> Product list</a></li>
+                                            
                                         </ul>
                                     </li>
                                     <li><a href="contact.html">Contact</a></li>
@@ -98,13 +83,8 @@
                         <!-- Header Right -->
                         <div class="header-right">
                             <ul>
-                                <li>
-                                    <div class="nav-search search-switch">
-                                        <span class="flaticon-search"></span>
-                                    </div>
-                                </li>
                                 <li> <a th:href="@{/guest/login}"><span class="flaticon-user"></span></a></li>
-                                <li><a th:href="@{/admin/}"><span class="flaticon-shopping-cart"></span></a> </li>
+                                <li><a th:href="@{/user/shoppingCart}"><span class="flaticon-shopping-cart"></span></a> </li>
                                 <li>
                                 <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-primary">Logout</a></li>
                             </ul>
@@ -199,8 +179,8 @@
                 </div>
                 <div class="col-lg-9 col-md-9">
                     <div class="row">
-						<div class="col-lg-4 col-md-6" th:each="product:${productList}">
-                            <div class="product__item border border-secondary rounded">
+						<div class="col-lg-4 col-md-6"  th:each="product:${productList}">
+                            <div class="product__item border border-secondary rounded" >
 								
                                 <div class="product__item__pic set-bg" data-setbg="@{'/admin/showImage/' + ${product.productImages[0].imageId}}">
 									<div th:if="${product.quantity <= 0}" class="label stockout bg-danger">Out Of Stock</div>
