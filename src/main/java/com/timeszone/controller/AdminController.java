@@ -40,10 +40,12 @@ import com.timeszone.model.product.SubCategory;
 import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.model.shared.PurchaseOrder;
+import com.timeszone.model.shared.ReturnReason;
 import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductImageRepository;
 import com.timeszone.repository.ProductRepository;
+import com.timeszone.repository.ReturnReasonRepository;
 import com.timeszone.repository.SubCategoryRepository;
 import com.timeszone.service.CategoryService;
 import com.timeszone.service.CouponService;
@@ -98,6 +100,9 @@ public class AdminController {
 	
 	@Autowired
 	private ProductImageRepository productImageRepository;
+	
+	@Autowired
+	private ReturnReasonRepository returnReasonRepository;
 	
 	@GetMapping("/")
 	public String adminHome() {
@@ -282,8 +287,6 @@ public class AdminController {
         model.addAttribute("success", "File Uploaded Successfully");
         return redirectView;
 	}
-	
-
 	
 	@GetMapping("/deleteProductImage/{id}")
 	public String deleteProductImage(@PathVariable("id") Integer productImageId) {
@@ -525,8 +528,17 @@ public class AdminController {
 	@GetMapping("/orderManagement")
 	public String orderManagement(Model model) {
 		
-		List<PurchaseOrder> orderList = purchaseOrderService.getAllOrders();
+		List<PurchaseOrder> orderListByReturnRequest = purchaseOrderService.getAllByOrderStatus("Requested for Return");
+		model.addAttribute("orderListByReturnRequest", orderListByReturnRequest);
+		
+		List<PurchaseOrder> orderListByApprovedReturnRequest = purchaseOrderService.getAllByOrderStatus("Return Request Approved");
+		model.addAttribute("orderListByApprovedReturnRequest", orderListByApprovedReturnRequest);
+		
+		List<PurchaseOrder> orderList = purchaseOrderService.getAllOrders();		
+		orderList.removeAll(orderListByReturnRequest);
+		orderList.removeAll(orderListByApprovedReturnRequest);
 		model.addAttribute("orderList", orderList);
+		
 		return "orderManagement";
 	}
 	
@@ -542,4 +554,33 @@ public class AdminController {
 		return ResponseEntity.ok(response);
 	}
 	
+	@GetMapping("/orderDetails")
+	public String showOrderDetails(@RequestParam("id") Integer orderId,Model model) {
+		
+		PurchaseOrder order = purchaseOrderService.getOrder(orderId);
+		ReturnReason reason = returnReasonRepository.findByOrder(order);
+		model.addAttribute("order", order);
+		model.addAttribute("reason", reason);
+		model.addAttribute("orderItemList",order.getOrderItems());
+		return "orderDetailsAdmin";
+	}
+	
+	@GetMapping("order/return/request")
+	public String returnRequestCheck(@RequestParam("id") Integer approval,@RequestParam("orderId") Integer orderId) {
+		
+		if(approval==1) {
+			purchaseOrderService.updateOrderStatus(orderId, "Return Request Approved");
+		}
+		if(approval==0) {
+			purchaseOrderService.updateOrderStatus(orderId, "Return Request Declined");
+		}
+		return "redirect:/admin/orderManagement";
+	}
+	
+	@GetMapping("order/initiateRefund")
+	public String initiateRefund(@RequestParam("id") Integer orderId) {
+		
+		purchaseOrderService.returnOrder(orderId);
+		return "redirect:/admin/orderManagement";
+	}
 }

@@ -47,8 +47,10 @@ import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.OrderItem;
 import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.model.shared.PurchaseOrder;
+import com.timeszone.model.shared.ReturnReason;
 import com.timeszone.repository.OrderItemRepository;
 import com.timeszone.repository.PurchaseOrderRepository;
+import com.timeszone.repository.ReturnReasonRepository;
 
 @Service
 public class PurchaseOrderService {
@@ -67,6 +69,9 @@ public class PurchaseOrderService {
 	
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+	
+	@Autowired
+	private ReturnReasonRepository reasonRepository;
 	
 	@Autowired
 	private AddressService addressService;
@@ -385,6 +390,59 @@ public class PurchaseOrderService {
 		purchaseOrderRepository.save(newOrder);	
 	}
 	
+//	canceling a particular order ----------------------------------------
+	public void cancelOrder(Integer orderId) {
+		
+		PurchaseOrder cancelOrder = this.getOrder(orderId);
+		List<OrderItem> orderItems = cancelOrder.getOrderItems();
+		Customer customer = cancelOrder.getCustomer();
+		
+		for(OrderItem orderItem:orderItems) {
+			Product product = orderItem.getProduct();
+			product.setQuantity(product.getQuantity()+orderItem.getOrderItemCount());
+			productService.modifyProduct(product);
+		}
+		
+		returnAmount(customer,cancelOrder.getOrderAmount(),cancelOrder.getPaymentMethod());
+		cancelOrder.setOrderStatus("Cancelled");
+		purchaseOrderRepository.save(cancelOrder);
+		
+	}
+	
+	private void returnAmount(Customer customer,Double returnAmount,PaymentMethod paymentMethod) {
+		
+		if(paymentMethod.getPaymentMethodName().equals("UPI") || paymentMethod.getPaymentMethodName().equals("Wallet")) {
+			customer.setWallet(customer.getWallet()+returnAmount);
+			customerService.customerRepository.save(customer);
+		}
+	}
+	
+//	canceling a particular order ----------------------------------------
+	public void returnOrder(Integer orderId) {
+		
+		PurchaseOrder returnOrder = this.getOrder(orderId);
+		List<OrderItem> orderItems = returnOrder.getOrderItems();
+		Customer customer = returnOrder.getCustomer();
+		
+		for(OrderItem orderItem:orderItems) {
+			Product product = orderItem.getProduct();
+			product.setQuantity(product.getQuantity()+orderItem.getOrderItemCount());
+			productService.modifyProduct(product);
+		}
+		
+		returnAmount(customer,returnOrder.getOrderAmount(),returnOrder.getPaymentMethod());
+		returnOrder.setOrderStatus("Refunded");
+		if(returnOrder.getPaymentMethod().getPaymentMethodName().equals("Cash On Delivery (COD)")) {
+			customer.setWallet(customer.getWallet()+returnOrder.getOrderAmount());
+			customerService.customerRepository.save(customer);
+		}
+		purchaseOrderRepository.save(returnOrder);
+		
+	}
+	
+	public void saveReason(ReturnReason reason) {
+		reasonRepository.save(reason);
+	}
 	
 //	Invoice creation -----------------------------------
 	public InvoiceDTO createInvoice(Integer orderId) {

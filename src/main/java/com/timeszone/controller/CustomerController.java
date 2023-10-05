@@ -43,6 +43,7 @@ import com.timeszone.model.dto.AddressDTO;
 import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.InvoiceDTO;
 import com.timeszone.model.dto.LoginDTO;
+import com.timeszone.model.dto.ReturnReasonDTO;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.shared.Cart;
@@ -51,6 +52,7 @@ import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.OrderItem;
 import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.model.shared.PurchaseOrder;
+import com.timeszone.model.shared.ReturnReason;
 import com.timeszone.repository.AddressRepository;
 import com.timeszone.repository.CartItemRepository;
 import com.timeszone.repository.CartRepository;
@@ -442,6 +444,9 @@ public class CustomerController {
 		return ResponseEntity.ok(response);
 	}
 	
+	
+//	Order Management ================================================================================
+	
 	@GetMapping("/viewOrders")
 	public String viewOrders(Model model,Principal principal) {
 		
@@ -463,6 +468,40 @@ public class CustomerController {
 		model.addAttribute("order", order);
 		return "orderDetails";
 	}
+	
+	@GetMapping("order/cancel")
+	public ResponseEntity<Map<String,Object>> cancelOrder(@RequestParam("id") Integer orderId) {
+
+		Map<String,Object> response = new HashMap<>();
+		purchaseOrderService.cancelOrder(orderId);
+		
+		response.put("message", "Order Cancelled successfully");
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("order/returnReason")
+	public String returnOrder(@RequestParam("id") Integer orderId,Model model) {
+		
+		ReturnReasonDTO reason = new ReturnReasonDTO();
+		model.addAttribute("reason", reason);
+		model.addAttribute("orderId", orderId);
+		return "returnReason";
+	}
+	
+	@PostMapping("order/return/submitRequest")
+	public String submitReturnRequest(@ModelAttribute("reason") ReturnReasonDTO reason) {
+		
+		ReturnReason newReason = new ReturnReason();
+		newReason.setComment(reason.getComment());
+		newReason.setReturnReason(reason.getReturnReason());
+		PurchaseOrder order = purchaseOrderService.getOrder(reason.getOrderId());
+		newReason.setOrder(order);
+		purchaseOrderService.saveReason(newReason);
+		order.setOrderStatus("Requested for Return");
+		purchaseOrderService.createOrder(order);
+		return "redirect:/user/viewOrders";
+	}
+	
 	
 	@GetMapping("/invoice")
 	public String generateInvoice(@RequestParam("id") Integer orderId) {

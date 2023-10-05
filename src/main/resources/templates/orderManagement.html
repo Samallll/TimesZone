@@ -36,6 +36,8 @@
   <link id="pagestyle" href="/assets/css/material-dashboard.css?v=3.0.0" rel="stylesheet" />
   
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  
+  
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -197,7 +199,6 @@
 						    <option value="Cancelled">Cancelled</option>
 						    <option value="Returned">Returned</option>
 						    <option value="Refunded">Refunded</option>
-						    <option value="Requested for Return">Requested for Return</option>
 						</select>
 
                       </td>
@@ -233,7 +234,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr th:each="order:${orderList}">
+                    <tr th:each="order:${orderListByReturnRequest}">
                       <td class="align-middle text-center text-sm">
                         <h6 class="mb-0 text-sm" th:text="${order.orderId}"></h6>
                       </td>
@@ -253,21 +254,66 @@
                         <span class="badge badge-sm bg-gradient-success" th:text="${order.orderStatus}"></span>
                       </td>
                       <td class="align-middle d-flex align-items-center justify-content-center me-2">
-						
-						<select class="form-select ps-3 py-2" name="selectedOption" 
-									onchange="handleOptionChange(this.value,this.getAttribute('id'))" 
-									th:id="${order.orderId}">
-						    <option>Choose</option>
-						    <option value="Pending">Pending</option>
-						    <option value="Shipped">Shipped</option>
-						    <option value="Delivered">Delivered</option>
-						    <option value="Cancelled">Cancelled</option>
-						    <option value="Returned">Returned</option>
-						    <option value="Refunded">Refunded</option>
-						    <option value="Requested for Return">Requested for Return</option>
-						</select>
-
+						<a th:href="@{/admin/orderDetails(id=${order.orderId})}" class="btn btn-outline-secondary btn-sm py-2 px-3 mb-0">View Order Details</a>
                       </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+              <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
+					<h6 class="text-white text-capitalize ps-4">Return Request Approved (Initiate Refund)</h6>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order Id</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ordered Date</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Amount</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Method</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Current Status</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Initiate Refund</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="order:${orderListByApprovedReturnRequest}">
+                      <td class="align-middle text-center text-sm">
+                        <h6 class="mb-0 text-sm" th:text="${order.orderId}"></h6>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold" th:text="${order.orderedDate}"></span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-secondary text-xs font-weight-bold" th:text="${order.orderAmount}"></span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <p class="text-xs text-secondary mb-0" th:text="${order.paymentMethod.paymentMethodName}"></p>
+                      </td>
+                      <td class="align-middle text-center">
+                        <p class="text-xs text-secondary mb-0" th:text="${order.orderedQuantity}"></p>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="badge badge-sm bg-gradient-success" th:text="${order.orderStatus}"></span>
+                      </td>
+                      <td class="align-middle d-flex align-items-center justify-content-center">
+					        <a th:href="@{/admin/order/initiateRefund(id=${order.orderId})}" class="btn btn-warning btn-sm py-2 mb-0">Refund</a>
+					    </td>
+					    <td class="align-middle d-flex align-items-center justify-content-center">
+					        <a th:href="@{/admin/orderDetails(id=${order.orderId})}" class="btn btn-outline-secondary btn-sm py-2 mb-0">View Order Details</a>
+					    </td>
                     </tr>
                   </tbody>
                 </table>
@@ -287,6 +333,7 @@
 
   <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
+  
   
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
