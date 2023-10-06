@@ -1,12 +1,17 @@
 package com.timeszone.controller;
 
+import java.io.OutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -15,7 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -31,9 +39,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.lowagie.text.DocumentException;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -64,6 +75,7 @@ import com.timeszone.service.CartService;
 import com.timeszone.service.CouponService;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.PaymentMethodService;
+import com.timeszone.service.PdfService;
 import com.timeszone.service.PurchaseOrderService;
 
 @RequestMapping("/user")
@@ -107,7 +119,8 @@ public class CustomerController {
 	private PurchaseOrderService purchaseOrderService;
 	
 	@Autowired
-	private SpringTemplateEngine springTemplateEngine;
+	private PdfService pdfService;
+
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
 	
@@ -502,22 +515,22 @@ public class CustomerController {
 		return "redirect:/user/viewOrders";
 	}
 	
-	
-	@GetMapping("/invoice")
-	public String generateInvoice(@RequestParam("id") Integer orderId) {
-		
-		String finalHtml = null;
-		InvoiceDTO invoice = purchaseOrderService.createInvoice(orderId);
-		Context dataContext = purchaseOrderService.setData(invoice);
-		
-		finalHtml = springTemplateEngine.process("invoice", dataContext);
-		
-		purchaseOrderService.htmlToPdf(finalHtml);
-		
-		return "finalHtml";
-		
+//	Download Invoice ----------------------------------
+	@GetMapping("invoice/download")
+    public ResponseEntity<byte[]> invoice(@RequestParam("id") Integer orderId) throws DocumentException, IOException {
+
+		byte[] pdfBytes = pdfService.createPdf(orderId);
+		// Create HTTP response headers
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", UUID.randomUUID().toString()+"invoice.pdf");
+
+        // Return the PDF as a byte array in the response
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfBytes);
 	}
-	
+
 	
 //	Ajax backend methods =============================================================================================
 //	==================================================================================================================

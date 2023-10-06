@@ -1,11 +1,5 @@
 package com.timeszone.service;
 
-import com.itextpdf.html2pdf.ConverterProperties;
-import com.itextpdf.html2pdf.HtmlConverter;
-import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
-import com.itextpdf.io.source.ByteArrayOutputStream;
-import com.itextpdf.kernel.pdf.PdfWriter;
-
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -448,7 +442,6 @@ public class PurchaseOrderService {
 	public InvoiceDTO createInvoice(Integer orderId) {
 		
 		InvoiceDTO invoice = new InvoiceDTO();
-		Double productAmount = (double) 0;
 		Double couponAmount = (double) 0;
 		PurchaseOrder order = purchaseOrderRepository.findById(orderId).get();
 		Address address = order.getAddress();
@@ -473,51 +466,17 @@ public class PurchaseOrderService {
         int randomNumber = random.nextInt(max - min + 1) + min;
         String randomString = String.valueOf(randomNumber);
 		invoice.setInvoiceNumber(randomString);
-		
-		for(OrderItem orderItem: order.getOrderItems()) {
-			invoice.getProducts().add(orderItem.getProduct());
-			productAmount = productAmount + (orderItem.getProduct().getPrice()*orderItem.getOrderItemCount());
-		}
+		invoice.setOrderItems(order.getOrderItems());
 		invoice.setOrderedQuantity(order.getOrderedQuantity());
-		invoice.setSubTotal(productAmount);
+		
 		
 		if(coupon!=null) {
-			couponAmount = (coupon.getPercentage()*productAmount)/100;
-			invoice.setCouponAmount(couponAmount);
+			couponAmount = (coupon.getPercentage()*order.getOrderAmount())/100;
 		}
-		invoice.setGrandTotal(couponAmount+productAmount);
+		invoice.setCouponAmount(couponAmount);
+		invoice.setGrandTotal(order.getOrderAmount());
+		invoice.setSubTotal(order.getOrderAmount()-couponAmount);
 		return invoice;
 	}
 	
-	public Context setData(InvoiceDTO invoice) {
-		
-		Context context = new Context();
-		Map<String, Object> data = new HashMap<>();
-		data.put("invoice", invoice);
-		context.setVariables(data);
-		return context;
-	}
-	
-	public String htmlToPdf(String processedHtml) {
-		
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		try {
-			PdfWriter pdfwriter = new PdfWriter(byteArrayOutputStream);
-			DefaultFontProvider defaultFont = new DefaultFontProvider(false, true, false);
-			ConverterProperties converterProperties = new ConverterProperties();
-			converterProperties.setFontProvider(defaultFont);
-			HtmlConverter.convertToPdf(processedHtml, pdfwriter, converterProperties);
-			FileOutputStream fout = new FileOutputStream("/Users/User/Downloads/employee.pdf");
-			byteArrayOutputStream.writeTo(fout);
-			byteArrayOutputStream.close();
-			byteArrayOutputStream.flush();
-			fout.close();
-			return null;
-			
-		} catch(Exception ex) {
-			System.out.println(ex.getMessage());
-		}
-		
-		return null;
-	}
 }

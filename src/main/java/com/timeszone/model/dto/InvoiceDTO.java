@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.timeszone.model.product.Product;
+import com.timeszone.model.shared.OrderItem;
 
 public class InvoiceDTO {
 	
@@ -23,7 +24,7 @@ public class InvoiceDTO {
 	
 	private String invoiceNumber;
 	
-	private List<Product> products = new ArrayList<>();
+	private List<OrderItem> orderItems = new ArrayList<>();
 	
 	private Integer orderedQuantity;
 	
@@ -101,12 +102,12 @@ public class InvoiceDTO {
 		this.invoiceNumber = invoiceNumber;
 	}
 
-	public List<Product> getProducts() {
-		return products;
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
 	}
 
-	public void setProducts(List<Product> products) {
-		this.products = products;
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
 	
 	public Integer getOrderedQuantity() {
