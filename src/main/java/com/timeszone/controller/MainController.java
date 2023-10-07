@@ -328,11 +328,19 @@ public class MainController {
 //	Shopping side -------------------------------------------------------------------------------
 	
 	@GetMapping("/shop")
-	public String shopPage(Model model) {
-		
-		List<Product> productList = productRepository.findAll();
-		model.addAttribute("productList", productList);
-		return "shop";
+	public String shopPage(
+	    @RequestParam(name = "search", required = false) String search,
+	    Model model) {
+
+	    List<Product> productList;
+	    if (search != null) {
+	        productList = productRepository.findAllByProductNameContainingIgnoreCase(search);
+	    } else {
+	        productList = productRepository.findAll();
+	    }
+
+	    model.addAttribute("productList", productList);
+	    return "shop";
 	}
 	
 //	Product details ------------------------------------------

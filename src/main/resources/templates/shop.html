@@ -99,7 +99,15 @@
         </div>
         <!-- Header End -->
     </header>
-
+	
+	<div class="d-flex justify-content-center ">
+	  <form class="col-6 d-flex justify-content-between align-items-center" method="post">
+          	<input type="search" placeholder="Search" aria-label="Search" class="form-control me-4" id="searchData">
+          <button id="searchButton" onclick="search()" type="button" class="btn btn-primary mb-0 ms-2">Search</button>
+      </form>         
+    </div>
+	
+	
     <!-- Shop Section Begin -->
     <section class="shop spad " style="background-color: #faf6f2;">
         <div class="container">
@@ -215,18 +223,6 @@
     </section>
     <!-- Shop Section End -->
 
-    
-    <!-- Search Begin -->
-    <div class="search-model">
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div class="search-close-switch">+</div>
-            <form class="search-model-form">
-                <input type="text" id="search-input" placeholder="Search here.....">
-            </form>
-        </div>
-    </div>
-    <!-- Search End -->
-
     <!-- Js Plugins -->
     <script src="../assets/js/jquery-3.3.1.min.js"></script>
     <script src="../assets/js/bootstrap.min.js"></script>
@@ -273,6 +269,14 @@
     <!-- Jquery Plugins, main Jquery -->	
     <script src="../assets/js/plugins.js"></script>
     <script src="../assets/js/main.js"></script>
+    
+    <script>
+		 $('#searchButton').click(function () {
+			const searchData = $('#searchData').val();
+	        window.location.href = '/guest/shop?search='+searchData; 
+	    });
+	</script>
+    
     
 </body>
 </html>

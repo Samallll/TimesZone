@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.dto.CustomerDTO;
@@ -105,11 +107,31 @@ public class AdminController {
 	private ReturnReasonRepository returnReasonRepository;
 	
 	@GetMapping("/")
-	public String adminHome() {
+	public String adminHome(Model model) {
+		
+//		for chart creation
+		
+		String name = "John"; // Your data to pass to the template
+        model.addAttribute("name", name);
+		
+		List<Category> categories = categoryRepository.findAll();
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    String transactionsJson;
+	    try {
+	        transactionsJson = objectMapper.writeValueAsString(categories);
+	        System.out.println(transactionsJson);
+	    } catch (JsonProcessingException e) {
+	        
+	        transactionsJson = "[]"; 
+	    }
+
+	    model.addAttribute("transactions", transactionsJson);
 		return "adminHome.html";
 	}
 	
-//	For User management ---------------------------------------------------------------------
+//	User management =====================================================================================
+	
+//	User Management page rendering ----------------------------------------------
 	@GetMapping("/user_management")
 	public String userManagementPage(Model model) {
 		logger.debug("InSide User Management Controller");
@@ -230,14 +252,6 @@ public class AdminController {
 	public String editProduct(@ModelAttribute("editProduct") ProductDTO ep) {
 		logger.debug("InSide Product Editing Controller");
 		
-
-		System.out.println(ep.getDescription());
-		System.out.println(ep.getProductId());
-		System.out.println(ep.getProductName());
-		System.out.println(ep.getCaseSize());
-		System.out.println(ep.getQuantity());
-		System.out.println(ep.getPrice());
-		System.out.println(ep.getIsEnabled());
 		for(String s:ep.getSelectedSubCategories()) {
 			System.out.println("Selected SubCategory"+s);
 		}
@@ -253,7 +267,6 @@ public class AdminController {
 		productService.deleteProduct(id);
 		return "redirect:/admin/product_management";
 	}
-	
 	
 	@GetMapping("/addProductImage/{id}")
 	public String addProductImagePage(@PathVariable("id") Integer prodcutId,Model model) {
@@ -542,6 +555,7 @@ public class AdminController {
 		return "orderManagement";
 	}
 	
+//	change order status --------------------------------------------------------------
 	@GetMapping("/changeOrderStatus")
 	public ResponseEntity<Map<String,Object>> changeOrderStatus(@RequestParam("selectedValue") String orderStatus,
 								@RequestParam("orderId") Integer orderId){
@@ -565,6 +579,7 @@ public class AdminController {
 		return "orderDetailsAdmin";
 	}
 	
+//	return order admin approval ----------------------------------------------------------
 	@GetMapping("order/return/request")
 	public String returnRequestCheck(@RequestParam("id") Integer approval,@RequestParam("orderId") Integer orderId) {
 		
@@ -577,10 +592,12 @@ public class AdminController {
 		return "redirect:/admin/orderManagement";
 	}
 	
+	
 	@GetMapping("order/initiateRefund")
 	public String initiateRefund(@RequestParam("id") Integer orderId) {
 		
 		purchaseOrderService.returnOrder(orderId);
 		return "redirect:/admin/orderManagement";
 	}
+	
 }
