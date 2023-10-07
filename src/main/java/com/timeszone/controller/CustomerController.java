@@ -134,7 +134,7 @@ public class CustomerController {
 		CustomerDTO customerData = customerService.convertIntoCustomerDTO(c);
 		model.addAttribute("customerData", customerData);
 		
-		List<Address> addressList = addressService.getAllByCustomer(c);
+		List<Address> addressList = addressService.availableAddressByCustomer(c);
 		model.addAttribute("addressList",addressList );
 		return "userProfile";
 	}
@@ -333,7 +333,7 @@ public class CustomerController {
 	public String checkoutPage(Model model,Principal principal,HttpSession session) {
 		
 		Customer customer = customerRepository.findByEmailId(principal.getName());
-		List<Address> addressList = addressService.getAllAddress(customer);
+		List<Address> addressList = addressService.availableAddressByCustomer(customer);
 		List<PaymentMethod> paymentMethodList = paymentMethodService.getAll();
 		Double grandTotal;
 		

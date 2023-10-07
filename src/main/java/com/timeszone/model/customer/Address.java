@@ -48,6 +48,9 @@ public class Address {
 	@Column(name="contactNumber",nullable=false,unique=true)
 	private String contactNumber;
 	
+	@Column(name="isDisabled",nullable=false)
+	private Boolean isDisabled=false;
+	
 	@ManyToOne
     private Customer customer;
 	
@@ -179,6 +182,14 @@ public class Address {
 
 	public void setContactNumber(String contactNumber) {
 		this.contactNumber = contactNumber;
+	}
+
+	public Boolean getIsDisabled() {
+		return isDisabled;
+	}
+
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
 	}
 
 	@Override

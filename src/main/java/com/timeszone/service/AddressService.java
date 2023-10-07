@@ -89,10 +89,8 @@ public class AddressService {
 	public void removeAddress(Integer addressId) {
 		
 		Address deleteAddress = addressRepository.findById(addressId).get();
-		Customer customer = deleteAddress.getCustomer();
-		customer.getAddresses().remove(deleteAddress);
-		customerRepository.save(customer);
-		addressRepository.delete(deleteAddress);
+		deleteAddress.setIsDisabled(true);
+		addressRepository.save(deleteAddress);
 	}
 	
 	public void addAddress(Address address) {
@@ -102,6 +100,17 @@ public class AddressService {
 	public Address getAddress(Integer addressId) {
 		
 		return addressRepository.findById(addressId).orElseThrow(() -> new NoSuchElementException("Address not found with ID: " + addressId));
+	}
+	
+	public List<Address> availableAddressByCustomer(Customer customer) {
+		// TODO Auto-generated method stub
+		List<Address> addressList = addressRepository.findAllByCustomer(customer);
+		for(Address address:addressList) {
+			if(address.getIsDisabled()) {
+				addressList.remove(address);
+			}
+		}
+		return addressList;
 	}
 	
 }

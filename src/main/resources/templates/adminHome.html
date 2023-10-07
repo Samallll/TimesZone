@@ -711,16 +711,12 @@
       </div>
     </div>
   </main>
-  
-   <script th:inline="javascript">
-        var name = [[${name}]];
-    </script>
-    <script th:inline="javascript">
+<!--    <script th:inline="javascript">
         /* Using Thymeleaf to populate a JavaScript variable with JSON */
         const transactionsJson = /*[[${transactions}]]*/ '[]'; // Provide a default empty JSON array
         const transactions = JSON.parse(transactionsJson);
         alert("Transactions: " + JSON.stringify(transactions));
-    </script>
+    </script>-->
   
   
   
@@ -732,11 +728,6 @@
   <script src="/assets/js/plugins/chartjs.min.js"></script>
 
   <script>
-	
-	
-	
-	console.log(name);  
-	console.log(transactions);
 	
     var ctx = document.getElementById("chart-bars").getContext("2d");
 
