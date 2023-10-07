@@ -19,6 +19,9 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -330,18 +333,24 @@ public class MainController {
 	@GetMapping("/shop")
 	public String shopPage(
 	    @RequestParam(name = "search", required = false) String search,
+	    @RequestParam(name = "page", defaultValue = "0") int page,
+	    @RequestParam(name = "size", defaultValue = "2") int size,
 	    Model model) {
 
-	    List<Product> productList;
+	    Pageable pageable = PageRequest.of(page, size);
+	    Page<Product> productList;
+
 	    if (search != null) {
-	        productList = productRepository.findAllByProductNameContainingIgnoreCase(search);
+	        productList = productRepository.findAllByProductNameContainingIgnoreCase(search, pageable);
+	        model.addAttribute("search", search);
 	    } else {
-	        productList = productRepository.findAll();
+	        productList = productRepository.findAll(pageable);
 	    }
 
 	    model.addAttribute("productList", productList);
 	    return "shop";
 	}
+
 	
 //	Product details ------------------------------------------
 		
