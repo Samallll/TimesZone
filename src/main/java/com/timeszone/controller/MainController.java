@@ -334,7 +334,7 @@ public class MainController {
 	public String shopPage(
 	    @RequestParam(name = "search", required = false) String search,
 	    @RequestParam(name = "page", defaultValue = "0") int page,
-	    @RequestParam(name = "size", defaultValue = "2") int size,
+	    @RequestParam(name = "size", defaultValue = "3") int size,
 	    Model model) {
 
 	    Pageable pageable = PageRequest.of(page, size);
