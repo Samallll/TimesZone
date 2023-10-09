@@ -3,18 +3,24 @@ package com.timeszone.controller;
 import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.io.OutputStream;
+
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +36,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lowagie.text.DocumentException;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.dto.CustomerDTO;
@@ -599,4 +606,41 @@ public class AdminController {
 		return "redirect:/admin/orderManagement";
 	}
 	
+//	Download report ---------------------------------------------------------------------------
+	@GetMapping("/dashboard/generateReport")
+	public ResponseEntity<byte[]> generateReport(
+	        HttpServletResponse response,
+	        @RequestParam String selectedOption,
+	        @RequestParam String dateFrom,
+	        @RequestParam String dateTo) throws IOException {
+
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	    LocalDate startDate = LocalDate.parse(dateFrom, formatter);
+	    LocalDate endDate = LocalDate.parse(dateTo, formatter);
+
+	    // Generate the CSV content
+	    StringBuilder csvContent;
+	    
+	    if(selectedOption.equalsIgnoreCase("Orders")) {
+	    	csvContent = reportGeneratorService.generateOrderReport(startDate, endDate);
+	    }
+	    else if(selectedOption.equalsIgnoreCase("Users")) {
+	    	csvContent = reportGeneratorService.generateUserReport();
+	    }
+	    else {
+	    	csvContent = reportGeneratorService.generateProductReport();
+	    }
+	    // Convert the CSV content to bytes
+	    byte[] csvBytes = csvContent.toString().getBytes();
+
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+	    String uniqueFileName = "order_" + UUID.randomUUID().toString() + ".csv";
+	    headers.setContentDispositionFormData("attachment", uniqueFileName);
+
+	    return ResponseEntity.ok()
+	            .headers(headers)
+	            .body(csvBytes);
+	}
+
 }

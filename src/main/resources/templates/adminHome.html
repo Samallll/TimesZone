@@ -41,8 +41,7 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" th:href="@{/guest/user}">
-        <img src="/assets/img/logo.png" class="navbar-brand-img h-100" alt="main_logo">
-        <span class="ms-1 font-weight-bold text-white">TimesZone</span>
+        <img src="../assets/img/logo/logo.png" width="100px" class="navbar-brand-img h-100" alt="main_logo">
       </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
@@ -114,15 +113,6 @@
               <i class="material-icons opacity-10">receipt_long</i>
             </div>
             <span class="nav-link-text ms-1">Coupon Management</span>
-          </a>
-        </li>
-        
-        <li class="nav-item">
-          <a class="nav-link text-white " href="./pages/billing.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">receipt_long</i>
-            </div>
-            <span class="nav-link-text ms-1">Billing</span>
           </a>
         </li>
         <li class="nav-item mt-3">
@@ -231,8 +221,43 @@
       </div>
     </nav>
     <!-- End Navbar -->
-    <div class="container-fluid py-4">
-      <div class="row">
+    <div class="container-fluid pb-4 pt-0">
+	  <div class="row d-flex justify-content-center">
+		<div class="col-xl-6 col-sm-6 mb-xl-0 mb-5">
+		  <div class="card">
+		    <div class="card-header p-3 pt-2">
+		        <div class="text-center pt-1">
+		            <p class="text-sm mb-0 fs-4 fw-bold text-capitalize">Download Report</p>
+		        </div>
+		    </div>
+		    <div class="card-body p-3 pt-2">
+			    <div class="row d-flex align-items-center">
+			        <div class="col-4">
+			            <p class="mb-0 text-capitalize">Select a time range :</p>
+			        </div>
+			        <div class="col-4">
+			            <input id="dateFrom" class="form-control border border-secondary px-3" type="date">
+			        </div>
+			        <div class="col-4">
+			            <input id="dateTo" class="form-control border border-secondary px-3" type="date">
+			        </div>
+			        <div class="col-12 mt-2">
+			            <select class="form-select ps-3 py-2 border border-secondary" name="selectedOption">
+			                <option>Choose</option>
+			                <option value="Orders">Orders</option>
+			                <option value="Users">Users</option>
+			                <option value="Products">Products</option>
+			            </select>
+			        </div>
+			    </div>
+			</div>
+		    <div class="card-footer py-3 pb-3 pt-0 d-flex justify-content-end">
+				<button class="btn btn-primary mb-0" onclick="downloadReport()" type="button" id="downloadReport">Click to here to download the report</button>
+		    </div>
+		  </div>
+		</div>
+	  </div> 
+      <div class="row mt-4">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div class="card">
             <div class="card-header p-3 pt-2">
@@ -313,8 +338,8 @@
               </div>
             </div>
             <div class="card-body">
-              <h6 class="mb-0 ">Website Views</h6>
-              <p class="text-sm ">Last Campaign Performance</p>
+              <h6 class="mb-0 ">Order Status</h6>
+              <p class="text-sm ">Includes all status</p>
               <hr class="dark horizontal">
               <div class="d-flex ">
                 <i class="material-icons text-sm my-auto me-1">schedule</i>
@@ -343,26 +368,6 @@
             </div>
           </div>
         </div>
-        <!--<div class="col-lg-4 mt-4 mb-3">
-          <div class="card z-index-2 ">
-            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
-              <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
-                <div class="chart">
-                  <canvas id="chart-line-tasks" class="chart-canvas" height="170"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <h6 class="mb-0 ">Completed Tasks</h6>
-              <p class="text-sm ">Last Campaign Performance</p>
-              <hr class="dark horizontal">
-              <div class="d-flex ">
-                <i class="material-icons text-sm my-auto me-1">schedule</i>
-                <p class="mb-0 text-sm">just updated</p>
-              </div>
-            </div>
-          </div>
-        </div>-->
       </div>
       
     </div>
@@ -379,11 +384,7 @@
 	
 	var orderKeys = Object.keys(orderByDateMapdata);
 	var orderValues = Object.values(orderByDateMapdata);
-	
-	console.log(statusKeys);
-	console.log(statusValues);
-	console.log(orderKeys);
-	console.log(orderValues);
+
   </script>
   
   
@@ -561,6 +562,60 @@
     });
 
    </script>
+   
+   <script>
+	   function downloadReport() {
+
+		    var selectedOption = document.querySelector('[name="selectedOption"]').value;
+		    var dateFrom = document.getElementById('dateFrom').value;
+		    var dateTo = document.getElementById('dateTo').value;
+
+		    if (selectedOption === 'Choose' || dateFrom === '' || dateTo === '') {
+		        alert('Please select a valid option and enter valid dates.');
+		        return; 
+		    }
+		    dateFrom = new Date(dateFrom);
+		    dateTo = new Date(dateTo);
+		    var currentDate = new Date(); 
+		
+		    if (dateFrom >= dateTo) {
+		        alert('Please select a date range where "From" date is before "To" date.');
+		        return; 
+		    }
+		
+		    if (dateFrom > currentDate) {
+		        alert('Please select a "From" date on or before the current date.');
+		        return; 
+		    }
+		
+		    if (dateTo >= currentDate) {
+		        alert('Please select a "To" date before the current date.');
+		        return; 
+		    }
+		
+		    var formattedDateFrom = formatDate(dateFrom);
+		    var formattedDateTo = formatDate(dateTo);
+		
+		    const url = `/admin/dashboard/generateReport?selectedOption=${selectedOption}&dateFrom=${formattedDateFrom}&dateTo=${formattedDateTo}`;
+			
+			window.location.href = url;
+			
+		}
+		
+		// Function to format a date as 'yyyy-mm-dd'
+		function formatDate(date) {
+		    var year = date.getFullYear();
+		    var month = String(date.getMonth() + 1).padStart(2, '0'); // Ensure two-digit month
+		    var day = String(date.getDate()).padStart(2, '0'); // Ensure two-digit day
+		    return year + '-' + month + '-' + day;
+		}
+
+
+   </script>
+   
+   
+   
+   
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -574,6 +629,8 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="/assets/js/material-dashboard.min.js?v=3.0.0"></script>
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+
 </body>
 
 </html>
