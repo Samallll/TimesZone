@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -477,6 +478,11 @@ public class PurchaseOrderService {
 		invoice.setGrandTotal(order.getOrderAmount());
 		invoice.setSubTotal(order.getOrderAmount()-couponAmount);
 		return invoice;
+	}
+
+	public int getNumberOfOrdersForDate(LocalDate date) {
+		
+		return purchaseOrderRepository.findAllByOrderedDate(date).size();
 	}
 	
 }

@@ -56,6 +56,7 @@ import com.timeszone.service.PaymentMethodService;
 import com.timeszone.service.ProductImageService;
 import com.timeszone.service.ProductService;
 import com.timeszone.service.PurchaseOrderService;
+import com.timeszone.service.ReportGeneratorService;
 import com.timeszone.service.SubCategoryService;
 
 @RequestMapping("/admin")
@@ -106,26 +107,24 @@ public class AdminController {
 	@Autowired
 	private ReturnReasonRepository returnReasonRepository;
 	
+	@Autowired
+	private ReportGeneratorService reportGeneratorService;
+	
 	@GetMapping("/")
-	public String adminHome(Model model) {
+	public String adminHome(Model model){
 		
-//		for chart creation
-		
-		String name = "John"; // Your data to pass to the template
-        model.addAttribute("name", name);
-		
-		List<Category> categories = categoryRepository.findAll();
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    String transactionsJson;
-	    try {
-	        transactionsJson = objectMapper.writeValueAsString(categories);
-	        System.out.println(transactionsJson);
-	    } catch (JsonProcessingException e) {
-	        
-	        transactionsJson = "[]"; 
-	    }
-
-	    model.addAttribute("transactions", transactionsJson);
+		Long noOfUsers = customerRepository.count();
+		Map<String,Integer> orderStatusMapData;
+		Map<String,Integer> orderByDateMapdata;
+		int noOfOrders = purchaseOrderService.getAllOrders().size();
+		orderStatusMapData = reportGeneratorService.generateOrderCountForChart();
+		orderByDateMapdata = reportGeneratorService.generateOrderPlacedForWeek();
+		model.addAttribute("orderStatusMapData", orderStatusMapData);
+		model.addAttribute("orderByDateMapdata", orderByDateMapdata);
+		model.addAttribute("noOfUsers", noOfUsers);
+		model.addAttribute("noOfOrders", noOfOrders);
+		model.addAttribute("noOfProducts", productRepository.count());
+		model.addAttribute("totalRevenue", reportGeneratorService.revenueCalculator());
 		return "adminHome.html";
 	}
 	

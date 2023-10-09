@@ -1,5 +1,6 @@
 package com.timeszone.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,5 @@ public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder,Int
 	List<PurchaseOrder> findAllByCustomer(Customer customer);
 	List<PurchaseOrder> findAllByPaymentMethod(PaymentMethod paymentMethod);
 	List<PurchaseOrder> findAllByOrderStatus(String orderStatus);
+	List<PurchaseOrder> findAllByOrderedDate(LocalDate date);
 }

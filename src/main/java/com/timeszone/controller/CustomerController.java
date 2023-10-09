@@ -466,7 +466,7 @@ public class CustomerController {
 		String userName = principal.getName();
 		Customer customer = customerRepository.findByEmailId(userName);
 		List<PurchaseOrder> orderList = purchaseOrderService.getAllByCustomer(customer);
-		if(orderList.size()<1) {
+		if(orderList.isEmpty()) {
 			return "redirect:/guest/shop";
 		}
 		model.addAttribute("orderList", orderList);
