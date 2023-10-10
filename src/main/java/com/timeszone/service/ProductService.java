@@ -124,4 +124,11 @@ public class ProductService {
 		productRepository.save(product);
 	}
 	
+	public Product getProduct(Integer productId) {
+		return productRepository.findById(productId).get();
+	}
+	
+	public void saveProduct(Product product) {
+		productRepository.save(product);
+	}
 }

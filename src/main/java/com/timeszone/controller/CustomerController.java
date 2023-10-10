@@ -28,6 +28,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,6 +65,7 @@ import com.timeszone.model.shared.OrderItem;
 import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.model.shared.PurchaseOrder;
 import com.timeszone.model.shared.ReturnReason;
+import com.timeszone.model.shared.Wishlist;
 import com.timeszone.repository.AddressRepository;
 import com.timeszone.repository.CartItemRepository;
 import com.timeszone.repository.CartRepository;
@@ -77,6 +79,7 @@ import com.timeszone.service.CustomerService;
 import com.timeszone.service.PaymentMethodService;
 import com.timeszone.service.PdfService;
 import com.timeszone.service.PurchaseOrderService;
+import com.timeszone.service.WishlistService;
 
 @RequestMapping("/user")
 @Controller
@@ -120,6 +123,9 @@ public class CustomerController {
 	
 	@Autowired
 	private PdfService pdfService;
+	
+	@Autowired
+	private WishlistService wishlistService;
 
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
@@ -287,7 +293,9 @@ public class CustomerController {
 	
 //	adding product to the cart -----------------------------------------------------------
 	@GetMapping("/addCart")
-	public String addToCart(@RequestParam("id") Integer productId,@RequestParam("quantity") Integer productQuantity,Principal principal) {
+	public String addToCart(@RequestParam("id") Integer productId,
+							@RequestParam(name="quantity",required=false,defaultValue="1") Integer productQuantity,
+							Principal principal) {
 		
 		
 		Product product = productRepository.findById(productId).get();
@@ -298,6 +306,18 @@ public class CustomerController {
 		
 		Cart customerCart = customer.getCart();
 		Integer existingCartItemId = cartService.contains(customerCart,cartItem);
+		
+		addProductToCart(productQuantity, product, cartItem, customer, existingCartItemId);
+		return"redirect:/user/shoppingCart";		
+	}
+
+	private void addProductToCart(Integer productQuantity, 
+									Product product,
+									CartItem cartItem, 
+									Customer customer,
+									Integer existingCartItemId) {
+		
+		Cart customerCart = customer.getCart();
 		
 		if(existingCartItemId!=null) {
 			CartItem existingCartItem = cartItemRepository.findById(existingCartItemId).get();
@@ -316,7 +336,6 @@ public class CustomerController {
 			product.getCartItems().add(cartItem);
 			productRepository.save(product);
 		}
-		return"redirect:/user/shoppingCart";		
 	}
 	
 	@GetMapping("/deleteCart")
@@ -339,6 +358,16 @@ public class CustomerController {
 		
 		session.removeAttribute("paymentMethodId");
 		Integer couponId = (Integer) session.getAttribute("couponApplied");
+		grandTotal = calculateCouponAmount(model, customer, couponId);
+		model.addAttribute("grandTotal", grandTotal);
+		model.addAttribute("subTotal", customer.getCart().getTotalPrice());
+		model.addAttribute("addressList", addressList);
+		model.addAttribute("paymentMethodList", paymentMethodList);
+		return "checkout";
+	}
+
+	private Double calculateCouponAmount(Model model, Customer customer, Integer couponId) {
+		Double grandTotal;
 		if(couponId!=null) {
 			Coupon coupon = couponService.getCoupon(couponId);
 			Double couponAmount = customer.getCart().getTotalPrice() * (coupon.getPercentage()/100);
@@ -349,11 +378,7 @@ public class CustomerController {
 			grandTotal = customer.getCart().getTotalPrice();
 			model.addAttribute("couponAmount", 0);
 		}
-		model.addAttribute("grandTotal", grandTotal);
-		model.addAttribute("subTotal", customer.getCart().getTotalPrice());
-		model.addAttribute("addressList", addressList);
-		model.addAttribute("paymentMethodList", paymentMethodList);
-		return "checkout";
+		return grandTotal;
 	}
 	
 	@ResponseBody
@@ -530,6 +555,42 @@ public class CustomerController {
                 .headers(headers)
                 .body(pdfBytes);
 	}
+    
+//  WishList Management =========================================================================
+    @GetMapping("/wishlist")
+    public String wishlist(Principal principal,
+    						HttpSession session,
+    						Model model,
+    						@RequestParam(name="id",required=false,defaultValue = "0") Integer productId) {
+    	
+    	session.removeAttribute("emptyWishlist");
+    	String customerName = principal.getName();
+    	Customer customer = customerService.getCustomerByEmailId(customerName);
+    	Wishlist wishlist = customer.getWishlist();
+    	if(wishlist==null) {
+    		wishlist = new Wishlist();
+    		wishlist.setCustomer(customer);
+    		wishlistService.saveWishlist(wishlist);
+    	}
+    	if(productId!=0) {
+    		wishlistService.addProduct(productId, wishlist);
+    	}
+
+    	model.addAttribute("wishlist", wishlist);
+    	return "wishlist";
+    }
+    
+    @GetMapping("wishlist/delete")
+    public String wishlistProductDeletion(@RequestParam("id")Integer productId,Principal principal) {
+    	
+    	String customerName = principal.getName();
+    	Customer customer = customerService.getCustomerByEmailId(customerName);
+    	if(customer==null) {
+    		throw new UsernameNotFoundException("Customer did not found");
+    	}
+    	wishlistService.deleteProduct(productId, customer.getWishlist());
+    	return "redirect:/user/wishlist";
+    }
 
 	
 //	Ajax backend methods =============================================================================================

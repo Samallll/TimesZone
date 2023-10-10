@@ -159,36 +159,15 @@
                         <hr>
                         
                         <div class="product__details__button mb-0">
-                            <!--<div class="col-lg-4 col-md-6 mb-4 mb-lg-0 d-flex">
-				                 Quantity 
-				                <div class="d-flex mb-4 jutify-items-center" style="max-width: 200px">
-				                    <button onclick="decrementItem(this.getAttribute('data-product-id'))" th:data-product-id="${product.productId}" 
-				                    class="btn btn-primary ps-2 pe-3 me-2" type="button" style="height: 40px;width: 40px;" >
-				                    
-				                    <i class="fas fa-minus fa-fw"></i>
-				                  </button>
-				
-				                  <p th:data-product-id="${product.productId}" type="text" name="quantity"
-				                  th:id="'inputId-' + ${product.productId}"
-				                  th:text="${cartItemQuantity}"  
-				                  class="py-2 mx-1" 
-				                  style="border-radius: 9px; text-align: center; border: 1px solid; font-size: 26px; width: 178px;margin-top: 15px;"></p>
-		
-				
-				                  <button onclick="incrementItem(this.getAttribute('data-product-id'))" th:data-product-id="${product.productId}" 
-				                    class="btn btn-primary ps-2 pe-3 me-2" type="button" style="height: 40px;width: 40px;" >
-				                    <i class="fas fa-plus fa-fw"></i>
-				                  </button>
-				            </div>-->
                             <a th:if="${product.quantity > 0}" th:href="@{/user/addCart(id=${product.productId}, quantity=${cartItemQuantity})}" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</a>
                             <ul class="d-flex align-items-center">
-                                <li ><a href="#"><span class="icon_heart_alt"></span></a></li>
-                                <li class="d-flex mx-3">
+                                <li ><a th:href="@{/user/wishlist(id=${product.productId})}"><span class="icon_heart_alt"></span></a></li>
+                                <li class="d-flex align-items-center mx-3">
                                     <span class="fs-5">Availability :</span>
-	                                    <p th:if="${product.quantity > 0}" class="badge badge-sm bg-success text-white ms-3 py-2">
+	                                    <p th:if="${product.quantity > 0}" class="badge badge-sm bg-success text-white ms-3 mb-0 py-2">
 	                                        In Stock
 	                                    </p>
-	                                    <p th:if="${product.quantity < 1}" class="badge badge-sm bg-danger text-white ms-3 py-2">
+	                                    <p th:if="${product.quantity < 1}" class="badge badge-sm bg-danger text-white ms-3 mb-0 py-2">
 	                                        Out of Stock
 	                                    </p>
                                 </li>

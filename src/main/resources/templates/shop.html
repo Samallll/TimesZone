@@ -55,6 +55,11 @@
 	                        <a th:href="@{/guest/login}"><span class="flaticon-user text-white"></span></span></a>
 	                    </li>
 	                    <li class="nav-item">
+	                        <a th:href="@{/user/wishlist}">
+	                            <i class="text-white icon_heart_alt"></i>
+	                        </a>
+	                    </li>
+	                    <li class="nav-item">
 	                        <a th:href="@{/user/shoppingCart}">
 	                            <i class="text-white fas fa-shopping-cart"></i>
 	                        </a>
@@ -79,6 +84,9 @@
 	
     <!-- Shop Section Begin -->
     <section class="shop spad my-0 py-0" style="background-color: #faf6f2;">
+		<div th:if="${session.emptyWishlist}" class="alert alert-danger">
+        	<span th:if="${session.emptyWishlist}" th:text="${session.emptyWishlist}"></span>
+    	</div>
         <div class="container ms-5 py-5 d-flex">
                 <div class="col-lg-3 col-md-3">
                     <div class="shop__sidebar form">
@@ -142,8 +150,8 @@
 									<a th:href="@{/guest/productDetails(id=${product.productId})}"><img th:src="@{'/guest/showImage/' + ${product.productImages[0].imageId}}" class="w-100 h-100"></a>
                                     <ul class="product__hover">
                                         <li><a th:href="@{'/guest/showImage/' + ${product.productImages[0].imageId}}" class="image-popup"><span class="arrow_expand"></span></a></li>
-                                        <li><a href="#"><span class="icon_heart_alt"></span></a></li>
-                                        <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                        <li><a th:href="@{/user/wishlist(id=${product.productId})}"><span class="icon_heart_alt"></span></a></li>
+                                        <li><a th:if="${product.quantity > 0}" th:href="@{/user/addCart(id=${product.productId})}"><span class="icon_bag_alt"></span></a></li>
                                     </ul>
                                 </div>
                                 <div class="product__item__text px-1 pb-2">

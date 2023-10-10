@@ -20,6 +20,7 @@ import javax.persistence.Table;
 
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.model.shared.OrderItem;
+import com.timeszone.model.shared.Wishlist;
 
 
 @Entity
@@ -68,6 +69,9 @@ public class Product {
 	
 	@Column(name="quantity",nullable=false)
 	private Integer quantity;
+	
+	@ManyToMany(mappedBy = "products")
+    private Set<Wishlist> wishlist = new HashSet<>();
 	
 	public Product() {
 		super();
@@ -210,5 +214,15 @@ public class Product {
 
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
-	}	
+	}
+
+	public Set<Wishlist> getWishlist() {
+		return wishlist;
+	}
+
+	public void setWishlist(Set<Wishlist> wishlist) {
+		this.wishlist = wishlist;
+	}
+	
+	
 }

@@ -26,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.timeszone.model.shared.Cart;
 import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.PurchaseOrder;
+import com.timeszone.model.shared.Wishlist;
 
 @Entity
 @Table(name="Customer")
@@ -77,6 +78,9 @@ public class Customer implements UserDetails {
     private Cart cart;
 	
 	private Double wallet = 0.0;
+	
+	@OneToOne(mappedBy = "customer",cascade=CascadeType.ALL)
+    private Wishlist wishlist = new Wishlist();
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "customer_coupon",
@@ -299,6 +303,14 @@ public class Customer implements UserDetails {
 
 	public void setWallet(Double wallet) {
 		this.wallet = wallet;
+	}
+
+	public Wishlist getWishlist() {
+		return wishlist;
+	}
+
+	public void setWishlist(Wishlist wishlist) {
+		this.wishlist = wishlist;
 	}
 
 	@Override

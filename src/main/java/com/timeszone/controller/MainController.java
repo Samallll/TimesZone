@@ -1,6 +1,7 @@
 package com.timeszone.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDate;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -374,5 +375,8 @@ public class MainController {
 		response.getOutputStream().write(productImage.getImage());
 		response.getOutputStream().close();
 	}
+	
+	
+
 
 }
