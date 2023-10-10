@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.product.Category;
+import com.timeszone.model.product.Product;
 import com.timeszone.model.product.SubCategory;
 import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.SubCategoryRepository;
@@ -45,5 +46,15 @@ public class SubCategoryService {
         }
         
         categoryRepository.save(existingCategory);
+	}
+	
+	public List<Product> getAllProductsBySubCategory(String subCategoryName){
+		
+		return subCategoryRepository.findAllBySubCategoryName(subCategoryName);
+	}
+	
+	public SubCategory getSubCategoryBySubCategoryName(String subCategoryName) {
+		
+		return subCategoryRepository.findBySubCategoryName(subCategoryName);
 	}
 }

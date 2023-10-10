@@ -89,56 +89,21 @@
     	</div>
         <div class="container ms-5 py-5 d-flex">
                 <div class="col-lg-3 col-md-3">
-                    <div class="shop__sidebar form">
+         
                         
-                        <div class="sidebar__color">
-                            <div class="section-title">
-                                <h4>Shop by Color</h4>
-                            </div>
-                            <div class="size__list color__list">
-                                <label for="black">
-                                    Blacks
-                                    <input type="checkbox" id="black">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label for="whites">
-                                    Whites
-                                    <input type="checkbox" id="whites">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label for="reds">
-                                    Reds
-                                    <input type="checkbox" id="reds">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label for="greys">
-                                    Greys
-                                    <input type="checkbox" id="greys">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label for="blues">
-                                    Blues
-                                    <input type="checkbox" id="blues">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label for="beige">
-                                    Beige Tones
-                                    <input type="checkbox" id="beige">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label for="greens">
-                                    Greens
-                                    <input type="checkbox" id="greens">
-                                    <span class="checkmark"></span>
-                                </label>
-                                <label for="yellows">
-                                    Yellows
-                                    <input type="checkbox" id="yellows">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
+                        <div class="sidebar__color" th:each="category:${categories}">
+						    <div class="section-title">
+						        <h4 th:text="'Shop by '+${category.categoryName}"></h4>
+						    </div>
+						    <div class="size__list color__list" th:each="subCategory:${category.subcategories}">
+						        <label>
+						            <input type="checkbox" th:value="${subCategory.subCategoryName}" onchange="handleCheckboxChange(this)">
+						            <span class="checkmark"></span>
+						            <span th:text="${subCategory.subCategoryName}"></span>
+						        </label>
+						    </div>
+						</div>
+                    
                 </div>
                 <div class="col-lg-9 col-md-9">
                     <div class="row">
@@ -167,6 +132,7 @@
 						    <ul class="pagination justify-content-center">
 						        <li th:if="${productList.hasPrevious()}" class="page-item">
 						            <a th:href="@{/guest/shop(page=0, size=${size}, search=${search})}" class="page-link border border-secondary text-secondary">First</a>
+						            
 						        </li>
 						        <!-- For the "Previous" link -->
 								<li th:if="${productList.hasPrevious()}">
@@ -185,6 +151,7 @@
 						        <li th:if="${productList.hasNext()}" class="page-item">
 						            <a th:href="@{/guest/shop(page=${productList.totalPages - 1}, size=${size}, search=${search})}" class="page-link text-secondary border border-secondary">Last</a>
 						        </li>
+						        <input type="hidden" id="pageNumber" th:value="${productList.number}">
 						    </ul>
 						</div>
 
@@ -198,6 +165,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
     
     <!-- Jquery Plugins, main Jquery -->	
     <script src="../assets/js/plugins.js"></script>
@@ -210,6 +178,64 @@
 	    });
 	</script>
     
-    
+    <script>
+	    // Create an array to store selected values
+	    var selectedValues = [];
+	
+	    function handleCheckboxChange(checkbox) {
+	        if (checkbox.checked) {
+	            var selectedValue = checkbox.value;
+	            // Add the selected value to the array
+	            selectedValues.push(selectedValue);
+	        } else {
+	            var selectedValue = checkbox.value;
+	            // Remove the selected value from the array
+	            var index = selectedValues.indexOf(selectedValue);
+	            if (index !== -1) {
+	                selectedValues.splice(index, 1);
+	            }
+	        }
+	
+	        // Log the selected values
+	        console.log('Selected values: ' + selectedValues);
+	        sendSelectedValues();
+	    }
+	
+	    function sendSelectedValues() {
+	        // Make an AJAX request to your endpoint with the selected values
+	        if (selectedValues.length === 0) {
+		        alert('Please select at least one option.');
+		        return;
+		    }
+		
+		    // Get the other parameters like search, page, and size if needed
+		    var search = $('#searchData').val(); // Get the search input value if needed
+		    var page = $('#pageNumber').val(); // Set the default page number
+		    var size = 3; // Set the default page size
+	        
+	        console.log("lnside the ajax call");
+	        console.log(page);
+	        $.ajax({
+	            url: '/guest/test',
+	            type: 'POST',
+	            dataType: 'json', // Use POST or GET as needed
+	            data: JSON.stringify({ 
+					selectedValues: selectedValues,
+					search: search,
+		            page: page,
+		            size: size }),
+	            contentType: 'application/json',
+	            success: function (response) {
+	                // Handle success response
+	                 $('#productListContainer').html(response);
+	            },
+	            error: function (xhr, status, error) {
+	                // Handle error
+	                console.error('Error:', error);
+	            },
+	        });
+	    }
+	</script>
+
 </body>
 </html>
