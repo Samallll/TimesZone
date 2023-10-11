@@ -1,13 +1,14 @@
 package com.timeszone.model.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RequestData {
 
-    private List<String> selectedValues;
-    private String search;
-    private int page;
-    private int size;
+    private List<String> selectedValues= new ArrayList<String>();
+    private String search ;
+    private int page = 0;
+    private int size = 2;
 	public List<String> getSelectedValues() {
 		return selectedValues;
 	}

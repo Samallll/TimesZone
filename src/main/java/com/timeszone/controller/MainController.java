@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -344,7 +345,7 @@ public class MainController {
 	public String shopPage(
 	    @RequestParam(name = "search", required = false) String search,
 	    @RequestParam(name = "page", defaultValue = "0") int page,
-	    @RequestParam(name = "size", defaultValue = "3") int size,
+	    @RequestParam(name = "size", defaultValue = "2") int size,
 	    @RequestParam(name = "sub_category", required = false,defaultValue="") List<String> subCategoryName,
 	    Model model) {
 
@@ -352,49 +353,9 @@ public class MainController {
 				
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Product> productList;
-
-//		if (search != null && subCategoryName != null && !subCategoryName.isEmpty()) {
-//		    List<Specification<Product>> specifications = new ArrayList<>();
-//		    for (String subCategory : subCategoryName) {
-//		        specifications.add((root, query, builder) ->
-//		                builder.and(
-//		                        builder.like(root.get("productName"), "%" + search + "%"),
-//		                        builder.equal(root.join("subcategories").get("subCategoryName"), subCategory)
-//		                )
-//		        );
-//		    }
-//		    
-//		    Specification<Product> finalSpecification = Specification.where(specifications.get(0));
-//		    for (int i = 1; i < specifications.size(); i++) {
-//		        finalSpecification = finalSpecification.or(specifications.get(i));
-//		    }
-//
-//		    productList = productRepository.findAll(finalSpecification, pageable);
-//		    
-//		    model.addAttribute("search", search);
-//		    model.addAttribute("subCategoryName", subCategoryName);
-//		} else if (search != null) {
-//		    productList = productRepository.findAllByProductNameContainingIgnoreCase(search, pageable);
-//		    model.addAttribute("search", search);
-//		} else if (subCategoryName != null && !subCategoryName.isEmpty()) {
-//		    List<Specification<Product>> specifications = new ArrayList<>();
-//		    for (String subCategory : subCategoryName) {
-//		        specifications.add((root, query, builder) ->
-//		                builder.equal(root.join("subcategories").get("subCategoryName"), subCategory)
-//		        );
-//		    }
-//		    
-//		    Specification<Product> finalSpecification = Specification.where(specifications.get(0));
-//		    for (int i = 1; i < specifications.size(); i++) {
-//		        finalSpecification = finalSpecification.or(specifications.get(i));
-//		    }
-//		    
-//		    productList = productRepository.findAll(finalSpecification, pageable);
-//		    model.addAttribute("subCategoryName", subCategoryName);
-//		} else {
-		    productList = productRepository.findAll(pageable);
-//		}
-		    
+	    productList = productRepository.findAll(pageable);
+		RequestData searchRequest = new RequestData();
+		model.addAttribute("searchRequest", searchRequest);
 	    model.addAttribute("productList", productList);
 	    model.addAttribute("categories", categories);
 	    return "shop";
@@ -402,20 +363,31 @@ public class MainController {
 	
 	
 	@PostMapping("/test")
-	public String yourEndpoint(@RequestBody RequestData requestData,Model model) {
+	public String yourEndpoint(@ModelAttribute("searchRequest") RequestData requestData,Model model) {
 		
 		List<Category> categories = categoryService.getAllCategories();
 		int page = requestData.getPage();
         int size = requestData.getSize();
+        String search = requestData.getSearch();
+        List<String> subCategories = requestData.getSelectedValues();
+        
+        System.out.println("search: "+ search);
+        System.out.println("page:"+page);
+        System.out.println("size:"+size);
+        for(String s:subCategories) {
+        	System.out.println("subCategory: "+s);
+        }
+        System.out.println();
+        
+
+        RequestData searchRequest = new RequestData();
 		
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Product> productList;
-		
-		List<String> subCategoryName = requestData.getSelectedValues();
-        String search = requestData.getSearch();
-		if (search != null && subCategoryName != null && !subCategoryName.isEmpty()) {
+				
+		if (search != null && !search.isEmpty() && subCategories != null && !subCategories.isEmpty()) {
 		    List<Specification<Product>> specifications = new ArrayList<>();
-		    for (String subCategory : subCategoryName) {
+		    for (String subCategory : subCategories) {
 		        specifications.add((root, query, builder) ->
 		                builder.and(
 		                        builder.like(root.get("productName"), "%" + search + "%"),
@@ -430,17 +402,22 @@ public class MainController {
 		    }
 	
 		    productList = productRepository.findAll(finalSpecification, pageable);
+		    model.addAttribute("subCategoryName", subCategories);
+		    System.out.println("search and category is not null:" + productList.getTotalElements());
 		    
-		    model.addAttribute("search", search);
-		    model.addAttribute("subCategoryName", subCategoryName);
-		    System.out.println("search and category is not null:" + productList.getNumberOfElements());
-		} else if (search != null) {
+		    searchRequest.setSearch(search);
+		    searchRequest.setSelectedValues(subCategories);
+		    
+		} else if (search != null && !search.isEmpty()) {
 		    productList = productRepository.findAllByProductNameContainingIgnoreCase(search, pageable);
 		    model.addAttribute("search", search);
-		    System.out.println("search is null");
-		} else if (subCategoryName != null && !subCategoryName.isEmpty()) {
+		    System.out.println("search is not null: "+productList.getTotalElements());
+		    
+		    searchRequest.setSearch(search);
+		    
+		} else if (subCategories != null && !subCategories.isEmpty()) {
 		    List<Specification<Product>> specifications = new ArrayList<>();
-		    for (String subCategory : subCategoryName) {
+		    for (String subCategory : subCategories) {
 		        specifications.add((root, query, builder) ->
 		                builder.equal(root.join("subcategories").get("subCategoryName"), subCategory)
 		        );
@@ -452,13 +429,21 @@ public class MainController {
 		    }
 		    
 		    productList = productRepository.findAll(finalSpecification, pageable);
-		    model.addAttribute("subCategoryName", subCategoryName);
-		    System.out.println("category is null");
+		    model.addAttribute("subCategoryName", subCategories);
+		    System.out.println("category is not null :" + productList.getTotalElements());
+		    
+		    searchRequest.setSelectedValues(subCategories);
+		    
 		} else {
 		    productList = productRepository.findAll(pageable);
-		    System.out.println("search and category is null");
+		    System.out.println("search and category is null : "+productList.getTotalElements());
 		}
-		    
+		
+		if(page!=0) {
+			searchRequest.setPage(page);
+		}
+		
+		model.addAttribute("searchRequest", searchRequest);
 	    model.addAttribute("productList", productList);
 	    model.addAttribute("categories", categories);
 	    System.out.println("completed");
