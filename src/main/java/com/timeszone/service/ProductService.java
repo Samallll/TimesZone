@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.timeszone.model.dto.ProductDTO;
@@ -32,6 +33,47 @@ public class ProductService {
 	public List<Product> getAllProducts(){
 		
 		return productRepository.findAll();
+	}
+	
+	public Specification<Product> categoryFilterSpecificationCreation(List<String> selectedSubCategories) {
+		/*
+		 * Creation of specification for finding the data from the database 
+		 * based on the product name and sub category names selected.
+		*/
+		List<Specification<Product>> specifications = new ArrayList<>();
+		for (String subCategory : selectedSubCategories) {
+		    specifications.add((root, query, builder) ->
+		            builder.equal(root.join("subcategories").get("subCategoryName"), subCategory)
+		    );
+		}
+		
+		Specification<Product> finalSpecification = Specification.where(specifications.get(0));
+		for (int i = 1; i < specifications.size(); i++) {
+		    finalSpecification = finalSpecification.or(specifications.get(i));
+		}
+		return finalSpecification;
+	}
+
+	public Specification<Product> categoryFilterSpecificationCreation(String search, List<String> selectedSubCategories) {
+		/*
+		 * Creation of specification for finding the data from the database 
+		 * based on the product name and sub category names selected.
+		*/
+		List<Specification<Product>> specifications = new ArrayList<>();
+		for (String subCategory : selectedSubCategories) {				
+		    specifications.add((root, query, builder) ->
+		            builder.and(
+		                    builder.like(root.get("productName"), "%" + search + "%"),
+		                    builder.equal(root.join("subcategories").get("subCategoryName"), subCategory)
+		            )
+		    );
+		}
+
+		Specification<Product> finalSpecification = Specification.where(specifications.get(0));
+		for (int i = 1; i < specifications.size(); i++) {
+		    finalSpecification = finalSpecification.or(specifications.get(i));
+		}
+		return finalSpecification;
 	}
 
 	public void updateProduct(ProductDTO p) {

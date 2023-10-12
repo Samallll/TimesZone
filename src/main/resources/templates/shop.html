@@ -73,7 +73,7 @@
 	    </nav>
 	</header>
 		
-<form th:action="@{/guest/test}" method="post" th:object="${searchRequest}">
+<form th:action="@{/guest/shop}" method="post" th:object="${searchRequest}">
 	<div class="d-flex justify-content-center py-4 my-3" style="background-color: #faf6f2;">
 	  <div class="col-6 d-flex align-items-center justify-content-center">
           
@@ -81,9 +81,9 @@
           <input type="hidden" id="searchPageNumber" th:name="page" th:value="${searchRequest.page}">
           <input type="hidden" id="searchSize" th:name="size" th:value="${searchRequest.size}">
 		  <div th:each="category:${categories}">
-		  <div th:each="subCategory: ${category.subcategories}" style="display: none;">
-	          <input type="checkbox" th:field="*{selectedValues}" th:value="${subCategory.subCategoryName}" th:checked="${searchRequest.selectedValues.contains(subCategory.subCategoryName)}">
-		  </div>
+			  <div th:each="subCategory: ${category.subcategories}" style="display: none;">
+		        <input type="checkbox" th:field="*{selectedValues}" th:value="${subCategory.subCategoryName}" th:checked="${searchRequest.selectedValues.contains(subCategory.subCategoryName)}">
+			  </div>
 		  </div>
           <button type="submit" class="btn btn-dark mb-0">Search</button>
       </div>         
@@ -100,7 +100,7 @@
                 <div class="col-lg-3 col-md-3">
          
                         
-                        <form th:action="@{/guest/test}" method="post" th:object="${searchRequest}">
+                        <form th:action="@{/guest/shop}" method="post" th:object="${searchRequest}">
 						    <div class="sidebar__color" th:each="category:${categories}">
 						        <div class="section-title">
 						            <h4 th:text="'Shop by ' + ${category.categoryName}"></h4>
@@ -150,25 +150,24 @@
                         <div class="col-lg-12 text-center">
 						    <ul class="pagination justify-content-center">
 						        <li th:if="${productList.hasPrevious()}" class="page-item">
-						            <a th:href="@{/guest/shop(page=0, size=${size}, search=${search})}" class="page-link border border-secondary text-secondary">First</a>
-						            <button type="submit" class="btn btn-primary"></button>
+						            <a th:href="@{/guest/shop(page=0, size=${size})}" class="page-link border border-secondary text-secondary">First</a>
 						        </li>
 						        <!-- For the "Previous" link -->
 								<li th:if="${productList.hasPrevious()}">
-								    <a th:href="@{/guest/shop(page=${productList.number - 1}, size=${size}, search=${search})}" class="page-link text-secondary border border-secondary">Previous</a>
+								    <a th:href="@{/guest/shop(page=${productList.number - 1}, size=${size})}" class="page-link text-secondary border border-secondary">Previous</a>
 								</li>
 								
 								<!-- For the other pagination links using a loop -->
 								<li th:each="i : ${#numbers.sequence(0, productList.totalPages - 1)}" class="page-item">
-								    <a th:href="@{/guest/shop(page=${i}, size=${size}, search=${search})}" th:text="${i + 1}" class="page-link border text-secondary border-secondary"></a>
+								    <a th:href="@{/guest/shop(page=${i}, size=${size})}" th:text="${i + 1}" class="page-link border text-secondary border-secondary"></a>
 								</li>
 								
 								<!-- For the "Next" link -->
 								<li th:if="${productList.hasNext()}">
-								    <a th:href="@{/guest/shop(page=${productList.number + 1}, size=${size}, search=${search})}" class="page-link border text-secondary border-secondary">Next</a>
+								    <a th:href="@{/guest/shop(page=${productList.number + 1}, size=${size})}" class="page-link border text-secondary border-secondary">Next</a>
 								</li>
 						        <li th:if="${productList.hasNext()}" class="page-item">
-						            <a th:href="@{/guest/shop(page=${productList.totalPages - 1}, size=${size}, search=${search})}" class="page-link text-secondary border border-secondary">Last</a>
+						            <a th:href="@{/guest/shop(page=${productList.totalPages - 1}, size=${size})}" class="page-link text-secondary border border-secondary">Last</a>
 						        </li>
 						        <input type="hidden" id="pageNumber" th:value="${productList.number}">
 						    </ul>
