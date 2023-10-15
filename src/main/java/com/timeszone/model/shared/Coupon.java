@@ -38,6 +38,8 @@ public class Coupon {
 
 	private Integer cartItemsCount;
 	
+	private Integer usageCount=0;
+	
 	@OneToMany(mappedBy="coupon")
 	private List<PurchaseOrder> ordersList;
 	
@@ -143,6 +145,12 @@ public class Coupon {
 	public void setOrdersList(List<PurchaseOrder> ordersList) {
 		this.ordersList = ordersList;
 	}
-	
-	
+
+	public Integer getUsageCount() {
+		return usageCount;
+	}
+
+	public void setUsageCount(Integer usageCount) {
+		this.usageCount = usageCount;
+	}
 }

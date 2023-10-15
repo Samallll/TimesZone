@@ -106,7 +106,7 @@
 					<div class="card-header py-3">
 		            	<h5 class="mb-0 text-center">Available Coupons for you!!</h5>
 		          	</div>
-					<div class="card-body py-4 px-2 d-flex flex-row" >
+					<div class="card-body py-4 px-2 d-flex flex-row" id="couponContainer">
 				        <div class="card ms-3" th:each="coupon:${couponList}">
 				          <div class="card-body" >
 							  <h5 class="card-title" th:text="${coupon.couponCode}" ></h5>

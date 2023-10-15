@@ -186,8 +186,8 @@
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Expiry Date</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Percentage</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Base Price</th>  
-					  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cart Items Count</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Minimum Purchase Amount</th>  
+					  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Coupon Usage Count</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Changes Available</th>
                     </tr>
@@ -211,7 +211,7 @@
                       </td>
                       
                       <td class="align-middle text-center text-sm">
-                        <span class="text-secondary text-xs font-weight-bold" th:text="${coupon.cartItemsCount}"></span>
+                        <span class="text-secondary text-xs font-weight-bold" th:text="${coupon.usageCount}"></span>
                       </td>
                       <td class="align-middle text-center text-sm">
                         <span class="badge badge-sm bg-gradient-success" th:if="${coupon.isActive}">Available</span>

@@ -160,6 +160,26 @@
 				    <label for="inputCartItemsCount" class="form-label">Cart Items Count</label>
 				    <input type="number" class="form-control border border-1 border-primary ps-3 mb-2" id="inputCartItemsCount" th:field="*{cartItemsCount}" th:value="${editCoupon.cartItemsCount}">
 				  </div>
+				  <div class="col-md-3">
+				    <label for="inputUsageCount" class="form-label">Coupon Usage Count</label>
+				    <input type="number" class="form-control border border-1 border-primary ps-3 mb-2" id="inputUsageCount" th:field="*{usageCount}" th:value="${editCoupon.usageCount}">
+				  </div>
+				  
+				  	<div class="col-md-3 form-check form-check-inline px-2 py-4 mt-2 me-0">
+						<label for="inputIsActive" class="form-label">Enable?</label>
+				        <label>
+				            <input class="form-check-input" type="radio" name="isActive" value="true"
+				                th:checked="${editCoupon.isActive == true}" /><span class="fs-6 ps-2">True</span>
+				        </label>
+				        <label>
+				            <input class="form-check-input" type="radio" name="isActive" value="false"
+				                th:checked="${editCoupon.isActive == false}" /><span class="fs-6 ps-2">False</span>
+				        </label>
+				    </div>
+				  	
+			 		<input type="hidden" name="isActive" th:value="${editCoupon.isActive}" />
+				  
+				  
 				  
 				  <!--Coupon Registration Completed-->
 				  

@@ -237,10 +237,6 @@ public class PurchaseOrderService {
 			String generatedSignature;
 			
 			generatedSignature = generateHmacSha256Signature(razorPaymentId,SECRET_KEY);
-			
-			System.out.println("generatedSignature: "+ generatedSignature);
-			System.out.println("razorSignature: "+ razorSignature);
-			System.out.println("orderId: "+orderId);
 			if(generatedSignature.equals(razorSignature) ) {
 				return true;
 			}
@@ -347,6 +343,7 @@ public class PurchaseOrderService {
 			Coupon coupon = couponService.getCoupon(couponId);
 			newOrder.setCoupon(coupon);
 			coupon.getOrdersList().add(newOrder);
+			coupon.setUsageCount(coupon.getUsageCount()-1);
 			session.removeAttribute("couponApplied");
 			couponService.addCoupon(coupon);
 		}

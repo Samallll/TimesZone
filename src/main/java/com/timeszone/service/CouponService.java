@@ -39,6 +39,7 @@ public class CouponService {
 		editCoupon.setDescription(coupon.getDescription());
 		editCoupon.setExpiryDate(coupon.getExpiryDate());
 		editCoupon.setIsActive(coupon.getIsActive());
+		editCoupon.setUsageCount(coupon.getUsageCount());
 		editCoupon.setMinimumPurchaseAmount(coupon.getMinimumPurchaseAmount());
 		editCoupon.setPercentage(coupon.getPercentage());
 		couponRepository.save(editCoupon);
@@ -48,16 +49,6 @@ public class CouponService {
 	public void deleteCoupon(Integer couponId) {
 		
 		couponRepository.deleteById(couponId);
-	}
-	
-	public void enableCoupon(Coupon coupon) {
-		
-
-	}
-	
-	public void disableCoupon(Coupon coupon) {
-		
-
 	}
 	
 	public List<Coupon> getAll(){
@@ -76,6 +67,14 @@ public class CouponService {
 		}
 		return nonExpiredCoupons;
 	}
+	
+	public List<Coupon> getCouponsMatchingCriteria(double purchaseAmount) {
+        LocalDate currentDate = LocalDate.now();
+        return couponRepository.findAllByExpiryDateAfterAndUsageCountGreaterThanAndMinimumPurchaseAmountLessThanEqualAndIsActive(
+            currentDate, 0, purchaseAmount,true
+        );
+	}
+    
 	
 	public List<Coupon> getAllIsActive(){
 		List<Coupon> activeCoupons = new ArrayList<>();
@@ -127,5 +126,6 @@ public class CouponService {
 		}
 		return false;
 	}
+	
 
 }

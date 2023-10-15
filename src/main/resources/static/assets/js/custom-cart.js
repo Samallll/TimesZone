@@ -32,6 +32,53 @@
 				document.getElementById('grandTotal').innerText = response.finalAmount + '.0 Rs';                
                 document.getElementById('subTotal').innerText = response.finalAmount+ '.0 Rs';
                 document.getElementById('couponAmount').innerText = '0.0 Rs';
+                if("additionalCoupons" in response){
+					
+					var couponContainer = document.getElementById('couponContainer');
+					while (couponContainer.firstChild) {
+					    couponContainer.removeChild(couponContainer.firstChild);
+					}
+					
+					var additionalCoupons = response.additionalCoupons;
+					
+					additionalCoupons.forEach(function(coupon) {
+						console.log(coupon);
+			            var couponCard = document.createElement('div');
+			            couponCard.className = 'card ms-3';
+			
+			            var couponCardBody = document.createElement('div');
+			            couponCardBody.className = 'card-body';
+			
+			            var couponTitle = document.createElement('h5');
+			            couponTitle.className = 'card-title';
+			            couponTitle.textContent = coupon.couponCode;
+			
+			            var couponDescription = document.createElement('p');
+			            couponDescription.className = 'card-text';
+			            couponDescription.textContent = coupon.description;
+			
+			            var applyButton = document.createElement('a');
+			            applyButton.className = 'btn btn-primary';
+			            applyButton.textContent = 'Apply coupon';
+			            applyButton.setAttribute('data-coupon-id', coupon.couponId);
+			            applyButton.id = 'coupon-card-' + coupon.couponId;
+			            applyButton.onclick = function() {
+			                applyCoupon(this.getAttribute('data-coupon-id'));
+			            };
+			
+			            couponCardBody.appendChild(couponTitle);
+			            couponCardBody.appendChild(couponDescription);
+			            couponCardBody.appendChild(applyButton);
+			
+			            couponCard.appendChild(couponCardBody);
+			
+			            // Append the new coupon card to the coupon container
+			            document.getElementById('couponContainer').appendChild(couponCard);
+			        });
+
+				}				
+									
+        
              } else {
                  displayFlashMessageForStock(response.error,productId)
              }
@@ -60,6 +107,51 @@
                 document.getElementById('grandTotal').innerText = response.finalAmount + '.0 Rs';                
                 document.getElementById('subTotal').innerText = response.finalAmount+ '.0 Rs';
                 document.getElementById('couponAmount').innerText = '0.0 Rs';
+                if("additionalCoupons" in response){
+					
+					var couponContainer = document.getElementById('couponContainer');
+					while (couponContainer.firstChild) {
+					    couponContainer.removeChild(couponContainer.firstChild);
+					}
+					
+					var additionalCoupons = response.additionalCoupons;					
+					additionalCoupons.forEach(function(coupon) {
+						console.log(coupon);
+			            var couponCard = document.createElement('div');
+			            couponCard.className = 'card ms-3';
+			
+			            var couponCardBody = document.createElement('div');
+			            couponCardBody.className = 'card-body';
+			
+			            var couponTitle = document.createElement('h5');
+			            couponTitle.className = 'card-title';
+			            couponTitle.textContent = coupon.couponCode;
+			
+			            var couponDescription = document.createElement('p');
+			            couponDescription.className = 'card-text';
+			            couponDescription.textContent = coupon.description;
+			
+			            var applyButton = document.createElement('a');
+			            applyButton.className = 'btn btn-primary';
+			            applyButton.textContent = 'Apply coupon';
+			            applyButton.setAttribute('data-coupon-id', coupon.couponId);
+			            applyButton.id = 'coupon-card-' + coupon.couponId;
+			            applyButton.onclick = function() {
+			                applyCoupon(this.getAttribute('data-coupon-id'));
+			            };
+			
+			            couponCardBody.appendChild(couponTitle);
+			            couponCardBody.appendChild(couponDescription);
+			            couponCardBody.appendChild(applyButton);
+			
+			            couponCard.appendChild(couponCardBody);
+			
+			            // Append the new coupon card to the coupon container
+			            document.getElementById('couponContainer').appendChild(couponCard);
+			        });
+
+				}
+                
              } 
          },
          contentType: "text/plain"

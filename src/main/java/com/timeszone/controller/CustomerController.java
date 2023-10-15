@@ -277,14 +277,15 @@ public class CustomerController {
 	@GetMapping("/shoppingCart")
 	public String shoppingCart(Model model,Principal principal,HttpSession session) {
 		
-		List<Coupon> couponList = couponService.getAllNonExpired();
 		session.removeAttribute("addressId");
 		Customer customer = customerRepository.findByEmailId(principal.getName());
 		if(customer==null) {
 			return "guest/login";
 		}
+		
 		List<CartItem> cartItemList = cartService.getAll(customer.getCart());
 		Cart customerCart = customer.getCart();
+		List<Coupon> couponList = couponService.getCouponsMatchingCriteria(customerCart.getTotalPrice());
 		model.addAttribute("cartItemList", cartItemList);
 		model.addAttribute("couponList", couponList);
 		model.addAttribute("customerCart", customerCart);
@@ -622,6 +623,10 @@ public class CustomerController {
 					responseMap.put("productAmount", productAmount);
 					finalAmount = cartItem.getCart().getTotalPrice();
 					responseMap.put("finalAmount", finalAmount);
+					List<Coupon> couponList = couponService.getCouponsMatchingCriteria(finalAmount);
+					if(couponList != null) {
+						responseMap.put("additionalCoupons", couponList);
+					}
 					return ResponseEntity.ok(responseMap);
 				}
 				else {
@@ -664,6 +669,10 @@ public class CustomerController {
 					responseMap.put("productAmount", productAmount);
 					finalAmount = cartItem.getCart().getTotalPrice();
 					responseMap.put("finalAmount", finalAmount);
+					List<Coupon> couponList = couponService.getCouponsMatchingCriteria(finalAmount);
+					if(couponList != null) {
+						responseMap.put("additionalCoupons", couponList);
+					}
 					return ResponseEntity.ok(responseMap);
 				}
 				
