@@ -91,6 +91,10 @@ public class Customer implements UserDetails {
 	@OneToMany(mappedBy="customer",cascade=CascadeType.REMOVE)
 	private List<PurchaseOrder> orders;
 	
+	private String referralCode;
+	
+	private String usedCode;
+	
 	public Customer() {
 		super();
 		this.cart = new Cart(this);
@@ -108,19 +112,6 @@ public class Customer implements UserDetails {
 		this.cart = cart;
 	}
 
-	public Customer(Integer customerId, String firstName, String lastName, String emailId, String phoneNumber,
-			String password, Set<Role> authorities, List<Address> addresses) {
-		super();
-		this.customerId = customerId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.emailId = emailId;
-		this.phoneNumber = phoneNumber;
-		this.password = password;
-		this.authorities = authorities;
-		this.addresses = addresses;
-	}
-
 	public Customer(String firstName, String lastName, String emailId, String phoneNumber,
 			String password, Set<Role> authorities) {
 		super();
@@ -134,13 +125,13 @@ public class Customer implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
+
 		return this.authorities;
 	}
 
 	@Override
 	public String getPassword() {
-		// TODO Auto-generated method stub
+
 		return this.password;
 	}
 	
@@ -162,12 +153,12 @@ public class Customer implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
+
 		return this.getEmailId();
 	}
 	
 	public String getEmailId() {
-		// TODO Auto-generated method stub
+
 		return this.emailId;
 	}
 	
@@ -245,36 +236,35 @@ public class Customer implements UserDetails {
 	}
 
 	public List<Address> getAddresses() {
-		// TODO Auto-generated method stub
+
 		return this.addresses;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
+
 		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
+
 		return !isLocked;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
+
 		return true;
 	}
 	
 	public void allAuthorities() {
-		// TODO Auto-generated method stub
+
 		System.out.println("Authorities=");
 		for(Role role:authorities) {
 			System.out.println(role.getAuthority());
@@ -282,7 +272,7 @@ public class Customer implements UserDetails {
 	}
 	
 	public void allAddresses() {
-		// TODO Auto-generated method stub
+
 		System.out.println("Addresses=");
 		for(Address address:addresses) {
 			address.toString();
@@ -311,6 +301,22 @@ public class Customer implements UserDetails {
 
 	public void setWishlist(Wishlist wishlist) {
 		this.wishlist = wishlist;
+	}
+
+	public String getReferralCode() {
+		return referralCode;
+	}
+
+	public void setReferralCode(String referralCode) {
+		this.referralCode = referralCode;
+	}
+
+	public String getUsedCode() {
+		return usedCode;
+	}
+
+	public void setUsedCode(String usedCode) {
+		this.usedCode = usedCode;
 	}
 
 	@Override

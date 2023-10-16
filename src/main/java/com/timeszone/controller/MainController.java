@@ -1,6 +1,9 @@
 package com.timeszone.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.time.LocalDate;
 
@@ -172,9 +175,17 @@ public class MainController {
 			cartRepository.save(newCart);
 			
 			verifyCustomer.setCart(newCart);
+			if(verifyCustomer.getUsedCode()!=null) {
+				//if valid then add the amount to the referred person's account and this account
+				Customer referredCustomer = customerRepository.findByReferralCode(verifyCustomer.getUsedCode());
+				referredCustomer.setWallet(referredCustomer.getWallet()+1000.0);
+				customerRepository.save(referredCustomer);
+				verifyCustomer.setWallet(500.0);
+				verifyCustomer.setReferralCode(generateReferralCode(verifyCustomer.getEmailId()));
+			}
 			customerService.customerRepository.save(verifyCustomer);
 			
-			newCart.setCustomer(verifyCustomer);;
+			newCart.setCustomer(verifyCustomer);
 			cartRepository.save(newCart);
 			
 			session.setAttribute("registerSuccess", otpService.getSuccessMessage());
@@ -189,6 +200,28 @@ public class MainController {
 		}		
 	}
 	
+    private String generateReferralCode(String emailId) {
+    	
+    	try {
+    		MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] emailBytes = emailId.getBytes("UTF-8");
+            byte[] hashBytes = md.digest(emailBytes);
+            
+            String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            StringBuilder code = new StringBuilder();
+            
+            for (byte b : hashBytes) {
+                int index = (b & 0xFF) % characters.length();
+                code.append(characters.charAt(index));
+            } 
+            return code.substring(0, 6);
+    	}
+    	catch(Exception e) {
+    		System.out.println(e.getMessage());
+    		return null;
+    	}
+	}
+
 //	For Login --------------------------------------------------------------------------------
 	@GetMapping("/login")
 	public String loginPage(Model model,HttpSession session) {

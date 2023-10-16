@@ -11,6 +11,8 @@ public class RegistrationDTO {
 	private String phoneNumber;
 	
 	private String password;
+	
+	private String referralCode;
 
 	@Override
 	public String toString() {
@@ -69,6 +71,14 @@ public class RegistrationDTO {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getReferralCode() {
+		return referralCode;
+	}
+
+	public void setReferralCode(String referralCode) {
+		this.referralCode = referralCode;
 	}
 	
 }

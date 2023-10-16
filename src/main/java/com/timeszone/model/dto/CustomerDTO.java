@@ -25,6 +25,8 @@ public class CustomerDTO {
 	private boolean isLocked=false;
 	
 	private Double wallet;
+	
+	private String referralCode;
 
 	public Double getWallet() {
 		return wallet;
@@ -114,6 +116,14 @@ public class CustomerDTO {
 
 	public void setLocked(boolean isLocked) {
 		this.isLocked = isLocked;
+	}
+
+	public String getReferralCode() {
+		return referralCode;
+	}
+
+	public void setReferralCode(String referralCode) {
+		this.referralCode = referralCode;
 	}
 
 	

@@ -92,6 +92,7 @@ public class CustomerService implements UserDetailsService{
 		customerDTO.setAddresses(customer.getAddresses());
 		customerDTO.setLocked(customer.isLocked());
 		customerDTO.setWallet(customer.getWallet());
+		customerDTO.setReferralCode(customer.getReferralCode());
 		return customerDTO;
 	}
 
@@ -112,6 +113,10 @@ public class CustomerService implements UserDetailsService{
 			errorMsg="Phone Number exists";
 			return true;
 		}
+		else if(customerData.getReferralCode()!=null && !isValidReferralCode(customerData.getReferralCode())) {
+			errorMsg="Invalid Referral Code";
+			return true;
+		}
 		else {
 			errorMsg=null;
 			return false;
@@ -124,6 +129,11 @@ public class CustomerService implements UserDetailsService{
 
 	public Customer getCustomerByEmailId(String emailId) {
 		return customerRepository.findByEmailId(emailId);
+	}
+	
+	public boolean isValidReferralCode(String referralCode) {
+		Customer customer = customerRepository.findByReferralCode(referralCode);
+		return customer!=null;
 	}
 
 }

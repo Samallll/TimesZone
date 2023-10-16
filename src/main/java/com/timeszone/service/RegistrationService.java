@@ -40,6 +40,10 @@ public class RegistrationService {
 		Set<Role> roles = new HashSet<>();
 		roles.add(userRole);
 		Customer newCustomer = new Customer(request.getFirstName(),request.getLastName(),request.getEmailId(),request.getPhoneNumber(),encoder.encode(request.getPassword()),roles);
+		if(request.getReferralCode()!=null) {
+			newCustomer.setUsedCode(request.getReferralCode());
+		}
+		
 		return newCustomer;
 	}
 }
