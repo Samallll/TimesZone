@@ -2,14 +2,19 @@ package com.timeszone.model.shared;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -45,6 +50,13 @@ public class PurchaseOrder {
 	private String transcationId;
 	
 	private Integer orderedQuantity;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "purchase_order_order_statuses",
+               joinColumns = @JoinColumn(name = "purchase_order_id"),
+               inverseJoinColumns = @JoinColumn(name = "order_status_id"))
+    private Set<OrderStatus> possibleOrderStatuses = new HashSet<>();
+
 	
 	@ManyToOne
 	private Coupon coupon;
@@ -181,5 +193,13 @@ public class PurchaseOrder {
         }
         return totalPrice;
     }
+
+	public Set<OrderStatus> getPossibleOrderStatuses() {
+		return possibleOrderStatuses;
+	}
+
+	public void setPossibleOrderStatuses(Set<OrderStatus> possibleOrderStatuses) {
+		this.possibleOrderStatuses = possibleOrderStatuses;
+	}
 	
 }

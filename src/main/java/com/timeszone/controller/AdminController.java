@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -52,6 +56,7 @@ import com.timeszone.model.shared.PurchaseOrder;
 import com.timeszone.model.shared.ReturnReason;
 import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
+import com.timeszone.repository.OrderStatusRepository;
 import com.timeszone.repository.ProductImageRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.repository.ReturnReasonRepository;
@@ -88,6 +93,9 @@ public class AdminController {
 	private CustomerRepository customerRepository;
 	
 	@Autowired
+	private OrderStatusRepository orderStatusRepository;
+	
+	@Autowired
 	private CategoryService categoryService;
 	
 	@Autowired
@@ -116,6 +124,8 @@ public class AdminController {
 	
 	@Autowired
 	private ReportGeneratorService reportGeneratorService;
+	
+	
 	
 	@GetMapping("/")
 	public String adminHome(Model model){
@@ -545,19 +555,26 @@ public class AdminController {
 	
 //	Order table rendering -------------------------------------------------------------------------
 	@GetMapping("/orderManagement")
-	public String orderManagement(Model model) {
+	public String orderManagement(Model model,
+								@RequestParam(name="pageOrder",defaultValue="0") int pageOrder,
+								@RequestParam(name="pageReturnRequest",defaultValue="0") int pageReturnRequest
+								) {
 		
-		List<PurchaseOrder> orderListByReturnRequest = purchaseOrderService.getAllByOrderStatus("Requested for Return");
+		Pageable pageable = PageRequest.of(pageOrder, 15);
+		Pageable pageableReturnRequest = PageRequest.of(pageReturnRequest, 5);
+
+		Page<PurchaseOrder> orderListByReturnRequest = purchaseOrderService.getAllByOrderStatusForPagination(pageableReturnRequest,"Requested for Return");
 		model.addAttribute("orderListByReturnRequest", orderListByReturnRequest);
 		
 		List<PurchaseOrder> orderListByApprovedReturnRequest = purchaseOrderService.getAllByOrderStatus("Return Request Approved");
 		model.addAttribute("orderListByApprovedReturnRequest", orderListByApprovedReturnRequest);
 		
-		List<PurchaseOrder> orderList = purchaseOrderService.getAllOrders();		
-		orderList.removeAll(orderListByReturnRequest);
-		orderList.removeAll(orderListByApprovedReturnRequest);
+		List<String> statusList = new ArrayList<>();
+		statusList.add("Requested for Return");
+		statusList.add("Return Request Approved");
+		Page<PurchaseOrder> orderList = purchaseOrderService.getAllOrdersByPageByRemovingMulipleOrderStatus(pageable,statusList);		
 		model.addAttribute("orderList", orderList);
-		
+		model.addAttribute("orderStatusList", orderStatusRepository.findAll());
 		return "orderManagement";
 	}
 	
@@ -567,8 +584,9 @@ public class AdminController {
 								@RequestParam("orderId") Integer orderId){
 		
 		PurchaseOrder order = purchaseOrderService.getOrder(orderId);
+		System.out.println(orderStatus);
 		order.setOrderStatus(orderStatus);
-		purchaseOrderService.createOrder(order);
+		purchaseOrderService.updateOrder(order);
 		Map<String,Object> response = new HashMap<>();
 		response.put("success", "completed");
 		return ResponseEntity.ok(response);
@@ -579,6 +597,9 @@ public class AdminController {
 		
 		PurchaseOrder order = purchaseOrderService.getOrder(orderId);
 		ReturnReason reason = returnReasonRepository.findByOrder(order);
+		if(reason == null) {
+			return "redirect:/admin/orderManagement";
+		}
 		model.addAttribute("order", order);
 		model.addAttribute("reason", reason);
 		model.addAttribute("orderItemList",order.getOrderItems());

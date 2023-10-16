@@ -106,10 +106,15 @@
 						</li>
 						<li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
 							<strong class="text-dark">Email Address:</strong> &nbsp;
-							<h6 th:text="${customerData.emailId}" class="border-0 ps-0 pt-0 text-sm" style="font-weight: normal;">
+							<h6 th:text="${customerData.emailId}" class="border-0 ps-0 pt-0 pb-2 text-sm" style="font-weight: normal;">
 							</h6>
 						</li>
-						<li class="list-group-item border-0 ps-0 pt-0 text-sm" ><strong class="text-dark">Location:</strong> &nbsp; India</li>	                    
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm" ><strong class="text-dark">Location:</strong> &nbsp; India</li>	  
+						<li class="list-group-item border-0 ps-0 pt-0 text-sm d-flex" >
+							<strong class="text-dark">Wallet Balance:</strong> &nbsp;
+							<h6 th:text="${customerData.wallet} + ' Rs'" class="border-0 ps-0 pt-0 text-sm" style="font-weight: normal;">
+							</h6>
+						</li>                  
 	                  </ul>
 	                </div>
 	              </div>

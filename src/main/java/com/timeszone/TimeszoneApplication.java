@@ -1,8 +1,6 @@
 package com.timeszone;
 
-import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -13,17 +11,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.customer.Role;
-import com.timeszone.model.product.Category;
-import com.timeszone.model.product.Product;
-import com.timeszone.model.product.SubCategory;
+import com.timeszone.model.shared.OrderStatus;
 import com.timeszone.model.shared.PurchaseOrder;
-import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
-import com.timeszone.repository.OrderItemRepository;
-import com.timeszone.repository.ProductRepository;
+import com.timeszone.repository.OrderStatusRepository;
 import com.timeszone.repository.PurchaseOrderRepository;
 import com.timeszone.repository.RoleRepository;
-import com.timeszone.repository.SubCategoryRepository;
 
 @SpringBootApplication
 public class TimeszoneApplication {
@@ -35,11 +28,7 @@ public class TimeszoneApplication {
 	@Bean
 	CommandLineRunner run(CustomerRepository customerRepository,
 			RoleRepository roleRepository,
-			PasswordEncoder encoder,
-			ProductRepository productRepository,
-			CategoryRepository categoryRepository,
-			SubCategoryRepository subCategoryRepository,
-			PurchaseOrderRepository orderRepository
+			PasswordEncoder encoder
 			) {
 		
 		return args -> {

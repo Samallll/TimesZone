@@ -186,7 +186,7 @@
 		          </div>
 		        </div>
 		        
-		        <div class="col-md-4 w-100 d-flex flex-column justify-content-center " th:if="@{order.orderStatus == 'Requested for Return'}">
+		        <div class="col-md-4 w-100 d-flex flex-column justify-content-center " th:if="${order.orderStatus == 'Requested for Return'}">
 					<a th:href="@{/admin/order/return/request(id=1,orderId=${order.orderId})}" class="btn btn-success fs-6">
 					    Approve Request
 					</a>

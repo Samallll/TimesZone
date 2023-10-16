@@ -438,7 +438,7 @@ public class CustomerController {
 	  
 	  if(methodId.equals("Wallet")) {
 		  if(purchaseOrderService.createOrderForWalletTransaction(grandTotal,customer,session,principal)) {
-			  response.put("message", "Order has been placed successfully");
+			  response.put("success", "Order has been placed successfully");
 		  }
 		  else {
 			  response.put("message", "Insufficient Balance in Wallet");
@@ -447,7 +447,7 @@ public class CustomerController {
 	  }
 	  if(methodId.equals("Cash On Delivery (COD)")) {
 		  purchaseOrderService.createOrderForCodTransaction(grandTotal,customer,session,principal);
-		  response.put("message", "Order has been placed successfully");
+		  response.put("success", "Order has been placed successfully");
 		  return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
 	  }
 	  
@@ -537,7 +537,7 @@ public class CustomerController {
 		newReason.setOrder(order);
 		purchaseOrderService.saveReason(newReason);
 		order.setOrderStatus("Requested for Return");
-		purchaseOrderService.createOrder(order);
+		purchaseOrderService.updateOrder(order);
 		return "redirect:/user/viewOrders";
 	}
 	

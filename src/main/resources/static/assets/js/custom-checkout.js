@@ -31,10 +31,25 @@
 		                   razorpayCall(response);
 						}
 						else{
-							var message = response.message;
-							var modal = $('#myModal');
-							modal.find('.modal-title').text('Alert');
-							modal.find('.modal-body').html(message);
+							if("success" in response){
+								var message = response.success;
+								var modal = $('#myModal');
+								modal.find('.modal-title').text('Alert');
+								modal.find('.modal-body').html(message);
+								modal.modal('show');
+
+								var modalFooter = $('<div class="modal-footer">');
+								var okayButton = $('<a href="/user/viewOrders" type="button" class="btn btn-secondary">Okay</a>');
+								modalFooter.append(okayButton);
+								
+								modal.find('.modal-content').append(modalFooter);
+							}
+							else{
+								var message = response.message;
+								var modal = $('#myModal');
+								modal.find('.modal-title').text('Alert');
+								modal.find('.modal-body').html(message);
+							}
 							modal.modal('show');
 						}
 	                },
@@ -99,6 +114,7 @@
                 success: function (response) {
 					
 					if("success" in response){
+						Console.log("Transaction completed");
 						window.location.href = "/user/viewOrders";
 					}
 					else{

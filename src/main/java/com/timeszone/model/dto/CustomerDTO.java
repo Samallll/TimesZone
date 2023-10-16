@@ -23,13 +23,23 @@ public class CustomerDTO {
 	private List<Address> addresses;
 	
 	private boolean isLocked=false;
+	
+	private Double wallet;
+
+	public Double getWallet() {
+		return wallet;
+	}
+
+	public void setWallet(Double wallet) {
+		this.wallet = wallet;
+	}
 
 	public CustomerDTO() {
 		super();
 	}
 
 	public CustomerDTO(Integer customerId, String firstName, String lastName, String emailId, String phoneNumber,
-			Set<Role> authorities, List<Address> addresses, boolean isLocked) {
+			Set<Role> authorities, List<Address> addresses, boolean isLocked,Double wallet) {
 		super();
 		this.customerId = customerId;
 		this.firstName = firstName;
@@ -39,6 +49,7 @@ public class CustomerDTO {
 		this.authorities = authorities;
 		this.addresses = addresses;
 		this.isLocked = isLocked;
+		this.wallet = wallet;
 	}
 
 	public Integer getCustomerId() {

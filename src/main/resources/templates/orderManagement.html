@@ -209,17 +209,21 @@
                       </td>
                       <td class="align-middle d-flex align-items-center justify-content-center me-2">
 						
-						<select class="form-select ps-3 py-2" name="selectedOption" 
-									onchange="handleOptionChange(this.value,this.getAttribute('id'))" 
-									th:id="${order.orderId}">
-						    <option>Choose</option>
-						    <option value="Pending">Pending</option>
-						    <option value="Shipped">Shipped</option>
-						    <option value="Delivered">Delivered</option>
-						    <option value="Cancelled">Cancelled</option>
-						    <option value="Returned">Returned</option>
-						    <option value="Refunded">Refunded</option>
-						</select>
+						<div th:if="${order.orderStatus == 'Shipped' or order.orderStatus == 'Pending'}">
+						    <select class="form-select ps-2 py-2" name="selectedOption" 
+						        onchange="handleOptionChange(this.value,this.getAttribute('id'))" 
+						        th:id="${order.orderId}">
+						        <option>Choose</option>
+						        <th:block th:each="status : ${order.possibleOrderStatuses}">
+						            <option th:value="${status.orderStatusName}" th:text="${status.orderStatusName}"></option>
+						        </th:block>
+						    </select>
+						</div>
+						
+						<div th:if="${order.orderStatus == 'Cancelled' or order.orderStatus == 'Refunded' or order.orderStatus == 'Returned' or order.orderStatus == 'Delivered'}">
+						    <span class="text-secondary text-xs font-weight-bold">Request Completed</span>
+						</div>
+
 
                       </td>
                     </tr>
@@ -229,6 +233,33 @@
             </div>
           </div>
         </div>
+        
+        <div class="col-lg-12 text-center">
+		    <ul class="pagination justify-content-center">
+		        <li th:if="${orderList.hasPrevious()}" >
+		            <a th:href="@{/admin/orderManagement(pageOrder=0, size=${size})}" class="page-link border border-secondary text-secondary text-wrap">First</a>
+		        </li>
+		        <!-- For the "Previous" link -->
+				<li th:if="${orderList.hasPrevious()}" >
+				    <a th:href="@{/admin/orderManagement(pageOrder=${orderList.number - 1}, size=${size})}" class="page-link text-secondary border border-secondary text-wrap">Previous</a>
+				</li>
+				
+				<!-- For the other pagination links using a loop -->
+				<li th:each="i : ${#numbers.sequence(0, orderList.totalPages - 1)}" >
+				    <a th:href="@{/admin/orderManagement(pageOrder=${i}, size=${size})}" th:text="${i + 1}" class="page-link border text-secondary border-secondary text-wrap"></a>
+				</li>
+				
+				<!-- For the "Next" link -->
+				<li th:if="${orderList.hasNext()}" >
+				    <a th:href="@{/admin/orderManagement(pageOrder=${orderList.number + 1}, size=${size})}" class="page-link border text-secondary border-secondary text-wrap">Next</a>
+				</li>
+		        <li th:if="${orderList.hasNext()}">
+		            <a th:href="@{/admin/orderManagement(pageOrder=${orderList.totalPages - 1}, size=${size})}" class="page-link text-secondary border border-secondary text-wrap">Last</a>
+		        </li>
+		        <input type="hidden" id="pageNumber" th:value="${orderList.number}">
+		    </ul>
+		</div>
+        
       </div>
       
       <div class="row">
@@ -283,6 +314,33 @@
             </div>
           </div>
         </div>
+        
+        <div class="col-lg-12 text-center">
+		    <ul class="pagination justify-content-center">
+		        <li th:if="${orderListByReturnRequest.hasPrevious()}" >
+		            <a th:href="@{/admin/orderManagement(pageReturnRequest=0, size=${size})}" class="page-link border border-secondary text-secondary text-wrap">First</a>
+		        </li>
+		        <!-- For the "Previous" link -->
+				<li th:if="${orderListByReturnRequest.hasPrevious()}" >
+				    <a th:href="@{/admin/orderManagement(pageReturnRequest=${orderListByReturnRequest.number - 1}, size=${size})}" class="page-link text-secondary border border-secondary text-wrap">Previous</a>
+				</li>
+				
+				<!-- For the other pagination links using a loop -->
+				<li th:each="i : ${#numbers.sequence(0, orderListByReturnRequest.totalPages - 1)}" >
+				    <a th:href="@{/admin/orderManagement(pageReturnRequest=${i}, size=${size})}" th:text="${i + 1}" class="page-link border text-secondary border-secondary text-wrap"></a>
+				</li>
+				
+				<!-- For the "Next" link -->
+				<li th:if="${orderListByReturnRequest.hasNext()}" >
+				    <a th:href="@{/admin/orderManagement(pageReturnRequest=${orderListByReturnRequest.number + 1}, size=${size})}" class="page-link border text-secondary border-secondary text-wrap">Next</a>
+				</li>
+		        <li th:if="${orderListByReturnRequest.hasNext()}">
+		            <a th:href="@{/admin/orderManagement(pageReturnRequest=${orderListByReturnRequest.totalPages - 1}, size=${size})}" class="page-link text-secondary border border-secondary text-wrap">Last</a>
+		        </li>
+		        <input type="hidden" id="pageNumber" th:value="${orderListByReturnRequest.number}">
+		    </ul>
+		</div>
+        
       </div>
       
       <div class="row">
@@ -341,6 +399,8 @@
             </div>
           </div>
         </div>
+        
+        
       </div>
       
       

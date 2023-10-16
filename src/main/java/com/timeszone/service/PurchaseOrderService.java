@@ -25,6 +25,8 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -40,10 +42,13 @@ import com.timeszone.model.product.Product;
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.OrderItem;
+import com.timeszone.model.shared.OrderStatus;
 import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.model.shared.PurchaseOrder;
 import com.timeszone.model.shared.ReturnReason;
+import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.OrderItemRepository;
+import com.timeszone.repository.OrderStatusRepository;
 import com.timeszone.repository.PurchaseOrderRepository;
 import com.timeszone.repository.ReturnReasonRepository;
 
@@ -67,6 +72,12 @@ public class PurchaseOrderService {
 	
 	@Autowired
 	private ReturnReasonRepository reasonRepository;
+	
+	@Autowired
+	private OrderStatusRepository orderStatusRepository;
+	
+	@Autowired
+	private CustomerRepository customerRepository;
 	
 	@Autowired
 	private AddressService addressService;
@@ -110,6 +121,11 @@ public class PurchaseOrderService {
 		return purchaseOrderRepository.findAllByPaymentMethod(paymentMethod);
 	}
 	
+//	list of all orders by order status for pagination
+	public Page<PurchaseOrder> getAllByOrderStatusForPagination(Pageable pageableReturnApproved, String orderStatus){
+		return purchaseOrderRepository.findAllByOrderStatus(pageableReturnApproved,orderStatus);
+	}
+	
 //	list of all orders by order status
 	public List<PurchaseOrder> getAllByOrderStatus(String orderStatus){
 		return purchaseOrderRepository.findAllByOrderStatus(orderStatus);
@@ -141,7 +157,25 @@ public class PurchaseOrderService {
 	}
 	
 //	create new order
-	public void createOrder(PurchaseOrder order) {
+	public void updateOrder(PurchaseOrder order) {
+		
+		Map<String, String[]> transitions = new HashMap<>();
+		transitions.put("Pending", new String[] { "Shipped", "Delivered" });
+		transitions.put("Shipped", new String[] { "Delivered" });
+		transitions.put("Requested for Return", new String[] { "Return Request Approved", "Return Request Declined" });
+		transitions.put("Return Request Approved", new String[] { "Returned", "Refunded" });
+		transitions.put("Returned", new String[] { "Refunded" });
+
+		String[] possibleTransitions = transitions.get(order.getOrderStatus());
+
+		order.getPossibleOrderStatuses().clear();
+
+		if (possibleTransitions != null) {
+		    for (String transition : possibleTransitions) {
+		        OrderStatus possibleOrderStatus = orderStatusRepository.findByOrderStatusName(transition);
+		        order.getPossibleOrderStatuses().add(possibleOrderStatus);
+		    }
+		}
 		purchaseOrderRepository.save(order);
 	}
 	
@@ -224,12 +258,7 @@ public class PurchaseOrderService {
 //	signature verification ---------------------------------------------------------------------------
 	public boolean completeTransaction(String razorPaymentId, String razorSignature) {	
 		boolean verified = verifyTranscation(razorPaymentId,razorSignature);
-		if(verified) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return verified?true:false;
 	}
 	
 	private boolean verifyTranscation(String razorPaymentId, String razorSignature) {	
@@ -307,6 +336,7 @@ public class PurchaseOrderService {
 		createOrder(session,principal,newOrder);
 //		reducing the wallet amount
 		customer.setWallet(customer.getWallet() - grandTotal);
+		customerRepository.save(customer);
 		return true;
 	}
 	
@@ -335,6 +365,16 @@ public class PurchaseOrderService {
 		
 		newOrder.setOrderAmount(finalAmount);
 		session.removeAttribute("finalAmount");
+		
+		for(OrderStatus status: newOrder.getPossibleOrderStatuses()) {
+			System.out.println(status.getOrderStatusName());
+		}
+		
+		String[] status = {"Pending","Delivered","Shipped"};
+		for(String s:status) {
+			OrderStatus possibleOrderStatus = orderStatusRepository.findByOrderStatusName(s);
+			newOrder.getPossibleOrderStatuses().add(possibleOrderStatus);
+		}
 		
 		purchaseOrderRepository.save(newOrder);
 		
@@ -403,6 +443,10 @@ public class PurchaseOrderService {
 	
 	private void returnAmount(Customer customer,Double returnAmount,PaymentMethod paymentMethod) {
 		
+		if(customer.getWallet() == null) {
+			System.out.println("Wallet not initiated for this customer");
+			return;
+		}
 		if(paymentMethod.getPaymentMethodName().equals("UPI") || paymentMethod.getPaymentMethodName().equals("Wallet")) {
 			customer.setWallet(customer.getWallet()+returnAmount);
 			customerService.customerRepository.save(customer);
@@ -480,6 +524,11 @@ public class PurchaseOrderService {
 	public int getNumberOfOrdersForDate(LocalDate date) {
 		
 		return purchaseOrderRepository.findAllByOrderedDate(date).size();
+	}
+
+	public Page<PurchaseOrder> getAllOrdersByPageByRemovingMulipleOrderStatus(Pageable pageable,List<String> statusList) {
+		
+		return purchaseOrderRepository.findByOrderStatusNotIn(statusList,pageable);
 	}
 	
 }

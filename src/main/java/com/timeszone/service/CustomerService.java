@@ -91,6 +91,7 @@ public class CustomerService implements UserDetailsService{
 		customerDTO.setAuthorities((Set<Role>) customer.getAuthorities());
 		customerDTO.setAddresses(customer.getAddresses());
 		customerDTO.setLocked(customer.isLocked());
+		customerDTO.setWallet(customer.getWallet());
 		return customerDTO;
 	}
 
