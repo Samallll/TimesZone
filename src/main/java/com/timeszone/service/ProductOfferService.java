@@ -36,9 +36,6 @@ public class ProductOfferService {
 		return true;
 	}
 	
-	public boolean isValidOfferCode(String offerCode) {
-		return productOfferRepository.findByProductOfferCode(offerCode)==null?true:false;
-	}
 
 	public void createOffer(String offerCode, LocalDate offerStartDate, LocalDate offerExpiryDate, double percentage,
 			List<String> productNames) {

@@ -762,9 +762,6 @@ public class AdminController {
 				!offerStartDate.isBefore(offerExpiryDate)) {
 			message = "Please enter valid date range";
 		}
-		else if(!productOfferService.isValidOfferCode(offerCode)) {
-			message = "OfferCode Exists";
-		}
 		else {
 			productOfferService.createOffer(offerCode,offerStartDate,offerExpiryDate,Double.parseDouble(percentage),productNames);
 		}
@@ -805,4 +802,13 @@ public class AdminController {
 		productOfferRepository.save(offer);
 		return "redirect:/admin/offerManagement";
 	}
+	
+//	Product Offer Completed ---------------------------------------------------------------------------
+//	Category Offer ------------------------------------------------------------------------------------
+	
+	@GetMapping("/offerManagement/addCategoryOffer")
+	public String categoryOffer() {
+		return "addCategoryOffer";
+	}
+	
 }

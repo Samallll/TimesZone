@@ -41,14 +41,6 @@ public class TimeszoneApplication {
 		
 		return args -> {
 					
-			List<ProductOffer> offers = repo.findAll();
-			for(ProductOffer o:offers) {
-				for(Product p:o.getProductList()) {
-					p.setProductOffer(null);
-					productRepository.save(p);
-				}
-				repo.delete(o);
-			}
 //			If admin role is present in the table then no need to create a separate admin role. For ddl-auto:update , it is used.
 			if(roleRepository.findByAuthority("ADMIN").isPresent()) return;
 			
