@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.timeszone.model.customer.Customer;
@@ -25,6 +26,7 @@ import com.timeszone.repository.PurchaseOrderRepository;
 import com.timeszone.repository.RoleRepository;
 
 @SpringBootApplication
+@EnableScheduling
 public class TimeszoneApplication {
 
 	public static void main(String[] args) {
