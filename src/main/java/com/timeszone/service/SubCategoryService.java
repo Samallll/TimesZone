@@ -57,4 +57,9 @@ public class SubCategoryService {
 		
 		return subCategoryRepository.findBySubCategoryName(subCategoryName);
 	}
+
+	public SubCategory saveToTable(SubCategory subCategory) {
+		
+		return subCategoryRepository.save(subCategory);
+	}
 }

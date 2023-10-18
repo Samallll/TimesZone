@@ -245,10 +245,9 @@
       </div>
       
       <div class="row">
-		  <div class="col-10"></div>
-		  <div class="col-2">
-			  <a th:href="@{/admin/addProduct}">
-			  		<button class="btn bg-gradient-light mb-3 border border-1 border-secondary" type="button">Add Category Offer</button>  
+		  <div class="col-12 d-flex justify-content-end">
+			  <a th:href="@{/admin/offerManagement/addSubCategoryOffer}">
+		  		<button class="btn bg-gradient-light mb-3 border border-1 border-secondary me-3" type="button">Add Sub Category Offer</button>  
 			  </a>
 		  </div>
 	  </div>
@@ -259,7 +258,7 @@
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 d-flex align-items-center">
-					<h6 class="text-white text-capitalize ps-4">Category Offer</h6>
+					<h6 class="text-white text-capitalize ps-4">Sub Category Offer</h6>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
@@ -270,51 +269,45 @@
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Offer Code</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Start Date</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Expiry Date</th>
-                      
-                      
-                      <!--<th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Category</th>-->
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                      
-                      
-                      
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Discount Percentage</th>
-					  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Categories</th>
+					  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sub Categories Applied</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Changes Available</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr >
+                    <tr th:each="subCategoryOffer:${subCategoryOfferList}">
                       <td class="align-middle text-center text-sm">
-                        <h6 class="mb-0 text-sm" >th:text="${product.productName}"</h6>
+                        <h6 class="mb-0 text-sm" th:text="${subCategoryOffer.subCategoryOfferCode}"></h6>
                       </td>
                       <td class="align-middle text-center text-sm">
-                        <span class="text-secondary text-xs font-weight-bold" >th:text="${product.dateAdded}"</span>
+                        <span class="text-secondary text-xs font-weight-bold" th:text="${subCategoryOffer.startDate}"></span>
                       </td>
                       <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success" >th:if="${product.isEnabled}" Available</span>
-                        <span class="badge badge-sm bg-gradient-secondary" >th:if="${!product.isEnabled}" Locked</span>
+                        <span class="text-secondary text-xs font-weight-bold" th:text="${subCategoryOffer.expiryDate}"></span>
                       </td>
-<!--                      <td class="align-middle text-center">
+                      <td class="align-middle text-center text-sm">
+                        <span class="badge badge-sm bg-gradient-success" th:if="${subCategoryOffer.isActive}"> Active></span>
+                        <span class="badge badge-sm bg-gradient-secondary" th:if="${!subCategoryOffer.isActive}"> Not Active</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <p class="text-xs text-secondary mb-0" th:text="${subCategoryOffer.discountPercentage}"></p>
+                      </td>
+                      <td class="align-middle text-center">
                         <p class="text-xs text-secondary font-weight-bold mb-0">
-					        <span th:each="subcategory, iterStat : ${product.subcategories}">
-					            <span th:text="${subcategory.subCategoryName}"></span>
-					             Add a separator if needed 
+					        <span th:each="subCategory, iterStat : ${subCategoryOffer.subCategories}">
+					            <span th:text="${subCategory.subCategoryName}"></span>
 					            <span th:if="${!iterStat.last}">,</span>
 					        </span>
 					    </p>
-                      </td>-->
-                      <td class="align-middle text-center">
-                        <p class="text-xs text-secondary mb-0" >th:text="${product.price}"</p>
                       </td>
-                      <td class="align-middle text-center">
-                        <p class="text-xs text-secondary mb-0" >th:text="${product.quantity}"</p>
-                      </td>
+                      
                       <td class="align-middle d-flex align-items-center justify-content-center pe-0">
-                        <a  class="btn bg-gradient-info font-weight-bold text-xs mb-0 ms-2" data-toggle="tooltip">
-                          Edit th:href="@{/admin/editProduct/{id}(id=${product.productId})}"
+                        <a  class="btn bg-gradient-info font-weight-bold text-xs mb-0 ms-2" data-toggle="tooltip" th:href="@{/admin/offerManagement/subCategoryOfferEdit(id=${subCategoryOffer.subCategoryOfferId})}">
+                          Edit 
                         </a>
-                        <a  class="btn bg-gradient-danger font-weight-bold text-xs mb-0 ms-2 me-0" data-toggle="tooltip">
-                          Delete th:href="@{/admin/deleteProduct/{id}(id=${product.productId})}"
+                        <a  class="btn bg-gradient-danger font-weight-bold text-xs mb-0 ms-2" data-toggle="tooltip" th:href="@{/admin/offerManagement/subCategoryOfferDelete(id=${subCategoryOffer.subCategoryOfferId})}">
+                          Delete 
                         </a>
                       </td>
                     </tr>

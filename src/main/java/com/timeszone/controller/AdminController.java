@@ -46,6 +46,7 @@ import com.lowagie.text.DocumentException;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.dto.CustomerDTO;
+import com.timeszone.model.dto.OfferRequestDTO;
 import com.timeszone.model.dto.ProductDTO;
 import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Category;
@@ -53,6 +54,7 @@ import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductImage;
 import com.timeszone.model.product.ProductOffer;
 import com.timeszone.model.product.SubCategory;
+import com.timeszone.model.product.SubCategoryOffer;
 import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.PaymentMethod;
 import com.timeszone.model.shared.PurchaseOrder;
@@ -74,6 +76,7 @@ import com.timeszone.service.ProductOfferService;
 import com.timeszone.service.ProductService;
 import com.timeszone.service.PurchaseOrderService;
 import com.timeszone.service.ReportGeneratorService;
+import com.timeszone.service.SubCategoryOfferService;
 import com.timeszone.service.SubCategoryService;
 
 @RequestMapping("/admin")
@@ -135,6 +138,9 @@ public class AdminController {
 	
 	@Autowired
 	private ProductOfferRepository productOfferRepository;
+	
+	@Autowired
+	private SubCategoryOfferService subCategoryOfferService;
 	
 	@GetMapping("/")
 	public String adminHome(Model model){
@@ -676,9 +682,14 @@ public class AdminController {
 //	Offer Management ======================================================================================
 	
 	@GetMapping("/offerManagement")
-	public String offerManagement(Model model) {
+	public String offerManagement(Model model,HttpSession session) {
+		if(session.getAttribute("error")!= null) {
+			session.removeAttribute("error");
+		}
 		List<ProductOffer> productOfferList = productOfferService.getAll();
 		model.addAttribute("productOfferList", productOfferList);
+		List<SubCategoryOffer> subCategoryOfferList = subCategoryOfferService.getAllByIsEnabled();
+		model.addAttribute("subCategoryOfferList", subCategoryOfferList);
 		return "offerManagement";
 	}
 	
@@ -806,9 +817,75 @@ public class AdminController {
 //	Product Offer Completed ---------------------------------------------------------------------------
 //	Category Offer ------------------------------------------------------------------------------------
 	
-	@GetMapping("/offerManagement/addCategoryOffer")
-	public String categoryOffer() {
-		return "addCategoryOffer";
+	@GetMapping("/offerManagement/addSubCategoryOffer")
+	public String SubCategoryOffer(Model model) {
+		
+		List<Category> categoryList = categoryService.getAllCategories();
+		model.addAttribute("categoryList", categoryList);
+		OfferRequestDTO offerRequest = new OfferRequestDTO();
+		model.addAttribute("offerRequest", offerRequest);
+		return "addSubCategoryOffer";
 	}
 	
+	@PostMapping("/offerManagement/addSubCategoryOffer")
+	public String addSubCategoryOffer(@ModelAttribute("offerRequest") OfferRequestDTO offerRequest,HttpSession session) {
+		
+		LocalDate offerStartDate = offerRequest.getStartDate();
+		LocalDate offerExpiryDate = offerRequest.getExpiryDate();
+		if((offerStartDate.isBefore(offerExpiryDate) || offerStartDate.isBefore(LocalDate.now()))&&
+				!offerStartDate.isBefore(offerExpiryDate)) {
+			session.setAttribute("error", "Please select a valid date range");
+			return "redirect:/admin/offerManagement/addSubCategoryOffer";
+		}
+		if(offerRequest.getSubItemListIds()==null || offerRequest.getSubItemListIds().isEmpty()) {
+			session.setAttribute("error", "Please select subcategories");
+			return "redirect:/admin/offerManagement/addSubCategoryOffer";
+		}
+		subCategoryOfferService.createOffer(offerRequest);
+		return "redirect:/admin/offerManagement";
+	}
+	
+	@GetMapping("/offerManagement/subCategoryOfferEdit")
+	public String editSubCategoryOffer(@RequestParam("id") Integer subCategoryOfferId, Model model) {
+		
+		SubCategoryOffer offer = subCategoryOfferService.getById(subCategoryOfferId);
+		model.addAttribute("offer", offer);
+		OfferRequestDTO offerRequest = new OfferRequestDTO();
+		model.addAttribute("offerRequest", offerRequest);
+		List<Category> categoryList = categoryService.getAllCategories();
+		model.addAttribute("categoryList", categoryList);
+		return "editSubCategoryOffer";
+	}
+	
+	@PostMapping("/offerManagement/editSubCategoryOffer")
+	public String editSubCategoryOffer(@ModelAttribute("offerRequest") OfferRequestDTO offerRequest,HttpSession session) {
+		
+		LocalDate offerStartDate = offerRequest.getStartDate();
+		LocalDate offerExpiryDate = offerRequest.getExpiryDate();
+		if((offerStartDate.isBefore(offerExpiryDate) || offerStartDate.isBefore(LocalDate.now()))&&
+				!offerStartDate.isBefore(offerExpiryDate)) {
+			session.setAttribute("error", "Please select a valid date range");
+			return "redirect:/admin/offerManagement/subCategoryOfferEdit";
+		}
+		if(offerRequest.getSubItemListIds()==null || offerRequest.getSubItemListIds().isEmpty()) {
+			session.setAttribute("error", "Please select subcategories");
+			return "redirect:/admin/offerManagement/subCategoryOfferEdit";
+		}
+		subCategoryOfferService.updateOffer(offerRequest);
+		return "redirect:/admin/offerManagement";
+	}
+	
+	@GetMapping("/offerManagement/subCategoryOfferDelete")
+	public String disableSubCategoryOffer(@RequestParam("id") Integer offerId) {
+		
+		SubCategoryOffer offer = subCategoryOfferService.getById(offerId);
+		offer.setIsEnabled(false);
+		for(SubCategory subCategory:offer.getSubCategories()) {
+			subCategory.setSubCategoryOffer(null);
+			subCategoryService.saveToTable(subCategory);
+		}
+		offer.getSubCategories().clear();
+		subCategoryOfferService.saveToTable(offer);
+		return "redirect:/admin/offerManagement";
+	}
 }

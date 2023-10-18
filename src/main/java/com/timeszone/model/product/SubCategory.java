@@ -33,6 +33,10 @@ public class SubCategory {
 
     @ManyToMany(mappedBy = "subcategories", cascade = CascadeType.MERGE)
     private Set<Product> products;
+    
+    @ManyToOne
+    @JoinColumn(name = "sub_category_offer_id")
+    private SubCategoryOffer subCategoryOffer;
 
 	public SubCategory() {
 		super();
@@ -98,6 +102,14 @@ public class SubCategory {
 
 	public void setProducts(Set<Product> products) {
 		this.products = products;
+	}
+
+	public SubCategoryOffer getSubCategoryOffer() {
+		return subCategoryOffer;
+	}
+
+	public void setSubCategoryOffer(SubCategoryOffer subCategoryOffer) {
+		this.subCategoryOffer = subCategoryOffer;
 	}
 
 	
