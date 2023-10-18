@@ -20,4 +20,6 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 	    );
 	Page<Product> findAllBySubcategories_SubCategoryName(String subCategoryName, Pageable pageable);
 	Page<Product> findAll(Specification<Product> finalSpecification, Pageable pageable);
+	List<Product> findAllByProductNameContainingIgnoreCase(String productName);
+	Product findByProductName(String productName);
 }

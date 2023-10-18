@@ -15,6 +15,7 @@ import java.io.OutputStream;
 
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -49,6 +51,7 @@ import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductImage;
+import com.timeszone.model.product.ProductOffer;
 import com.timeszone.model.product.SubCategory;
 import com.timeszone.model.shared.Coupon;
 import com.timeszone.model.shared.PaymentMethod;
@@ -58,6 +61,7 @@ import com.timeszone.repository.CategoryRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.OrderStatusRepository;
 import com.timeszone.repository.ProductImageRepository;
+import com.timeszone.repository.ProductOfferRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.repository.ReturnReasonRepository;
 import com.timeszone.repository.SubCategoryRepository;
@@ -66,6 +70,7 @@ import com.timeszone.service.CouponService;
 import com.timeszone.service.CustomerService;
 import com.timeszone.service.PaymentMethodService;
 import com.timeszone.service.ProductImageService;
+import com.timeszone.service.ProductOfferService;
 import com.timeszone.service.ProductService;
 import com.timeszone.service.PurchaseOrderService;
 import com.timeszone.service.ReportGeneratorService;
@@ -125,7 +130,11 @@ public class AdminController {
 	@Autowired
 	private ReportGeneratorService reportGeneratorService;
 	
+	@Autowired
+	private ProductOfferService productOfferService;
 	
+	@Autowired
+	private ProductOfferRepository productOfferRepository;
 	
 	@GetMapping("/")
 	public String adminHome(Model model){
@@ -663,5 +672,137 @@ public class AdminController {
 	            .headers(headers)
 	            .body(csvBytes);
 	}
+	
+//	Offer Management ======================================================================================
+	
+	@GetMapping("/offerManagement")
+	public String offerManagement(Model model) {
+		List<ProductOffer> productOfferList = productOfferService.getAll();
+		model.addAttribute("productOfferList", productOfferList);
+		return "offerManagement";
+	}
+	
+	@GetMapping("/offerManagement/addProductOffer")
+	public String addProductOffer(HttpSession session) {
+		if(session.getAttribute("selectedProducts")!= null) {
+			session.removeAttribute("selectedProducts");
+		}
+		return "addProductOffer";
+	}
 
+//  Search the product
+	@GetMapping("/productOffer/searchProduct")
+	@ResponseBody
+	public ResponseEntity<Map<String,Object>> getProducts(@RequestParam("search") String searchData){
+		
+		Map<String,Object> response = new HashMap<>();
+		List<Product> productList = productService.getProductsByName(searchData);
+		String[] productNames = new String[productList.size()];
+		int i=0;
+		for(Product product: productList) {
+			productNames[i]=product.getProductName();
+			i++;
+		}
+		response.put("productList", productNames);
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/productOffer/selectProducts")
+	@ResponseBody
+	public ResponseEntity<Map<String,Object>> selectProducts(@RequestParam("productName") String productName,HttpSession session){
+		
+		List<Product> products = productService.getProductsByName(productName);
+		Map<String,Object> response = new HashMap<>();
+		int i=0;
+		Product product = products.get(0);
+		@SuppressWarnings("unchecked")
+		Set<Product> selectedProducts = (Set<Product>) session.getAttribute("selectedProducts");
+		
+		if(selectedProducts == null) {
+			selectedProducts = new HashSet<>();;
+		}
+		
+		selectedProducts.add(product);
+		session.setAttribute("selectedProducts", selectedProducts);
+
+		String[] productNames = new String[selectedProducts.size()];
+		for(Product p:selectedProducts) {
+			productNames[i]=p.getProductName();
+			i++;
+		}
+		
+		response.put("selectedProducts", productNames);
+		return ResponseEntity.ok(response);
+	}
+	
+	@PostMapping("/offerManagement/submitProductOffer")
+	@ResponseBody
+	public ResponseEntity<Map<String,Object>> submitProductOffer(@RequestBody Map<String,Object> formData){
+		
+		Map<String,Object> response = new HashMap<>();
+		
+		String offerCode = (String) formData.get("offerCode");
+		String startDate = (String) formData.get("offerStartDate");
+		String expiryDate = (String) formData.get("offerExpiryDate");
+		String percentage = (String) formData.get("percentage");
+		List<String>  productNames=  (List<String>) formData.get("productNameList");
+		String message = "Offer Created Succesfullly";;
+		if(startDate == null || expiryDate == null || startDate.isEmpty() || expiryDate.isEmpty()) {
+			message = "Please enter valid dates";
+			if(offerCode == null || percentage == null || productNames == null) {
+				message = "Please enter fill valid data";
+			}
+			response.put("message", message);
+			return ResponseEntity.ok(response);
+		}
+
+		LocalDate offerStartDate = LocalDate.parse(startDate);
+		LocalDate offerExpiryDate = LocalDate.parse(expiryDate);
+		if((offerStartDate.isBefore(offerExpiryDate) || offerStartDate.isBefore(LocalDate.now()))&&
+				!offerStartDate.isBefore(offerExpiryDate)) {
+			message = "Please enter valid date range";
+		}
+		else if(!productOfferService.isValidOfferCode(offerCode)) {
+			message = "OfferCode Exists";
+		}
+		else {
+			productOfferService.createOffer(offerCode,offerStartDate,offerExpiryDate,Double.parseDouble(percentage),productNames);
+		}
+		response.put("message", message);
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/offerManagement/productOfferEdit")
+	public String editProductOffer(@RequestParam("id") Integer productOfferId,Model model) {
+		ProductOffer offer = productOfferService.getProductOfferById(productOfferId);
+		model.addAttribute("productOffer", offer);
+		return "editProductOffer";
+	}
+	
+	@PostMapping("/offerManagement/modifyProductOffer")
+	public String updateProductOffer(@ModelAttribute("offer") ProductOffer offer) {
+		
+		ProductOffer productOffer = productOfferRepository.findById(offer.getProductOfferId()).get();
+		productOffer.setDiscountPercentage(offer.getDiscountPercentage());
+		productOffer.setExpiryDate(offer.getExpiryDate());
+		productOffer.setProductOfferCode(offer.getProductOfferCode());
+		productOffer.setStartDate(offer.getStartDate());
+		productOfferService.modifyProductOffer(productOffer);
+		return "redirect:/admin/offerManagement";
+	}
+	
+	@GetMapping("/offerManagement/productOfferDelete")
+	public String deleteProductOffer(@RequestParam("id") Integer productOfferId) {
+		
+		ProductOffer offer = productOfferRepository.findById(productOfferId).get();
+		offer.setIsEnabled(false);
+		for(Product product:offer.getProductList()) {
+			product.setProductOffer(null);
+			productRepository.save(product);
+		}
+		offer.getProductList().clear();
+		productOfferRepository.save(offer);
+		return "redirect:/admin/offerManagement";
+	}
 }

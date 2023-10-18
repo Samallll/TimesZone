@@ -173,4 +173,13 @@ public class ProductService {
 	public void saveProduct(Product product) {
 		productRepository.save(product);
 	}
+	
+	public List<Product> getProductsByName(String productName){
+		
+		return productRepository.findAllByProductNameContainingIgnoreCase(productName);
+	}
+	
+	public Product getProductByName(String productName) {
+		return productRepository.findByProductName(productName);
+	}
 }

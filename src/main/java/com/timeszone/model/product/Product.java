@@ -14,9 +14,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import com.timeszone.model.shared.CartItem;
 import com.timeszone.model.shared.OrderItem;
@@ -72,6 +76,13 @@ public class Product {
 	
 	@ManyToMany(mappedBy = "products")
     private Set<Wishlist> wishlist = new HashSet<>();
+	
+	@ManyToOne
+	@JoinColumn(name = "product_offer_id")
+	@OnDelete(action = OnDeleteAction.NO_ACTION)
+	private ProductOffer productOffer;
+	
+	private Double discountedPrice=0.0;
 	
 	public Product() {
 		super();
@@ -223,6 +234,37 @@ public class Product {
 	public void setWishlist(Set<Wishlist> wishlist) {
 		this.wishlist = wishlist;
 	}
+
+	public ProductOffer getProductOffer() {
+		return productOffer;
+	}
+
+	public void setProductOffer(ProductOffer productOffer) {
+		this.productOffer = productOffer;
+	}
+
+	public Double getDiscountedPrice() {
+		return discountedPrice;
+	}
+
+	public void setDiscountedPrice(Double discountedPrice) {
+		this.discountedPrice = discountedPrice;
+	}
 	
-	
+	@Override
+	public boolean equals(Object o) {
+	    if (this == o) return true;
+	    if (o == null || getClass() != o.getClass()) return false;
+
+	    Product product = (Product) o;
+
+	    // Compare based on the productName attribute
+	    return productName != null ? productName.equals(product.productName) : product.productName == null;
+	}
+
+	@Override
+	public int hashCode() {
+	    // Generate a hash code based on the productName attribute
+	    return productName != null ? productName.hashCode() : 0;
+	}
 }
