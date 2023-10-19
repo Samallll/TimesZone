@@ -16,5 +16,9 @@ public interface SubCategoryOfferRepository extends JpaRepository<SubCategoryOff
 	List<SubCategoryOffer> findByIsEnabledTrueAndStartDateEquals(LocalDate date);
 
 	List<SubCategoryOffer> findAllByIsActiveTrue();
+
+	List<SubCategoryOffer> findByIsEnabledTrueAndExpiryDateEquals(LocalDate date);
+
+	List<SubCategoryOffer> findByIsEnabledTrueAndIsActiveTrueAndExpiryDateEquals(LocalDate date);
 	
 }

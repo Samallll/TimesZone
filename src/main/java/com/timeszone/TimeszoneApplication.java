@@ -24,6 +24,7 @@ import com.timeszone.repository.ProductOfferRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.repository.PurchaseOrderRepository;
 import com.timeszone.repository.RoleRepository;
+import com.timeszone.repository.SubCategoryRepository;
 import com.timeszone.scheduler.DiscountApplier;
 
 @SpringBootApplication

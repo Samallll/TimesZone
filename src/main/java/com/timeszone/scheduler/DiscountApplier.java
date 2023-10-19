@@ -33,21 +33,31 @@ public class DiscountApplier {
 	@Scheduled(cron = "0/2 0 0 * * ?", zone = "Asia/Kolkata")
 	public void offerApplyAndRemovalChecking() {
 		applyOffers();
-		
-		//Check for removing discount ------------------------------
-		
-		//productoffer && sub category offer = list of offers which are not enabled and the expiry date is today.
-//		List<ProductOffer> productOfferListForRemove = productOfferService.getAllOffersToRemove();
-//		List<SubCategoryOffer> subCategoryOfferListForRemove = categoryOfferService.getAllOffersToRemove();
-		//check for opposite and other categories' offer's availability on the particular product and apply it.
-//		List<SubCategoryOffer> appliedCategoryOffers = categoryOfferService.getAllAppliedOffers();
-//		List<ProductOffer> appliedProductOffers = productOfferService.getAllAppliedOffers();
-		//remove the discount
+		removeAppliedOffers();
 	}
 
-	/**
-	 * 
-	 */
+
+	public void removeAppliedOffers() {
+		
+		List<ProductOffer> productOfferListForRemove = productOfferService.getAllOffersToRemove();
+		List<SubCategoryOffer> subCategoryOfferListForRemove = categoryOfferService.getAllOffersToRemove();
+		
+		if(!productOfferListForRemove.isEmpty() && !subCategoryOfferListForRemove.isEmpty()) {
+			productOfferService.removeAppliedOffers(productOfferListForRemove);
+			categoryOfferService.removeAppliedOffers(subCategoryOfferListForRemove);
+			return;
+		}
+		if(!productOfferListForRemove.isEmpty()) {
+			productOfferService.removeAppliedOffers(productOfferListForRemove);
+			return;
+		}
+		
+		if(!subCategoryOfferListForRemove.isEmpty()) {
+			categoryOfferService.removeAppliedOffers(subCategoryOfferListForRemove);
+		}
+	}
+
+
 	public void applyOffers() {
 		
 		List<ProductOffer> productOfferList = productOfferService.getAllOffersToApply();
@@ -70,9 +80,15 @@ public class DiscountApplier {
 			categoryOfferService.applyOffers(subCategoryOfferList);
 		}
 	}
-
+	
+	
 	private void removeCommonProductOffers(List<SubCategoryOffer> subCategoryOfferList,
 			List<ProductOffer> alreadyActiveProductOffers) {
+		
+		 /*
+		 * finding the common/already applied productoffers. disabling and removing the
+		 * product offer references since category offers have higher priority.
+		 */
 		
 		List<Product> categoryOfferProducts = categoryOfferService.getProductsFromSubCategoryOffer(subCategoryOfferList);
 		List<Product> productOfferProducts = productOfferService.getProductsFromProductOffer(alreadyActiveProductOffers);
@@ -88,16 +104,32 @@ public class DiscountApplier {
 		}
 	}
 
+	
+	
 	private List<ProductOffer> filterProductOffers(List<ProductOffer> productOfferList,
 			List<SubCategoryOffer> subCategoryOfferList) {
 		
+		/*
+		 * Removing the productOffers from the applying list if the products are found
+		 * in the subcategory offer's product list. also checking with the already
+		 * active category offer's product list and other product offer' list.
+		 */
+		
 		List<Product> categoryProducts = categoryOfferService.getProductsFromSubCategoryOffer(subCategoryOfferList);
+		
 		List<SubCategoryOffer> alreadyActiveCategoryOffers = categoryOfferService.getAllActiveOffers();
 		categoryProducts.addAll(categoryOfferService.getProductsFromSubCategoryOffer(alreadyActiveCategoryOffers));
+		
+		List<Product> allActiveProducts = productOfferService.getAllActiveOffers()
+			    .stream()
+			    .flatMap(productOffer -> productOffer.getProductList().stream())
+			    .filter(product -> !categoryProducts.contains(product))
+			    .collect(Collectors.toList());
+		categoryProducts.addAll(allActiveProducts);
+		
 		productOfferList.removeIf(offer -> offer.getProductList()
 												.stream()
 												.anyMatch(categoryProducts::contains));
-		
 		return productOfferList;
 	}
 

@@ -92,9 +92,20 @@ public class ProductOfferService {
 		
 		for(ProductOffer productOffer:productOfferList) {
 			productOffer.setIsActive(true);
+			productOffer.getProductList().forEach(product -> {
+				product.setProductOffer(productOffer);
+				product.setDiscountedPrice(calculateDiscountedPrice(product,productOffer));
+				productService.saveToTable(product);
+			});
 			productOfferRepository.save(productOffer);
 		}
-		
+	}
+
+
+	private Double calculateDiscountedPrice(Product product, ProductOffer productOffer) {
+		Double price = (product.getPrice()*productOffer.getDiscountPercentage())/100;
+		price = product.getPrice()-price;
+		return price;
 	}
 
 
@@ -112,5 +123,27 @@ public class ProductOfferService {
 	public List<ProductOffer> getAllByIsEnabled() {
 
 		return productOfferRepository.findAllByIsEnabledTrue();
+	}
+
+
+	public List<ProductOffer> getAllOffersToRemove() {
+		
+		return productOfferRepository.findByIsEnabledTrueAndIsActiveTrueAndExpiryDateEquals(LocalDate.now().plusDays(2));
+	}
+
+
+	public void removeAppliedOffers(List<ProductOffer> productOfferListForRemove) {
+		
+		for(ProductOffer offer:productOfferListForRemove) {
+			offer.setIsActive(false);
+			offer.setIsEnabled(false);
+			offer.getProductList().forEach(product -> {
+		        product.setProductOffer(null);
+		        product.setDiscountedPrice(0.0);
+		        productService.saveToTable(product);
+		    });
+			offer.getProductList().clear();
+			productOfferRepository.save(offer);
+		}
 	}
 }

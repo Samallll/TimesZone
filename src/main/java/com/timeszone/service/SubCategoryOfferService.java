@@ -28,6 +28,9 @@ public class SubCategoryOfferService {
 	@Autowired
 	private SubCategoryRepository subCategoryRepository;
 	
+	@Autowired
+	private ProductService productService;
+	
 	public List<SubCategoryOffer> getAllByIsEnabled(){
 		return offerRepository.findAllByIsEnabledTrue();
 	}
@@ -59,7 +62,7 @@ public class SubCategoryOfferService {
 	private SubCategoryOffer convertToSubCategoryOffer(OfferRequestDTO offerRequest, SubCategoryOffer newOffer) {
 		
 		newOffer.setDiscountPercentage(offerRequest.getPercentage());
-		newOffer.setActive(offerRequest.getIsActive());
+		newOffer.setIsActive(offerRequest.getIsActive());
 		newOffer.setIsEnabled(offerRequest.getIsEnabled());
 		newOffer.setExpiryDate(offerRequest.getExpiryDate());
 		newOffer.setStartDate(offerRequest.getStartDate());
@@ -93,13 +96,51 @@ public class SubCategoryOfferService {
 	public void applyOffers(List<SubCategoryOffer> subCategoryOfferList) {
 
 		for(SubCategoryOffer offer:subCategoryOfferList) {
-			offer.setActive(true);
+			offer.setIsActive(true);
+			offer.getSubCategories().forEach(subCategory -> {
+				subCategory.setSubCategoryOffer(offer);
+				for(Product product:subCategory.getProducts()) {
+					product.setDiscountedPrice(calculateDiscountedPrice(product,offer));
+					productService.saveToTable(product);
+				}
+				subCategoryService.saveToTable(subCategory);
+			});
 			offerRepository.save(offer);
 		}
+	}
+
+	private Double calculateDiscountedPrice(Product product, SubCategoryOffer offer) {
+		Double price = (product.getPrice()*offer.getDiscountPercentage())/100;
+		price = product.getPrice() - price;
+		return price;
 	}
 
 	public List<SubCategoryOffer> getAllActiveOffers() {
 
 		return offerRepository.findAllByIsActiveTrue();
 	}
+
+	public List<SubCategoryOffer> getAllOffersToRemove() {
+
+		return offerRepository.findByIsEnabledTrueAndIsActiveTrueAndExpiryDateEquals(LocalDate.now().plusDays(2));
+	}
+
+	public void removeAppliedOffers(List<SubCategoryOffer> subCategoryOfferListForRemove) {
+
+		for(SubCategoryOffer offer:subCategoryOfferListForRemove) {
+			offer.setIsActive(false);
+			offer.setIsEnabled(false);
+			offer.getSubCategories().forEach(subCategory -> {
+				subCategory.setSubCategoryOffer(null);
+				for(Product product:subCategory.getProducts()) {
+					product.setDiscountedPrice(0.0);
+					productService.saveToTable(product);
+				}
+				subCategoryService.saveToTable(subCategory);
+			});
+			offer.getSubCategories().clear();
+			offerRepository.save(offer);
+		}
+	}
+	
 }

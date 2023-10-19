@@ -15,4 +15,5 @@ public interface ProductOfferRepository extends JpaRepository<ProductOffer,Integ
 	List<ProductOffer> findAllByIsEnabledTrue();
 	List<ProductOffer> findByIsEnabledTrueAndStartDateEquals(LocalDate date);
 	List<ProductOffer> findAllByIsActiveTrue();
+	List<ProductOffer> findByIsEnabledTrueAndIsActiveTrueAndExpiryDateEquals(LocalDate date);
 }
