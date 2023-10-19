@@ -1,13 +1,16 @@
 package com.timeszone.service;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.timeszone.model.dto.OfferRequestDTO;
+import com.timeszone.model.product.Product;
 import com.timeszone.model.product.SubCategory;
 import com.timeszone.model.product.SubCategoryOffer;
 import com.timeszone.repository.SubCategoryOfferRepository;
@@ -43,6 +46,12 @@ public class SubCategoryOfferService {
 	public void updateOffer(OfferRequestDTO offerRequest) {
 		
 		SubCategoryOffer newOffer = offerRepository.findById(offerRequest.getOfferid()).get();
+		for(SubCategory subCategory:newOffer.getSubCategories()) {
+			subCategory.setSubCategoryOffer(null);
+			subCategoryService.saveToTable(subCategory);
+		}
+		newOffer.getSubCategories().clear();
+		newOffer = offerRepository.save(newOffer);
 		newOffer = convertToSubCategoryOffer(offerRequest, newOffer);
 		offerRepository.save(newOffer);
 	}
@@ -67,8 +76,30 @@ public class SubCategoryOfferService {
 	}
 
 	public SubCategoryOffer saveToTable(SubCategoryOffer offer) {
-		
 		return offerRepository.save(offer);
 	}
 
+	public List<SubCategoryOffer> getAllOffersToApply() {
+		return offerRepository.findByIsEnabledTrueAndStartDateEquals(LocalDate.now().plusDays(1));
+	}
+	
+	public List<Product> getProductsFromSubCategoryOffer(List<SubCategoryOffer> subCategoryOfferList) {
+		return subCategoryOfferList.stream()
+		        .flatMap(categoryOffer -> categoryOffer.getSubCategories().stream())
+		        .flatMap(subCategory -> subCategory.getProducts().stream())
+		        .collect(Collectors.toList());
+	}
+
+	public void applyOffers(List<SubCategoryOffer> subCategoryOfferList) {
+
+		for(SubCategoryOffer offer:subCategoryOfferList) {
+			offer.setActive(true);
+			offerRepository.save(offer);
+		}
+	}
+
+	public List<SubCategoryOffer> getAllActiveOffers() {
+
+		return offerRepository.findAllByIsActiveTrue();
+	}
 }

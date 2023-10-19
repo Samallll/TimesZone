@@ -686,7 +686,7 @@ public class AdminController {
 		if(session.getAttribute("error")!= null) {
 			session.removeAttribute("error");
 		}
-		List<ProductOffer> productOfferList = productOfferService.getAll();
+		List<ProductOffer> productOfferList = productOfferService.getAllByIsEnabled();
 		model.addAttribute("productOfferList", productOfferList);
 		List<SubCategoryOffer> subCategoryOfferList = subCategoryOfferService.getAllByIsEnabled();
 		model.addAttribute("subCategoryOfferList", subCategoryOfferList);
@@ -862,6 +862,7 @@ public class AdminController {
 		
 		LocalDate offerStartDate = offerRequest.getStartDate();
 		LocalDate offerExpiryDate = offerRequest.getExpiryDate();
+
 		if((offerStartDate.isBefore(offerExpiryDate) || offerStartDate.isBefore(LocalDate.now()))&&
 				!offerStartDate.isBefore(offerExpiryDate)) {
 			session.setAttribute("error", "Please select a valid date range");

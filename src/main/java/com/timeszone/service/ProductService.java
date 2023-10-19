@@ -182,4 +182,9 @@ public class ProductService {
 	public Product getProductByName(String productName) {
 		return productRepository.findByProductName(productName);
 	}
+
+	public Product saveToTable(Product product) {
+		
+		return productRepository.save(product);
+	}
 }

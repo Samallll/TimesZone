@@ -1,5 +1,6 @@
 package com.timeszone.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ public interface ProductOfferRepository extends JpaRepository<ProductOffer,Integ
 	
 	ProductOffer findByProductOfferCode(String offerCode);
 	List<ProductOffer> findAllByIsEnabledTrue();
+	List<ProductOffer> findByIsEnabledTrueAndStartDateEquals(LocalDate date);
+	List<ProductOffer> findAllByIsActiveTrue();
 }

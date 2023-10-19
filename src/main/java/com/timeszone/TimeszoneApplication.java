@@ -24,6 +24,7 @@ import com.timeszone.repository.ProductOfferRepository;
 import com.timeszone.repository.ProductRepository;
 import com.timeszone.repository.PurchaseOrderRepository;
 import com.timeszone.repository.RoleRepository;
+import com.timeszone.scheduler.DiscountApplier;
 
 @SpringBootApplication
 @EnableScheduling
@@ -38,10 +39,12 @@ public class TimeszoneApplication {
 			RoleRepository roleRepository,
 			PasswordEncoder encoder,
 			ProductOfferRepository repo,
-			ProductRepository productRepository
+			DiscountApplier applier
 			) {
 		
 		return args -> {
+			
+			applier.offerApplyAndRemovalChecking();
 					
 //			If admin role is present in the table then no need to create a separate admin role. For ddl-auto:update , it is used.
 			if(roleRepository.findByAuthority("ADMIN").isPresent()) return;

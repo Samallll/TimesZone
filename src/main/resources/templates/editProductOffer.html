@@ -146,6 +146,9 @@
             <div class="card-body px-0 pb-2">
                           
             	<form class="row mx-5 my-2" method="POST" th:action="@{/admin/offerManagement/modifyProductOffer}" th:object="${productOffer}">
+					<input type="hidden" th:value="${productOffer.productOfferId}" th:field="*{productOfferId}">
+					<input type="hidden" th:value="${productOffer.isActive}" th:field="*{isActive}">
+					<input type="hidden" th:value="${productOffer.isEnabled}" th:field="*{isEnabled}">
 				  <div class="row">
 				  <div class="col-md-6">
 				    <label for="inputCouponCode" class="form-label">Product Offer Code</label>

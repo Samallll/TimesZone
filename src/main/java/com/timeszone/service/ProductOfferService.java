@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,46 @@ public class ProductOfferService {
 	}
 	
 	public List<ProductOffer> getAllByProductOfferEnabled(){
+		return productOfferRepository.findAllByIsEnabledTrue();
+	}
+
+
+	public List<ProductOffer> getAllOffersToApply() {
+		
+		return productOfferRepository.findByIsEnabledTrueAndStartDateEquals(LocalDate.now().plusDays(1));
+	}
+	
+	public List<Product> getProductsFromProductOffer(List<ProductOffer> productOfferList) {
+		return productOfferList
+		        .stream()
+		        .flatMap(productOffer -> productOffer.getProductList().stream())
+		        .collect(Collectors.toList());
+	}
+
+
+	public void applyOffers(List<ProductOffer> productOfferList) {
+		
+		for(ProductOffer productOffer:productOfferList) {
+			productOffer.setIsActive(true);
+			productOfferRepository.save(productOffer);
+		}
+		
+	}
+
+
+	public List<ProductOffer> getAllActiveOffers() {
+
+		return productOfferRepository.findAllByIsActiveTrue();
+	}
+
+
+	public ProductOffer saveToTable(ProductOffer productOffer) {
+		return productOfferRepository.save(productOffer);
+		
+	}
+
+	public List<ProductOffer> getAllByIsEnabled() {
+
 		return productOfferRepository.findAllByIsEnabledTrue();
 	}
 }
