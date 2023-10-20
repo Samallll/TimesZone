@@ -3,16 +3,21 @@ package com.timeszone.service;
 import java.util.Date;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
+import java.time.format.TextStyle;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.timeszone.model.customer.Customer;
@@ -46,7 +51,7 @@ public class ReportGeneratorService {
 		return orderDataByStatus;
 	}
 	
-	public Map<String,Integer> generateOrderPlacedForWeek(){
+	public Map<String,Integer> generateOrderPlacedForDaily(){
         
         Calendar calendar = Calendar.getInstance();
 
@@ -69,6 +74,46 @@ public class ReportGeneratorService {
             startDate = calendar.getTime();
         }
         
+        return orderCounts;
+	}
+	
+	public Map<String,Integer> generateOrderPlacedForMonthly(){
+		
+		Map<String, Integer> orderCounts = new LinkedHashMap<>();
+		int year = LocalDate.now().getYear();
+		int orderCount = 0;
+		
+		for(Month month:Month.values()) {
+			LocalDate startDayOfMonth = LocalDate.of(year, month, 1);
+			LocalDate endDayOfMonth = startDayOfMonth.withDayOfMonth(startDayOfMonth.lengthOfMonth());
+			
+			orderCount = purchaseOrderService.getAllPurchaseOrdersByDateRange(startDayOfMonth, endDayOfMonth).size();
+			
+			String monthName = month.getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+			
+			orderCounts.put(monthName,orderCount);
+		}
+        return orderCounts;
+	}
+	
+	public Map<String, Integer> generateOrderPlacedForYearly() {
+		
+		Map<String, Integer> orderCounts = new LinkedHashMap<>();
+		
+		int currentYear = LocalDate.now().getYear();
+		for(int year = currentYear;year>=currentYear-4;year--) {
+			int orderCount = 0;
+			for(Month month:Month.values()) {
+				
+				LocalDate startDayOfMonth = LocalDate.of(year, month, 1);
+				LocalDate endDayOfMonth = startDayOfMonth.withDayOfMonth(startDayOfMonth.lengthOfMonth());
+				
+				orderCount = orderCount + purchaseOrderService.getAllPurchaseOrdersByDateRange(startDayOfMonth, endDayOfMonth).size();
+			}
+			String yearString = String.valueOf(year);
+			
+			orderCounts.put(yearString, orderCount);
+		}
         return orderCounts;
 	}
 	

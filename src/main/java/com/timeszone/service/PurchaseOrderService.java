@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
@@ -531,4 +532,12 @@ public class PurchaseOrderService {
 		return purchaseOrderRepository.findByOrderStatusNotIn(statusList,pageable);
 	}
 	
+	public Specification<PurchaseOrder> ordersWithinDateRange(LocalDate startDate,LocalDate endDate){
+		return (root,query,cb) -> cb.between(root.get("orderedDate"),startDate,endDate);
+	}
+	
+	public List<PurchaseOrder> getAllPurchaseOrdersByDateRange(LocalDate startDate,LocalDate endDate){
+		Specification<PurchaseOrder> specification = ordersWithinDateRange(startDate,endDate);
+		return purchaseOrderRepository.findAll(specification);
+	}
 }

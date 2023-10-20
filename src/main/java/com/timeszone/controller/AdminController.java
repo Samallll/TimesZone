@@ -150,7 +150,7 @@ public class AdminController {
 		Map<String,Integer> orderByDateMapdata;
 		int noOfOrders = purchaseOrderService.getAllOrders().size();
 		orderStatusMapData = reportGeneratorService.generateOrderCountForChart();
-		orderByDateMapdata = reportGeneratorService.generateOrderPlacedForWeek();
+		orderByDateMapdata = reportGeneratorService.generateOrderPlacedForDaily();
 		model.addAttribute("orderStatusMapData", orderStatusMapData);
 		model.addAttribute("orderByDateMapdata", orderByDateMapdata);
 		model.addAttribute("noOfUsers", noOfUsers);
@@ -888,5 +888,27 @@ public class AdminController {
 		offer.getSubCategories().clear();
 		subCategoryOfferService.saveToTable(offer);
 		return "redirect:/admin/offerManagement";
+	}
+	
+//	Offer Completed ---------------------------------------------------------------------------------------
+	
+	@GetMapping("/generateChart")
+	@ResponseBody
+	public ResponseEntity<Map<String,Integer>> generateChart(@RequestParam String orderDuration){
+		
+		Map<String, Integer> orderByDateMapdata;
+		if(orderDuration.equals("Daily")) {
+			orderByDateMapdata = reportGeneratorService.generateOrderPlacedForDaily();
+		}
+		else if(orderDuration.equals("Monthly")) {
+			orderByDateMapdata = reportGeneratorService.generateOrderPlacedForMonthly();
+		}
+		else if(orderDuration.equals("Yearly")) {
+			orderByDateMapdata = reportGeneratorService.generateOrderPlacedForYearly();
+		}
+		else {
+			orderByDateMapdata = null;
+		}
+		return ResponseEntity.ok(orderByDateMapdata);
 	}
 }
