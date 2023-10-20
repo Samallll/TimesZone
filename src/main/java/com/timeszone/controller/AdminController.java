@@ -648,35 +648,46 @@ public class AdminController {
 	        HttpServletResponse response,
 	        @RequestParam String selectedOption,
 	        @RequestParam String dateFrom,
-	        @RequestParam String dateTo) throws IOException {
+	        @RequestParam String dateTo,
+	        @RequestParam String type) throws Exception {
 
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	    LocalDate startDate = LocalDate.parse(dateFrom, formatter);
 	    LocalDate endDate = LocalDate.parse(dateTo, formatter);
+	    String fileType = type==null?null:type.toString();
 
-	    // Generate the CSV content
-	    StringBuilder csvContent;
+	    byte[] fileContent = null;
+	    String filename = "empty";
+	    MediaType contentType = MediaType.APPLICATION_OCTET_STREAM;
 	    
-	    if(selectedOption.equalsIgnoreCase("Orders")) {
-	    	csvContent = reportGeneratorService.generateOrderReport(startDate, endDate);
+	    if (selectedOption.equalsIgnoreCase("Orders")) {
+	    	if(fileType!=null) {
+	    		if (fileType.equals("pdf")) {
+		            fileContent = reportGeneratorService.generatePdfOrderReport(startDate, endDate);
+		            filename = "order_report.pdf";
+		            contentType = MediaType.APPLICATION_PDF;
+		        } 
+	    		else {
+		        	fileContent = reportGeneratorService.generateCSVOrderReport(startDate, endDate).toString().getBytes();
+		            filename = "order_report.csv";
+		        }
+	    	}
+	        
+	    } else if (selectedOption.equalsIgnoreCase("Users")) {
+	        fileContent = reportGeneratorService.generateUserReport().toString().getBytes();
+	        filename = "user_report.csv";
+	    } else {
+	        fileContent = reportGeneratorService.generateProductReport().toString().getBytes();
+	        filename = "product_report.csv";
 	    }
-	    else if(selectedOption.equalsIgnoreCase("Users")) {
-	    	csvContent = reportGeneratorService.generateUserReport();
-	    }
-	    else {
-	    	csvContent = reportGeneratorService.generateProductReport();
-	    }
-	    // Convert the CSV content to bytes
-	    byte[] csvBytes = csvContent.toString().getBytes();
 
 	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-	    String uniqueFileName = "order_" + UUID.randomUUID().toString() + ".csv";
-	    headers.setContentDispositionFormData("attachment", uniqueFileName);
+	    headers.setContentType(contentType);
+	    headers.setContentDispositionFormData("attachment", filename);
 
 	    return ResponseEntity.ok()
 	            .headers(headers)
-	            .body(csvBytes);
+	            .body(fileContent);
 	}
 	
 //	Offer Management ======================================================================================

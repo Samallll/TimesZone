@@ -1,6 +1,7 @@
 package com.timeszone.service;
 
 import java.util.Date;
+import java.io.ByteArrayOutputStream;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
@@ -19,7 +20,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.lowagie.text.DocumentException;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
@@ -37,6 +42,9 @@ public class ReportGeneratorService {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private TemplateEngine templateEngine;
 
 	public Map<String, Integer> generateOrderCountForChart() {
 		
@@ -127,7 +135,7 @@ public class ReportGeneratorService {
 		return Double.parseDouble(String.format("%.2f", amount / 100000.0));	
 	}
 
-	public StringBuilder generateOrderReport(LocalDate dateFrom, LocalDate dateTo) {
+	public StringBuilder generateCSVOrderReport(LocalDate dateFrom, LocalDate dateTo) {
 		
 		List<PurchaseOrder> orderList = purchaseOrderService.getAllOrders();
 		orderList.stream()
@@ -187,6 +195,26 @@ public class ReportGeneratorService {
             		product.getCaseSize().toString()));
         }
         return csvContent;
+	}
+	
+	public byte[] generatePdfOrderReport(LocalDate dateFrom, LocalDate dateTo) throws Exception {
+		
+		List<PurchaseOrder> orderList = purchaseOrderService.getAllPurchaseOrdersByDateRange(dateFrom, dateTo);
+	
+		Context context = new Context();
+		context.setVariable("orderList", orderList);
+		
+		String htmlContent = templateEngine.process("purchaseOrderPdf", context);
+		
+		ITextRenderer renderer = new ITextRenderer();
+		renderer.setDocumentFromString(htmlContent);
+		renderer.layout();
+		
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		renderer.createPDF(os);
+		os.close();
+		
+		return os.toByteArray();
 	}
 	
 }

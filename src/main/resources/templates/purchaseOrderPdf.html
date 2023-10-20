@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Purchase Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Purchase Orders</h1>
+        <table>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer Name</th>
+                <th>Order Amount</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Ordered Date</th>
+                <th>Payment Method</th>
+            </tr>
+
+            <tr th:each="order:${orderList}">
+                <td th:text="${order.orderId}"></td>
+                <td th:text="${order.customer.firstName}"></td>
+                <td th:text="${order.orderAmount}"></td>
+                <td th:text="${order.orderedQuantity}"></td>
+                <td th:text="${order.orderStatus}"></td>
+                <td th:text="${order.orderedDate}"></td>
+                <td th:text="${order.paymentMethod.paymentMethodName}"></td>
+            </tr>
+
+        </table>
+    </div>
+</body>
+</html>

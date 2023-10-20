@@ -208,7 +208,8 @@
 		    var selectedOption = document.querySelector('[name="selectedOption"]').value;
 		    var dateFrom = document.getElementById('dateFrom').value;
 		    var dateTo = document.getElementById('dateTo').value;
-
+		    var fileType;
+			
 		    if (selectedOption === 'Choose' || dateFrom === '' || dateTo === '') {
 		        alert('Please select a valid option and enter valid dates.');
 		        return; 
@@ -216,6 +217,15 @@
 		    dateFrom = new Date(dateFrom);
 		    dateTo = new Date(dateTo);
 		    var currentDate = new Date(); 
+		    
+		    if(selectedOption == 'Orders'){
+				fileType = document.getElementById('fileType').value;
+				if(!fileType){
+					alert('Please select a valid File Type.');
+		        	return; 
+				}
+				
+			}
 		
 		    if (dateFrom >= dateTo) {
 		        alert('Please select a date range where "From" date is before "To" date.');
@@ -235,7 +245,7 @@
 		    var formattedDateFrom = formatDate(dateFrom);
 		    var formattedDateTo = formatDate(dateTo);
 		
-		    const url = `/admin/dashboard/generateReport?selectedOption=${selectedOption}&dateFrom=${formattedDateFrom}&dateTo=${formattedDateTo}`;
+		    const url = `/admin/dashboard/generateReport?selectedOption=${selectedOption}&dateFrom=${formattedDateFrom}&dateTo=${formattedDateTo}&type=${fileType}`;
 			
 			window.location.href = url;
 		}
@@ -247,3 +257,30 @@
 		    var day = String(date.getDate()).padStart(2, '0'); // Ensure two-digit day
 		    return year + '-' + month + '-' + day;
 		}
+		
+//		Show filetype for orders
+		document.addEventListener("DOMContentLoaded", function() {
+		    // Get references to the dropdowns
+		    var selectedOptionDropdown = document.querySelector('[name="selectedOption"]');
+		    var fileTypeDropdown = document.getElementById("fileTypeDropdown");
+		
+		    // Add an event listener to the "selectedOption" dropdown
+		    selectedOptionDropdown.addEventListener("change", function() {
+		        var selectedOption = selectedOptionDropdown.value;
+		
+		        // Show or hide the "File Type" dropdown based on the selected option
+		        if (selectedOption === "Orders") {
+		            fileTypeDropdown.style.display = "block"; // Show the dropdown
+		        } else {
+		            fileTypeDropdown.style.display = "none"; // Hide the dropdown
+		        }
+		    });
+		
+		    // Initialize the visibility based on the initial selected option
+		    var initialSelectedOption = selectedOptionDropdown.value;
+		    if (initialSelectedOption === "Orders") {
+		        fileTypeDropdown.style.display = "block"; // Show the dropdown
+		    } else {
+		        fileTypeDropdown.style.display = "none"; // Hide the dropdown
+		    }
+		});
