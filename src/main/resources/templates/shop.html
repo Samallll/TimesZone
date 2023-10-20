@@ -129,7 +129,17 @@
                             <div class="shadow product__item border rounded mx-2" >
 								
                                 <div class="product__item__pic set-bg" data-setbg="@{'/admin/showImage/' + ${product.productImages[0].imageId}}">
-									<div th:if="${product.quantity <= 0}" class="label stockout bg-danger">Out Of Stock</div>
+									<div>
+										<div th:if="${product.quantity <= 0}" class="label stockout bg-danger">Out Of Stock</div>
+										<div th:if="${product.productOffer}" class="label stockout bg-success">
+											<span th:text="${product.productOffer.discountPercentage}+'% OFF'" class="text-center text-white"></span>
+										</div>
+										<div th:each="subCategory:${product.subcategories}">
+											<div th:if="${subCategory.subCategoryOffer}" class="label stockout bg-success">
+												<span th:text="${subCategory.subCategoryOffer.discountPercentage}+'% OFF'" class="text-center text-white"></span>
+											</div>
+										</div>
+									</div>
 									<a th:href="@{/guest/productDetails(id=${product.productId})}"><img th:src="@{'/guest/showImage/' + ${product.productImages[0].imageId}}" class="w-100 h-100"></a>
                                     <ul class="product__hover">
                                         <li><a th:href="@{'/guest/showImage/' + ${product.productImages[0].imageId}}" class="image-popup"><span class="arrow_expand"></span></a></li>
@@ -139,7 +149,13 @@
                                 </div>
                                 <div class="product__item__text px-1 pb-2">
                                     <h6><a th:href="@{/guest/productDetails(id=${product.productId})}" th:text="${product.productName}"></a></h6>
-                                    <div class="product__price text-xs text-danger mb-0" th:text="'Rs ' +${product.price}"></div>
+                                    <div th:if="${product.discountedPrice == 0.0}">
+										<div class="product__price text-xs text-danger mb-0" th:text="'Rs ' +${product.price}"></div>
+									</div>
+									<div class="mx-3 d-flex justify-content-around" th:unless="${product.discountedPrice == 0.0}">
+										<div class="product__price text-xs text-danger mb-0" th:text="'Rs ' +${product.price}" style="text-decoration: line-through;"></div>
+										<div class="product__price text-success fs-5 mb-0" th:text="'Rs ' +${product.discountedPrice}"></div>
+									</div>
                                 </div>
                                 <div id="myDiv" style="display: none;" th:text="${product.productId}"></div>
                                 

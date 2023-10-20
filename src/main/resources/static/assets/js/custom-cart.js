@@ -28,9 +28,9 @@
 			
              if ("newQuantity" in response) {
                 document.getElementById('inputId-' + productId).innerText = response.newQuantity ;
-                document.getElementById('productAmountId-' + productId ).innerText = response.productAmount+ '.0';
-				document.getElementById('grandTotal').innerText = response.finalAmount + '.0 Rs';                
-                document.getElementById('subTotal').innerText = response.finalAmount+ '.0 Rs';
+                document.getElementById('productAmountId-' + productId ).innerText = response.productAmount+ ' Rs';
+				document.getElementById('grandTotal').innerText = response.finalAmount + ' Rs';                
+                document.getElementById('subTotal').innerText = response.finalAmount+ ' Rs';
                 document.getElementById('couponAmount').innerText = '0.0 Rs';
                 if("additionalCoupons" in response){
 					
@@ -103,9 +103,9 @@
 			
              if ("newQuantity" in response) {
                 document.getElementById('inputId-' + productId).innerText = response.newQuantity ;
-                document.getElementById('productAmountId-' + productId).innerText = response.productAmount+ '.0';
-                document.getElementById('grandTotal').innerText = response.finalAmount + '.0 Rs';                
-                document.getElementById('subTotal').innerText = response.finalAmount+ '.0 Rs';
+                document.getElementById('productAmountId-' + productId).innerText = response.productAmount+ ' Rs';
+                document.getElementById('grandTotal').innerText = response.finalAmount + ' Rs';                
+                document.getElementById('subTotal').innerText = response.finalAmount+ ' Rs';
                 document.getElementById('couponAmount').innerText = '0.0 Rs';
                 if("additionalCoupons" in response){
 					

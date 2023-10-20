@@ -614,7 +614,13 @@ public class CustomerController {
 				
 				if(product.getQuantity()>=newQuantity) {
 					
-					Double productAmount = newQuantity*product.getPrice();
+					Double productAmount;
+					if(product.getDiscountedPrice()==0.0) {
+						productAmount = newQuantity*product.getPrice();
+					}
+					else {
+						productAmount = newQuantity*product.getDiscountedPrice();
+					}
 					Double finalAmount = productAmount;
 					
 					cartItem.setCartItemQuantity(newQuantity);
@@ -660,7 +666,13 @@ public class CustomerController {
 			if(product!=null) {
 				if(productQuantity>1) {
 					newQuantity = productQuantity - 1;
-					Double productAmount = newQuantity*product.getPrice();
+					Double productAmount;
+					if(product.getDiscountedPrice()==0.0) {
+						productAmount = newQuantity*product.getPrice();
+					}
+					else {
+						productAmount = newQuantity*product.getDiscountedPrice();
+					}
 					Double finalAmount = productAmount;
 					
 					cartItem.setCartItemQuantity(newQuantity);

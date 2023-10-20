@@ -27,6 +27,8 @@ public class ProductDTO {
 	
 	private LocalDate dateAdded;
 	
+	private Double discountedPrice;
+	
 	private List<String> selectedSubCategories = new ArrayList<>();
 	
 	private Map<String,String> categoryAndSubCategory = new HashMap<>();
@@ -141,6 +143,14 @@ public class ProductDTO {
 
 	public void setProductImages(List<ProductImage> productImages) {
 		this.productImages = productImages;
+	}
+
+	public Double getDiscountedPrice() {
+		return discountedPrice;
+	}
+
+	public void setDiscountedPrice(Double discountedPrice) {
+		this.discountedPrice = discountedPrice;
 	}
 
 	

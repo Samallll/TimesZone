@@ -368,7 +368,15 @@
             </div>
             <div class="card-body">
               <h6 class="mb-0 "> Daily Sales </h6>
-              <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in today sales. </p>
+              <select class="form-select mt-2 ps-2 py-2"
+			        onchange="generateChart(this.value,this.getAttribute('id'))" 
+			        id="orderDuration">
+			        <option>Choose</option>
+			        <option value="Daily">Daily</option>
+			        <option value="Weekly">Weekly</option>
+			        <option value="Monthly">Monthly</option>
+			        <option value="Yearly">Yearly</option>
+		      </select>
               <hr class="dark horizontal">
               <div class="d-flex ">
                 <i class="material-icons text-sm my-auto me-1">schedule</i>
@@ -618,7 +626,11 @@
 		    var day = String(date.getDate()).padStart(2, '0'); // Ensure two-digit day
 		    return year + '-' + month + '-' + day;
 		}
-
+		
+		
+		
+		
+		
 
    </script>
    

@@ -79,12 +79,15 @@
 						
 		                <!-- Price -->
 		                <p class="text-start text-md-center">
-		                  <span style="font-size:24px;">₹ 
-							  <span th:id="'productAmountId-' + ${cartItem.cartItemId}" 
-							  style="font-size: 24px;margin-bottom: 21px;"  
-							  th:text="${ cartItem.product.price * cartItem.cartItemQuantity}">
-							  </span>
-						  </span>
+							₹
+		                  <span th:id="'productAmountId-' + ${cartItem.cartItemId}" 
+						          style="font-size: 24px; margin-bottom: 21px;"
+						          th:if="${cartItem.product.discountedPrice != 0.0}"
+						          th:text="${cartItem.product.discountedPrice}+ ' Rs'">
+						    </span>
+						    <span th:unless="${cartItem.product.discountedPrice != 0.0}" style="font-size: 24px; margin-bottom: 21px;"
+						          th:text="${cartItem.product.price * cartItem.cartItemQuantity} + ' Rs'">
+						    </span>
 		                </p>
 		                <!-- Price -->
 		                <div th:id="'flash-message-' + ${cartItem.cartItemId}" class="alert alert-danger text-center" style="display:none;"></div>
@@ -137,7 +140,7 @@
 		                <span>0.0 Rs</span>
 		              </li>
 		              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-						  Discount
+						  Coupon Discount
 		                  <span id="couponAmount">0.0 Rs</span>
 					  </li>
 					  <li class="list-group-item d-flex justify-content-between align-items-center px-0  border-0 pb-0">

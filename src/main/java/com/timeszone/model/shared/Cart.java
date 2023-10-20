@@ -72,9 +72,11 @@ public class Cart {
 	}
 	
 	public double getTotalPrice() {
-        double totalPrice = 0;
+        Double totalPrice = 0.0;
+        Double price = 0.0;
         for (CartItem cartItem : cartItems) {
-            totalPrice += cartItem.getProduct().getPrice() * cartItem.getCartItemQuantity();
+        	price = cartItem.getProduct().getDiscountedPrice()==0.0?cartItem.getProduct().getPrice():cartItem.getProduct().getDiscountedPrice();
+            totalPrice = totalPrice + (price * cartItem.getCartItemQuantity());
         }
         return totalPrice;
     }

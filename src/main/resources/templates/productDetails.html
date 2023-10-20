@@ -137,9 +137,15 @@
                     <div class="product__details__text">
 						<input type="hidden" name="id">
                         <h3 th:text="${product.productName}" class="mb-0"></h3>
-                        <h4 style="color: green;" class="mb-2 mt-1">
-						    Rs <span th:text="${product.price}"></span>
-						</h5>
+                        <div th:if="${product.discountedPrice == 0.0}">
+							<h4 style="color: green;" class="mb-2 mt-1">
+							    Rs <span th:text="${product.price}"></span>
+							</h5>
+						</div>
+						<div class="mx-3 d-flex align-items-center" th:unless="${product.discountedPrice == 0.0}">
+							<div class="text-xs text-danger fs-5 mb-0" th:text="${product.price}+' Rs'" style="text-decoration: line-through;"></div>
+							<div class="text-success fs-4 mb-0 ms-3" th:text="${product.discountedPrice}+' Rs'"></div>
+						</div>
                         <div th:text="${'Case Size: ' + product.caseSize + 'mm'}" class=" mb-2 ps-3" ></div>
                         <div th:each="entry : ${product.categoryAndSubCategory}" class="d-flex align-items-center ps-3 my-2">
 							<h5 th:text="${entry.key + ':'}"></h5> 
