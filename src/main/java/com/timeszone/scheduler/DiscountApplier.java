@@ -1,9 +1,6 @@
 package com.timeszone.scheduler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductOffer;
-import com.timeszone.model.product.SubCategory;
 import com.timeszone.model.product.SubCategoryOffer;
 import com.timeszone.service.ProductOfferService;
 import com.timeszone.service.ProductService;
@@ -30,7 +26,7 @@ public class DiscountApplier {
 	@Autowired
 	private ProductService productService;
 	
-	@Scheduled(cron = "0/2 0 0 * * ?", zone = "Asia/Kolkata")
+	@Scheduled(cron = "2 0 0 * * ?", zone = "Asia/Kolkata")
 	public void offerApplyAndRemovalChecking() {
 		applyOffers();
 		removeAppliedOffers();

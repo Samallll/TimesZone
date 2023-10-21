@@ -1,8 +1,6 @@
 package com.timeszone;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -14,18 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.customer.Role;
-import com.timeszone.model.product.Product;
-import com.timeszone.model.product.ProductOffer;
-import com.timeszone.model.shared.OrderStatus;
-import com.timeszone.model.shared.PurchaseOrder;
 import com.timeszone.repository.CustomerRepository;
-import com.timeszone.repository.OrderStatusRepository;
-import com.timeszone.repository.ProductOfferRepository;
-import com.timeszone.repository.ProductRepository;
-import com.timeszone.repository.PurchaseOrderRepository;
 import com.timeszone.repository.RoleRepository;
-import com.timeszone.repository.SubCategoryRepository;
-import com.timeszone.scheduler.DiscountApplier;
 
 @SpringBootApplication
 @EnableScheduling
@@ -38,14 +26,10 @@ public class TimeszoneApplication {
 	@Bean
 	CommandLineRunner run(CustomerRepository customerRepository,
 			RoleRepository roleRepository,
-			PasswordEncoder encoder,
-			ProductOfferRepository repo,
-			DiscountApplier applier
+			PasswordEncoder encoder
 			) {
 		
 		return args -> {
-			
-			applier.offerApplyAndRemovalChecking();
 					
 //			If admin role is present in the table then no need to create a separate admin role. For ddl-auto:update , it is used.
 			if(roleRepository.findByAuthority("ADMIN").isPresent()) return;

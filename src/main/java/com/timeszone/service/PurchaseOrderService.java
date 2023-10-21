@@ -1,18 +1,14 @@
 package com.timeszone.service;
 
-import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
@@ -277,6 +271,15 @@ public class PurchaseOrderService {
 		return false;
 	}
 	
+	
+	/**
+	 * @param razorPaymentId
+	 * @param secretKey
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeyException
+	 * @throws InvalidKeySpecException
+	 */
 	private String generateHmacSha256Signature(String razorPaymentId, String secretKey) throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException{
 		
 		Mac hmac = Mac.getInstance("HmacSHA256");

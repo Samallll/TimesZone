@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.TextStyle;
-import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -18,17 +16,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.lowagie.text.DocumentException;
 import com.timeszone.model.customer.Customer;
-import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
-import com.timeszone.model.product.SubCategory;
 import com.timeszone.model.shared.PurchaseOrder;
 
 @Service

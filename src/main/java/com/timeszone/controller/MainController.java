@@ -1,23 +1,13 @@
 package com.timeszone.controller;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Principal;
-import java.time.LocalDate;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -29,10 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -41,14 +27,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.lowagie.text.DocumentException;
 import com.timeszone.model.customer.Customer;
-import com.timeszone.model.dto.InvoiceDTO;
 import com.timeszone.model.dto.LoginDTO;
 import com.timeszone.model.dto.ProductDTO;
 import com.timeszone.model.dto.RegistrationDTO;
@@ -56,9 +38,7 @@ import com.timeszone.model.dto.RequestData;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductImage;
-import com.timeszone.model.product.SubCategory;
 import com.timeszone.model.shared.Cart;
-import com.timeszone.model.shared.CartItem;
 import com.timeszone.repository.CartRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductImageRepository;

@@ -1,7 +1,6 @@
 package com.timeszone.controller;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -10,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.io.OutputStream;
 
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -40,15 +36,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lowagie.text.DocumentException;
 import com.timeszone.model.customer.Customer;
 import com.timeszone.model.dto.CategoryRegistrationDTO;
 import com.timeszone.model.dto.CustomerDTO;
 import com.timeszone.model.dto.OfferRequestDTO;
 import com.timeszone.model.dto.ProductDTO;
-import com.timeszone.model.dto.RegistrationDTO;
 import com.timeszone.model.product.Category;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductImage;

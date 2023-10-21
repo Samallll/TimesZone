@@ -3,7 +3,6 @@ package com.timeszone.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.timeszone.model.product.Product;
 import com.timeszone.model.shared.OrderItem;
 
 public class InvoiceDTO {

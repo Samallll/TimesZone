@@ -83,7 +83,7 @@ public class SubCategoryOfferService {
 	}
 
 	public List<SubCategoryOffer> getAllOffersToApply() {
-		return offerRepository.findByIsEnabledTrueAndStartDateEquals(LocalDate.now().plusDays(1));
+		return offerRepository.findByIsEnabledTrueAndStartDateEquals(LocalDate.now());
 	}
 	
 	public List<Product> getProductsFromSubCategoryOffer(List<SubCategoryOffer> subCategoryOfferList) {
@@ -122,7 +122,7 @@ public class SubCategoryOfferService {
 
 	public List<SubCategoryOffer> getAllOffersToRemove() {
 
-		return offerRepository.findByIsEnabledTrueAndIsActiveTrueAndExpiryDateEquals(LocalDate.now().plusDays(2));
+		return offerRepository.findByIsEnabledTrueAndIsActiveTrueAndExpiryDateEquals(LocalDate.now());
 	}
 
 	public void removeAppliedOffers(List<SubCategoryOffer> subCategoryOfferListForRemove) {

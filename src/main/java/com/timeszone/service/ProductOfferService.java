@@ -12,16 +12,12 @@ import org.springframework.stereotype.Service;
 import com.timeszone.model.product.Product;
 import com.timeszone.model.product.ProductOffer;
 import com.timeszone.repository.ProductOfferRepository;
-import com.timeszone.repository.ProductRepository;
 
 @Service
 public class ProductOfferService {
 	
 	@Autowired
 	private ProductService productService;
-	
-	@Autowired
-	private ProductRepository productRepository;
 	
 	@Autowired
 	private ProductOfferRepository productOfferRepository;
@@ -77,7 +73,7 @@ public class ProductOfferService {
 
 	public List<ProductOffer> getAllOffersToApply() {
 		
-		return productOfferRepository.findByIsEnabledTrueAndStartDateEquals(LocalDate.now().plusDays(1));
+		return productOfferRepository.findByIsEnabledTrueAndStartDateEquals(LocalDate.now());
 	}
 	
 	public List<Product> getProductsFromProductOffer(List<ProductOffer> productOfferList) {
@@ -128,7 +124,7 @@ public class ProductOfferService {
 
 	public List<ProductOffer> getAllOffersToRemove() {
 		
-		return productOfferRepository.findByIsEnabledTrueAndIsActiveTrueAndExpiryDateEquals(LocalDate.now().plusDays(2));
+		return productOfferRepository.findByIsEnabledTrueAndIsActiveTrueAndExpiryDateEquals(LocalDate.now());
 	}
 
 

@@ -2,7 +2,6 @@ package com.timeszone.service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 import java.util.Random;
 
 import javax.mail.MessagingException;
