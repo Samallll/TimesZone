@@ -155,14 +155,14 @@ public class MainController {
 			cartRepository.save(newCart);
 			
 			verifyCustomer.setCart(newCart);
-			if(verifyCustomer.getUsedCode()!=null) {
+			if(verifyCustomer.getUsedCode()!=null && !verifyCustomer.getUsedCode().isEmpty()) {
 				//if valid then add the amount to the referred person's account and this account
 				Customer referredCustomer = customerRepository.findByReferralCode(verifyCustomer.getUsedCode());
 				referredCustomer.setWallet(referredCustomer.getWallet()+1000.0);
 				customerRepository.save(referredCustomer);
 				verifyCustomer.setWallet(500.0);
-				verifyCustomer.setReferralCode(generateReferralCode(verifyCustomer.getEmailId()));
 			}
+			verifyCustomer.setReferralCode(generateReferralCode(verifyCustomer.getEmailId()));
 			customerService.customerRepository.save(verifyCustomer);
 			
 			newCart.setCustomer(verifyCustomer);

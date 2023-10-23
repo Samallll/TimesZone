@@ -113,7 +113,7 @@ public class CustomerService implements UserDetailsService{
 			errorMsg="Phone Number exists";
 			return true;
 		}
-		else if(customerData.getReferralCode()!=null && !isValidReferralCode(customerData.getReferralCode())) {
+		else if(!customerData.getReferralCode().isEmpty() && !isValidReferralCode(customerData.getReferralCode())) {
 			errorMsg="Invalid Referral Code";
 			return true;
 		}
