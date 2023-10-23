@@ -114,7 +114,7 @@
                 success: function (response) {
 					
 					if("success" in response){
-						Console.log("Transaction completed");
+						console.log("Transaction completed");
 						window.location.href = "/user/viewOrders";
 					}
 					else{

@@ -227,7 +227,7 @@
 				
 			}
 		
-		    if (dateFrom >= dateTo) {
+		    if (dateFrom > dateTo) {
 		        alert('Please select a date range where "From" date is before "To" date.');
 		        return; 
 		    }

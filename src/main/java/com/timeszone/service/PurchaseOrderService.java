@@ -49,15 +49,15 @@ import com.timeszone.repository.ReturnReasonRepository;
 
 @Service
 public class PurchaseOrderService {
-	
-	@Value("${razorpay.keyId}")
-    private String razorpayKeyId;
-
-    @Value("${razorpay.keySecret}")
-    private String razorpayKeySecret;
     
     @Value("${razorpay.currency}")
     private String currency;
+    
+	@Value("${razorpay.keyId}")
+	private String SECRET_ID; 
+	
+	@Value("${razorpay.keySecret}")
+	private String SECRET_KEY;
 	
 	@Autowired
 	private PurchaseOrderRepository purchaseOrderRepository;
@@ -91,12 +91,6 @@ public class PurchaseOrderService {
 	
 	@Autowired
 	private ProductService productService;
-	
-	@Value("${razorpay.keyId}")
-	private String SECRET_ID; 
-	
-	@Value("${razorpay.keySecret}")
-	private String SECRET_KEY;
 	
 	private String orderId;
 	
@@ -298,7 +292,7 @@ public class PurchaseOrderService {
     }
 	
 	public String getSecretId() {
-		return razorpayKeyId;
+		return SECRET_ID;
 	}
 	
 	public String getCurrency() {
