@@ -86,7 +86,7 @@
 						          th:text="${cartItem.product.discountedPrice}+ ' Rs'">
 						    </span>
 						    <span th:unless="${cartItem.product.discountedPrice != 0.0}" style="font-size: 24px; margin-bottom: 21px;"
-						          th:text="${cartItem.product.price * cartItem.cartItemQuantity} + ' Rs'">
+						          th:text="${cartItem.product.price * cartItem.cartItemQuantity} + ' Rs'" th:id="'productAmountId-' + ${cartItem.cartItemId}">
 						    </span>
 		                </p>
 		                <!-- Price -->

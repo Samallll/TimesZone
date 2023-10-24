@@ -132,6 +132,8 @@ public class ReportGeneratorService {
 	public StringBuilder generateCSVOrderReport(LocalDate dateFrom, LocalDate dateTo) {
 		
 		List<PurchaseOrder> orderList = purchaseOrderService.getAllOrders();
+		double totalOrderAmount = 0.0;
+		int totalOrderQuantity = 0;
 		orderList.stream()
                 .filter(order -> isDateBetween(order.getOrderedDate(), dateFrom, dateTo))
                 .collect(Collectors.toList());
@@ -147,7 +149,16 @@ public class ReportGeneratorService {
                     order.getOrderStatus(),
                     order.getOrderedDate(),
                     order.getPaymentMethod().getPaymentMethodName()));
+            
+            // Calculate the totals
+            if(order.getOrderAmount()!=null && order.getOrderedQuantity()!=null) {
+            	totalOrderAmount += order.getOrderAmount();
+                totalOrderQuantity += order.getOrderedQuantity();
+            }
+            
         }
+        csvContent.append("Total,,");
+        csvContent.append(String.format("%.2f,%d,,,,\n", totalOrderAmount, totalOrderQuantity));
         return csvContent;
 	}
 
@@ -194,9 +205,23 @@ public class ReportGeneratorService {
 	public byte[] generatePdfOrderReport(LocalDate dateFrom, LocalDate dateTo) throws Exception {
 		
 		List<PurchaseOrder> orderList = purchaseOrderService.getAllPurchaseOrdersByDateRange(dateFrom, dateTo);
-	
+		
+		int totalOrderedQuantity = 0;
+		totalOrderedQuantity = orderList.stream()
+		        .filter(order -> order.getOrderedQuantity() != null)
+		        .mapToInt(PurchaseOrder::getOrderedQuantity)
+		        .sum();
+
+		double totalOrderAmount = 0;
+		totalOrderAmount = orderList.stream()
+		        .filter(order -> order.getOrderAmount() != null)
+		        .mapToDouble(PurchaseOrder::getOrderAmount)
+		        .sum();
+		
 		Context context = new Context();
 		context.setVariable("orderList", orderList);
+		context.setVariable("totalOrderedQuantity", totalOrderedQuantity);
+		context.setVariable("totalOrderAmount", totalOrderAmount);
 		
 		String htmlContent = templateEngine.process("purchaseOrderPdf", context);
 		

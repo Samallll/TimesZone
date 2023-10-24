@@ -56,6 +56,16 @@
                 <td th:text="${order.orderedDate}"></td>
                 <td th:text="${order.paymentMethod.paymentMethodName}"></td>
             </tr>
+            
+            <tr>
+				<td></td>
+				<td></td>
+                <td th:text="'Total Amount:' + ${totalOrderAmount}"></td>
+				<td th:text="'Total Ordered Quantity:' + ${totalOrderedQuantity}"></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
 
         </table>
     </div>

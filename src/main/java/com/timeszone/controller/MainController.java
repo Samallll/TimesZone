@@ -113,15 +113,20 @@ public class MainController {
 	}
 	
 	@GetMapping("/user_registration")
-	public String userRegistration(Model model,HttpSession session) {
+	public String userRegistration(Model model,HttpSession session,
+									@RequestParam(name="referralCode",defaultValue="null") String referralCode) {
 		
 		RegistrationDTO newUserData = new RegistrationDTO();
+		if(referralCode!=null) {
+			newUserData.setReferralCode(referralCode);
+		}
 		model.addAttribute("newUserData", newUserData);
 		return "userRegister.html";
 	}
 	
 	@PostMapping("/register_user")
-	public String register(@ModelAttribute("newUserData") RegistrationDTO request,HttpSession session) {
+	public String register(@ModelAttribute("newUserData") RegistrationDTO request,
+							HttpSession session) {
 		logger.debug("User Registeriing started");
 		
 		if(customerService.customerExists(request)) {

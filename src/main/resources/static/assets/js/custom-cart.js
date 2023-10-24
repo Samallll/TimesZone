@@ -27,6 +27,7 @@
          success: function (response) { 
 			
              if ("newQuantity" in response) {
+				
                 document.getElementById('inputId-' + productId).innerText = response.newQuantity ;
                 document.getElementById('productAmountId-' + productId ).innerText = response.productAmount+ ' Rs';
 				document.getElementById('grandTotal').innerText = response.finalAmount + ' Rs';                
