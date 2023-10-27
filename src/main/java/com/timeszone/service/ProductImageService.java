@@ -19,6 +19,7 @@ public class ProductImageService {
 	}
 	
 	public ProductImage create(ProductImage productImage) {
+		System.out.println("Saving image");
 		return productImageRepository.save(productImage);
 	}
 

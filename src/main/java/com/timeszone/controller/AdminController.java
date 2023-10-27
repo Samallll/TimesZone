@@ -305,15 +305,22 @@ public class AdminController {
 	public RedirectView uploadProductImage(@RequestParam("file") MultipartFile file,@ModelAttribute("product") Product p,Model model) throws IOException {
 		
 		ProductImage newImage = new ProductImage();
-		Product imageProduct = productRepository.findById(p.getProductId()).get();		
+		Product imageProduct = productRepository.findById(p.getProductId()).get();
+		System.out.println("Product Name : " + imageProduct.getProductName());
+		System.out.println("SubCategory List : " + imageProduct.getSubcategories());
+		imageProduct.getSubcategories().forEach(subCategory -> System.out.println( subCategory.getSubCategoryId()));
 		String fileName = file.getOriginalFilename();
+		System.out.println(fileName);
 		if(!fileName.isEmpty()) {
+			System.out.println("Inside fileName checking");
 			newImage.setImageName(fileName);
 			newImage.setImage(file.getBytes());
 			newImage.setSize(file.getSize());
 			newImage.setProduct(imageProduct);
+			System.out.println("Before creating the image");
 			productImageService.create(newImage);
 			productRepository.save(imageProduct);
+			System.out.println("After saving the image");
 		}
 		
 		// Redirect to another endpoint with a path variable
@@ -321,6 +328,7 @@ public class AdminController {
         redirectView.setUrl("/admin/addProductImage/{id}"); 
         redirectView.addStaticAttribute("id", p.getProductId());
         model.addAttribute("success", "File Uploaded Successfully");
+		System.out.println("Image uploaded successfully");
         return redirectView;
 	}
 	
