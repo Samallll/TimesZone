@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: mysql_db
+    image: mysql:8.0.27
+    environment:
+      DATABASE_HOST: docker-mysql
+      DATABASE_PORT: 3306
+      MYSQL_ROOT_PASSWORD: samal
+      MYSQL_DATABASE: times
+    volumes:
+      - mysql:/var/lib/mysql
+
+  app:
+    container_name: times-zone-container
+    build: .
+    image: timeszone
+    restart: always
+    command:  ["java", "-jar", "timeszone-aws.jar"]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/times
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: samalcd ..
+    depends_on:
+      - db
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    depends_on:
+      - app
+
+volumes:
+  mysql:
