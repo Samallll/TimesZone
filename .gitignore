@@ -38,3 +38,4 @@ src/main/resources/application-dev
 docker-compose.yml
 Dockerfile
 local_data_dump.sql
+nginx/
