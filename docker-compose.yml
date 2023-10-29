@@ -15,13 +15,12 @@ services:
   app:
     container_name: times-zone-container
     build: .
-    image: timeszone
-    restart: always
-    command:  ["java", "-jar", "timeszone-aws.jar"]
+    command:  []
+    entrypoint: ["/entrypoint.sh"]
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/times
+      DATABASE_HOST: db
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: samalcd ..
+      SPRING_DATASOURCE_PASSWORD: samal
     depends_on:
       - db
 

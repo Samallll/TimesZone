@@ -1,15 +1,12 @@
 
-# Stage 1: Build the application
-FROM maven:3.8.4-openjdk-17 AS build
+# Stage 2: Run the application
+FROM openjdk:17-alpine
+RUN apk add --no-cache maven
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-COPY application.properties .
-RUN mvn clean install
-
-# Stage 2: Run the application
-FROM openjdk:17-alpine
-WORKDIR /app
+COPY /src/main/resources/application.properties .
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
 ENV PORT 8080
-COPY --from=build /app/target/timezone-jar.jar ./timeszone-aws.jar
-EXPOSE 8080
