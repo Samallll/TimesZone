@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		http	
 				.csrf().disable()
 				.authorizeRequests()
-				.antMatchers("/assets/**","/error/**","/guest/**").permitAll()
+				.antMatchers("/assets/**","/error/**","/guest/**","/").permitAll()
 				.antMatchers("/user/**").hasAuthority("USER")
 				.antMatchers("/admin/**").hasAuthority("ADMIN")
 				.anyRequest().authenticated()
@@ -58,9 +58,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 				    {
 				    	resp.sendRedirect("/admin/");
 				    }
-				    else 
+				    else
 				    {
-				    	resp.sendRedirect("/guest/user");
+				    	resp.sendRedirect("/user/home");
 				    }
 					
 			}).and()

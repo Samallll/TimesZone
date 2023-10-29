@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="../assets/css/slick.css">
         <link rel="stylesheet" href="../assets/css/nice-select.css">
         <link rel="stylesheet" href="../assets/css/ashion_style.css">
+		<link rel="stylesheet" href="../assets/css/style.css">
         
 	    <link rel="stylesheet" href="../assets/css/elegant-icons.css" type="text/css">
 
@@ -28,56 +29,50 @@
 
 <body>
 
-    <header>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
-	        <div class="container ">
-	            <!-- Brand -->
-	            <a class="navbar-brand" href="#"><img src="../assets/img/logo/logo.png" alt=""></a>
-	            
-	            
-	            <!-- Navbar Toggle Button -->
-	            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-	                <span class="navbar-toggler-icon"></span>
-	            </button>
-	
-	            <!-- Navbar Items -->
-	            <div class="collapse navbar-collapse" id="navbarNav">
-	                <ul class="navbar-nav mx-auto">
-	                    <li class="nav-item">
-	                        <a class="nav-link text-white" th:href="@{/guest/user}">Home</a>
-	                    </li>
-	                    <li class="nav-item">
-	                        <a class="nav-link text-white" th:href="@{/guest/shop}">Shop</a>
-	                    </li>
-	                </ul>
-	                <ul class="navbar-nav ml-auto">
-	                    <li class="nav-item">
-	                        <a th:href="@{/guest/login}"><span class="flaticon-user text-white"></span></span></a>
-	                    </li>
-	                    <li class="nav-item">
-	                        <a th:href="@{/user/wishlist}">
-	                            <i class="text-white icon_heart_alt"></i>
-	                        </a>
-	                    </li>
-	                    <li class="nav-item">
-	                        <a th:href="@{/user/shoppingCart}">
-	                            <i class="text-white fas fa-shopping-cart"></i>
-	                        </a>
-	                    </li>
-	                    <li class="nav-item" sec:authorize="isAuthenticated()">
-	                        <a th:href="@{/logout}" class="btn btn-secondary text-white">Logout</a>
-	                    </li>
-	                </ul>
-	            </div>
-	        </div>
-	    </nav>
-	</header>
+<header>
+	<!-- Header Start -->
+	<div class="header-area">
+		<div class="main-header header-sticky">
+			<div class="container-fluid">
+				<div class="menu-wrapper">
+					<!-- Logo -->
+					<div class="logo">
+						<a th:href="@{/guest/user}"><img src="../assets/img/logo/logo.png" alt=""></a>
+					</div>
+					<!-- Main-menu -->
+					<div class="main-menu d-none d-lg-block">
+						<nav>
+							<ul id="navigation">
+								<li><a th:href="@{/guest/user}">Home</a></li>
+								<li><a th:href="@{/guest/shop}">shop</a></li>
+							</ul>
+						</nav>
+					</div>
+					<!-- Header Right -->
+					<div class="header-right">
+						<ul>
+							<li><a th:href="@{/user/wishlist}"><span class="flaticon-heart"></span></a></li>
+							<li> <a th:href="@{/user/profile}"><span class="flaticon-user"></span></a></li>
+							<li><a th:href="@{/user/shoppingCart}"><span class="flaticon-shopping-cart"></span></a> </li>
+							<a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-primary" style="height: 50px;">Logout</a>
+						</ul>
+					</div>
+				</div>
+				<!-- Mobile Menu -->
+				<div class="col-12">
+					<div class="mobile_menu d-block d-lg-none"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Header End -->
+</header>
 		
 <form th:action="@{/guest/shop}" method="post" th:object="${searchRequest}">
-	<div class="d-flex justify-content-center py-4 my-3" style="background-color: #faf6f2;">
+	<div class="d-flex justify-content-center py-4 mb-3" style="background-color: #faf6f2;">
 	  <div class="col-6 d-flex align-items-center justify-content-center">
           
-          <input type="search" placeholder="Search" aria-label="Search" class="form-control col-6" th:name="search" th:value="${searchRequest.search}">
+          <input type="search" placeholder="Search" aria-label="Search" class="form-control col-6 me-3" th:name="search" th:value="${searchRequest.search}">
           <input type="hidden" id="searchPageNumber" th:name="page" th:value="${searchRequest.page}">
           <input type="hidden" id="searchSize" th:name="size" th:value="${searchRequest.size}">
 		  <div th:each="category:${categories}">
@@ -85,7 +80,7 @@
 		        <input type="checkbox" th:field="*{selectedValues}" th:value="${subCategory.subCategoryName}" th:checked="${searchRequest.selectedValues.contains(subCategory.subCategoryName)}">
 			  </div>
 		  </div>
-          <button type="submit" class="btn btn-dark mb-0">Search</button>
+          <button type="submit" class="btn btn-dark ms-2 mb-0">Search</button>
       </div>         
     </div>
 </form>

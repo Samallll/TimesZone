@@ -107,7 +107,12 @@ public class CustomerController {
 
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
-	
+
+	@GetMapping("/home")
+	public String userHome() {
+		return "userHome.html";
+	}
+
 	@GetMapping("/profile")
 	public String userProfile(Model model) {
 		

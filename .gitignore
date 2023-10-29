@@ -34,5 +34,3 @@ build/
 
 
 src/main/resources/application-dev
-
-local_data_dump.sql

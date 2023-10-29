@@ -361,7 +361,7 @@ public class MainController {
 	
 	@GetMapping("/shop")
 	public String shopPage(@RequestParam(name = "page", defaultValue = "0") int page,
-						    @RequestParam(name = "size", defaultValue = "2") int size,
+						    @RequestParam(name = "size", defaultValue = "3") int size,
 						    HttpSession session,
 						    Model model) {
 

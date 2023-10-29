@@ -8,7 +8,7 @@ public class RequestData {
     private List<String> selectedValues= new ArrayList<String>();
     private String search ;
     private int page = 0;
-    private int size = 2;
+    private int size = 3;
 	public List<String> getSelectedValues() {
 		return selectedValues;
 	}

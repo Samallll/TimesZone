@@ -66,7 +66,7 @@
 	                                    <input type="password" class="form-control" id="password" name="password" value=""
 	                                            placeholder="Password" required>
 	                                    </div>
-	                                    <div class="col-md-6 form-group p_star">
+	                                    <div class="col-md-6 form-group p_star " th:if="${newUserData.referralCode != 'null'}">
 	                                    <input type="text" class="form-control" id="referralCode" name="referralCode" th:value="${newUserData.referralCode}"
 	                                            placeholder="Referral Code" >
 	                                    </div>

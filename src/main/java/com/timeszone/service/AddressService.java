@@ -1,5 +1,6 @@
 package com.timeszone.service;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -105,9 +106,12 @@ public class AddressService {
 	public List<Address> availableAddressByCustomer(Customer customer) {
 		// TODO Auto-generated method stub
 		List<Address> addressList = addressRepository.findAllByCustomer(customer);
-		for(Address address:addressList) {
-			if(address.getIsDisabled()) {
-				addressList.remove(address);
+		Iterator<Address> iterator = addressList.iterator();
+
+		while (iterator.hasNext()) {
+			Address address = iterator.next();
+			if (address.getIsDisabled()) {
+				iterator.remove(); // Safely remove the element
 			}
 		}
 		return addressList;

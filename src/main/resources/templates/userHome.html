@@ -44,55 +44,22 @@
                     <div class="menu-wrapper">
                         <!-- Logo -->
                         <div class="logo">
-                            <a href="index.html"><img src="../assets/img/logo/logo.png" alt=""></a>
+                            <a th:href="@{/guest/user}"><img src="../assets/img/logo/logo.png" alt=""></a>
                         </div>
                         <!-- Main-menu -->
                         <div class="main-menu d-none d-lg-block">
-                            <nav>                                                
-                                <ul id="navigation">  
-                                    <li><a th:href="@{/guest/user/}">Home</a></li>
+                            <nav>
+                                <ul id="navigation">
+                                    <li><a th:href="@{/guest/user}">Home</a></li>
                                     <li><a th:href="@{/guest/shop}">shop</a></li>
-                                    <li><a href="about.html">about</a></li>
-                                    <li class="hot"><a href="#">Latest</a>
-                                        <ul class="submenu">
-                                            <li><a href="shop.html"> Product list</a></li>
-                                            <li><a href="product_details.html"> Product Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="blog.html">Blog</a>
-                                        <ul class="submenu">
-                                            <li><a href="blog.html">Blog</a></li>
-                                            <li><a href="blog-details.html">Blog Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Pages</a>
-                                        <ul class="submenu">
-                                            <li><a th:href="@{/guest/login}">Login</a></li>
-                                            <li><a th:href="@{/guest/shoppingCart}">Cart</a></li>
-                                            <li><a href="elements.html">Element</a></li>
-                                            <li><a href="confirmation.html">Confirmation</a></li>
-                                            <li><a href="checkout.html">Product Checkout</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="contact.html">Contact</a></li>
                                 </ul>
                             </nav>
                         </div>
                         <!-- Header Right -->
                         <div class="header-right">
                             <ul>
-                                <li>
-                                    <div class="nav-search search-switch">
-                                        <span class="flaticon-search"></span>
-                                    </div>
-                                </li>
-                                <li>
-			                        <a th:href="@{/user/wishlist}">
-			                            <i class="text-white icon_heart_alt"></i>
-			                        </a>
-			                    </li>
+                                <li><a th:href="@{/user/wishlist}"><span class="flaticon-heart"></span></a></li>
                                 <li> <a th:href="@{/user/profile}"><span class="flaticon-user"></span></a></li>
-                                
                                 <li><a th:href="@{/user/shoppingCart}"><span class="flaticon-shopping-cart"></span></a> </li>
                                 <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn-primary" style="height: 50px;">Logout</a>
                             </ul>
@@ -118,10 +85,10 @@
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8">
                                 <div class="hero__caption">
                                     <h1 data-animation="fadeInLeft" data-delay=".4s" data-duration="2000ms">Select Your New Perfect Style</h1>
-                                    <p data-animation="fadeInLeft" data-delay=".7s" data-duration="2000ms">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat is aute irure.</p>
+                                    <p data-animation="fadeInLeft" data-delay=".7s" data-duration="2000ms">Discover Timeless Elegance: Unleash your style with our curated collection of branded watches. Elevate every moment with luxury, precision, and sophistication.</p>
                                     <!-- Hero-btn -->
                                     <div class="hero__btn" data-animation="fadeInLeft" data-delay=".8s" data-duration="2000ms">
-                                        <a href="industries.html" class="btn hero-btn">Shop Now</a>
+                                        <a th:href="@{/guest/user/}" class="btn hero-btn">Shop Now</a>
                                     </div>
                                 </div>
                             </div>
@@ -158,55 +125,6 @@
             </div>
         </div>
         <!-- slider Area End-->
-        <!-- ? New Product Start -->
-        <section class="new-product-area section-padding30">
-            <div class="container">
-                <!-- Section tittle -->
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="section-tittle mb-70">
-                            <h2>New Arrivals</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-new-pro mb-30 text-center">
-                            <div class="product-img">
-                                <img src="../assets/img/gallery/new_product1.png" alt="">
-                            </div>
-                            <div class="product-caption">
-                                <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                <span>$ 45,743</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-new-pro mb-30 text-center">
-                            <div class="product-img">
-                                <img src="../assets/img/gallery/new_product2.png" alt="">
-                            </div>
-                            <div class="product-caption">
-                                <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                <span>$ 45,743</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-new-pro mb-30 text-center">
-                            <div class="product-img">
-                                <img src="../assets/img/gallery/new_product3.png" alt="">
-                            </div>
-                            <div class="product-caption">
-                                <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                <span>$ 45,743</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!--  New Product End -->
         <!--? Gallery Area Start -->
         <div class="gallery-area">
             <div class="container-fluid p-0 fix">
@@ -248,7 +166,7 @@
                     <div class="col-xl-7 col-lg-8 col-md-10">
                         <div class="section-tittle mb-70 text-center">
                             <h2>Popular Items</h2>
-                            <p>Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida.</p>
+                            <p>Explore Our Best-Sellers: Dive into a world of must-have items, as we showcase our most popular products. Stay ahead of the trend with our top-rated and sought-after selections.</p>
                         </div>
                     </div>
                 </div>
@@ -258,15 +176,19 @@
                             <div class="popular-img">
                                 <img src="../assets/img/gallery/popular1.png" alt="">
                                 <div class="img-cap">
+                                    <a th:href="@{/user/shoppingCart}">
                                     <span>Add to cart</span>
+                                    </a>
                                 </div>
                                 <div class="favorit-items">
+                                    <a th:href="@{/user/wishlist}">
                                     <span class="flaticon-heart"></span>
+                                    </a>
                                 </div>
                             </div>
                             <div class="popular-caption">
-                                <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                <span>$ 45,743</span>
+                                <h3>Thermo Ball Etip Gloves</h3>
+                                <span>₹ 45,743</span>
                             </div>
                         </div>
                     </div>
@@ -275,15 +197,19 @@
                             <div class="popular-img">
                                 <img src="../assets/img/gallery/popular2.png" alt="">
                                 <div class="img-cap">
+                                    <a th:href="@{/user/shoppingCart}">
                                     <span>Add to cart</span>
+                                    </a>
                                 </div>
                                 <div class="favorit-items">
+                                    <a th:href="@{/user/wishlist}">
                                     <span class="flaticon-heart"></span>
+                                    </a>
                                 </div>
                             </div>
                             <div class="popular-caption">
-                                <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                <span>$ 45,743</span>
+                                <h3>Thermo Ball Etip Gloves</h3>
+                                <span>₹ 45,743</span>
                             </div>
                         </div>
                     </div>
@@ -292,15 +218,19 @@
                             <div class="popular-img">
                                 <img src="../assets/img/gallery/popular3.png" alt="">
                                 <div class="img-cap">
+                                    <a th:href="@{/user/shoppingCart}">
                                     <span>Add to cart</span>
+                                    </a>
                                 </div>
                                 <div class="favorit-items">
+                                    <a th:href="@{/user/wishliist}">
                                     <span class="flaticon-heart"></span>
+                                    </a>
                                 </div>
                             </div>
                             <div class="popular-caption">
-                                <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                <span>$ 45,743</span>
+                                <h3>Thermo Ball Etip Gloves</h3>
+                                <span>₹ 45,743</span>
                             </div>
                         </div>
                     </div>
@@ -309,15 +239,19 @@
                             <div class="popular-img">
                                 <img src="../assets/img/gallery/popular4.png" alt="">
                                 <div class="img-cap">
+                                    <a th:href="@{/user/shoppingCart}">
                                     <span>Add to cart</span>
+                                    </a>
                                 </div>
                                 <div class="favorit-items">
+                                    <a th:href="@{/user/wishlist}">
                                     <span class="flaticon-heart"></span>
+                                    </a>
                                 </div>
                             </div>
                             <div class="popular-caption">
-                                <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                <span>$ 45,743</span>
+                                <h3>Thermo Ball Etip Gloves</h3>
+                                <span>₹ 45,743</span>
                             </div>
                         </div>
                     </div>
@@ -326,15 +260,19 @@
                             <div class="popular-img">
                                 <img src="../assets/img/gallery/popular5.png" alt="">
                                 <div class="img-cap">
+                                    <a th:href="@{/user/shoppingCart}">
                                     <span>Add to cart</span>
+                                    </a>
                                 </div>
                                 <div class="favorit-items">
+                                    <a th:href="@{/user/wishlist}">
                                     <span class="flaticon-heart"></span>
+                                    </a>
                                 </div>
                             </div>
                             <div class="popular-caption">
-                                <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                <span>$ 45,743</span>
+                                <h3>Thermo Ball Etip Gloves</h3>
+                                <span>₹ 45,743</span>
                             </div>
                         </div>
                     </div>
@@ -343,15 +281,19 @@
                             <div class="popular-img">
                                 <img src="../assets/img/gallery/popular6.png" alt="">
                                 <div class="img-cap">
+                                    <a th:href="@{/user/shoppingCart}">
                                     <span>Add to cart</span>
+                                    </a>
                                 </div>
                                 <div class="favorit-items">
+                                    <a th:href="@{/user/wishlist}">
                                     <span class="flaticon-heart"></span>
+                                    </a>
                                 </div>
                             </div>
                             <div class="popular-caption">
-                                <h3><a href="product_details.html">Thermo Ball Etip Gloves</a></h3>
-                                <span>$ 45,743</span>
+                                <h3>Thermo Ball Etip Gloves</h3>
+                                <span>₹ 45,743</span>
                             </div>
                         </div>
                     </div>
@@ -359,32 +301,12 @@
                 <!-- Button -->
                 <div class="row justify-content-center">
                     <div class="room-btn pt-70">
-                        <a href="catagori.html" class="btn view-btn1">View More Products</a>
+                        <a th:href="@{/guest/shop}" class="btn view-btn1">View More Products</a>
                     </div>
                 </div>
             </div>
         </div>
         <!-- Popular Items End -->
-        <!--? Video Area Start -->
-        <div class="video-area">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-lg-12">
-                    <div class="video-wrap">
-                        <div class="play-btn "><a class="popup-video" href="https://www.youtube.com/watch?v=KMc6DyEJp04"><i class="fas fa-play"></i></a></div>
-                    </div>
-                    </div>
-                </div>
-                <!-- Arrow -->
-                <div class="thumb-content-box">
-                    <div class="thumb-content">
-                        <h3>Next Video</h3>
-                        <a href="#"> <i class="flaticon-arrow"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Video Area End -->
         <!--? Watch Choice  Start-->
         <div class="watch-area section-padding30">
             <div class="container">
@@ -393,7 +315,7 @@
                         <div class="watch-details mb-40">
                             <h2>Watch of Choice</h2>
                             <p>Enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse.</p>
-                            <a href="shop.html" class="btn">Show Watches</a>
+                            <a th:href="@{/guest/shop}" class="btn">Show Watches</a>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-10">
@@ -412,7 +334,7 @@
                         <div class="watch-details mb-40">
                             <h2>Watch of Choice</h2>
                             <p>Enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse.</p>
-                            <a href="shop.html" class="btn">Show Watches</a>
+                            <a th:href="@{/guest/shop}" class="btn">Show Watches</a>
                         </div>
                     </div>
                 </div>
@@ -461,11 +383,11 @@
                             <div class="single-footer-caption mb-30">
                                 <!-- logo -->
                                 <div class="footer-logo">
-                                    <a href="index.html"><img src="../assets/img/logo/logo2_footer.png" alt=""></a>
+                                    <a href="#"><img src="../assets/img/logo/logo2_footer.png" alt=""></a>
                                 </div>
                                 <div class="footer-tittle">
                                     <div class="footer-pera">
-                                        <p>Asorem ipsum adipolor sdit amet, consectetur adipisicing elitcf sed do eiusmod tem.</p>
+                                        <p>Discover Timeless Elegance: Unleash your style with our curated collection of branded watches. Elevate every moment with luxury, precision, and sophistication.</p>
                                 </div>
                                 </div>
                             </div>
@@ -511,27 +433,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- Footer bottom -->
-                <div class="row align-items-center">
-                    <div class="col-xl-7 col-lg-8 col-md-7">
-                        <div class="footer-copy-right">
-                            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>                  
-                        </div>
-                    </div>
-                    <div class="col-xl-5 col-lg-4 col-md-5">
-                        <div class="footer-copy-right f-right">
-                            <!-- social -->
-                            <div class="footer-social">
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="https://www.facebook.com/sai4ull"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fab fa-behance"></i></a>
-                                <a href="#"><i class="fas fa-globe"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
         <!-- Footer End-->
