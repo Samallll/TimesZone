@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
 
+import com.timeszone.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,14 +52,6 @@ import com.timeszone.repository.CartItemRepository;
 import com.timeszone.repository.CartRepository;
 import com.timeszone.repository.CustomerRepository;
 import com.timeszone.repository.ProductRepository;
-import com.timeszone.service.AddressService;
-import com.timeszone.service.CartService;
-import com.timeszone.service.CouponService;
-import com.timeszone.service.CustomerService;
-import com.timeszone.service.PaymentMethodService;
-import com.timeszone.service.PdfService;
-import com.timeszone.service.PurchaseOrderService;
-import com.timeszone.service.WishlistService;
 
 @RequestMapping("/user")
 @Controller
@@ -104,6 +98,9 @@ public class CustomerController {
 	
 	@Autowired
 	private WishlistService wishlistService;
+
+	@Autowired
+	private EmailSender emailSender;
 
 	
 	Logger logger = LoggerFactory.getLogger(MainController.class);
@@ -576,7 +573,19 @@ public class CustomerController {
     	return "redirect:/user/wishlist";
     }
 
-	
+	@PostMapping("/shareReferralCode")
+	@ResponseBody
+	public ResponseEntity<String> shareReferralCode(@RequestBody String email,Principal principal) throws MessagingException {
+
+		String customerName = principal.getName();
+		Customer customer = customerService.getCustomerByEmailId(customerName);
+		String subject = "Hey, Join the Community: " + customer.getFirstName();
+		String message = "Sign up to the community - timeszone.shop with the Referral Code :" +
+				customer.getReferralCode() +" to get surprising offers!";
+		emailSender.sendEmail(email,subject,message);
+		return ResponseEntity.ok("Success");
+	}
+
 //	Ajax backend methods =============================================================================================
 //	==================================================================================================================
 	

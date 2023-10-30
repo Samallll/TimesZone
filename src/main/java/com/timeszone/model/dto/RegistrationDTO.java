@@ -1,15 +1,28 @@
 package com.timeszone.model.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class RegistrationDTO {
-	
+
+	@NotNull
+	@NotEmpty
 	private String firstName;
-	
+
+	@NotNull
+	@NotEmpty
 	private String lastName;
-	
+
+	@NotNull
+	@NotEmpty
 	private String emailId;
-	
+
+	@NotNull
+	@NotEmpty
 	private String phoneNumber;
-	
+
+	@NotNull
+	@NotEmpty
 	private String password;
 	
 	private String referralCode;

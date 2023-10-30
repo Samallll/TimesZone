@@ -113,7 +113,7 @@ public class CustomerService implements UserDetailsService{
 			errorMsg="Phone Number exists";
 			return true;
 		}
-		else if(!customerData.getReferralCode().isEmpty() && !isValidReferralCode(customerData.getReferralCode())) {
+		else if(customerData.getReferralCode()!=null  && !isValidReferralCode(customerData.getReferralCode())) {
 			errorMsg="Invalid Referral Code";
 			return true;
 		}
@@ -134,6 +134,60 @@ public class CustomerService implements UserDetailsService{
 	public boolean isValidReferralCode(String referralCode) {
 		Customer customer = customerRepository.findByReferralCode(referralCode);
 		return customer!=null;
+	}
+
+	public boolean validateData(RegistrationDTO request) {
+
+		String emailRegex = "^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+$";
+
+		if(request.getFirstName().isEmpty() || request.getFirstName() == null){
+			errorMsg = "Please fill first name field";
+			return false;
+		}
+
+		if(request.getLastName().isEmpty() || request.getLastName() == null){
+			errorMsg = "Please fill last name field";
+			return false;
+		}
+
+		if(request.getEmailId().isEmpty() || request.getEmailId() == null){
+			errorMsg = "Email Id should not be empty";
+			return false;
+		}
+
+		if(request.getPhoneNumber().isEmpty() || request.getPhoneNumber() == null){
+			errorMsg = "Phone number should not be empty";
+			return false;
+		}
+
+		if(request.getPassword().isEmpty() || request.getPassword() == null){
+			errorMsg = "Password should not be empty";
+			return false;
+		}
+
+		if (!request.getEmailId().matches(emailRegex)) {
+			errorMsg = "Invalid Email Address";
+			return false;
+		}
+
+		String phoneNumber = request.getPhoneNumber();
+		if (phoneNumber.length() != 10) {
+			errorMsg = "Phone Number should be 10 digits";
+			return false;
+		}
+
+		if(!phoneNumber.matches("^\\d+$")){
+			errorMsg = "Please enter a valid Phone number";
+			return false;
+		}
+
+		String password = request.getPassword();
+		if (password.length() < 8) {
+			errorMsg = "Password must be at least 8 characters long";
+			return false;
+		}
+
+		return true;
 	}
 
 }
