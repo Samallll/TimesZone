@@ -16,23 +16,13 @@ services:
     container_name: times-zone-container
     build: .
     command:  []
-    entrypoint: ["/entrypoint.sh"]
+    entrypoint: ["./entrypoint.sh"]
     environment:
       DATABASE_HOST: db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: samal
     depends_on:
       - db
-
-  nginx:
-    container_name: nginx
-    image: nginx:latest
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-    ports:
-      - 80:80
-    depends_on:
-      - app
 
 volumes:
   mysql:
