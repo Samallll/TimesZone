@@ -7,29 +7,6 @@ TimesZone is an e-commerce web application for watch shopping. It is built on th
 - User-friendly interface for seamless navigation.
 - Backed by the robust functionality of Spring Boot.
 
-### User-side Features
-- **Shop Products:**
-    - Explore and shop from a diverse collection of watches.
-
-- **Authentication:**
-    - Create an account with email OTP validation or log in using email/password or OTP.
-
-- **Password Management:**
-    - Forgot password? Reset it via OTP sent to the registered email ID.
-    - Change user details, including password, in the user profile section.
-
-- **Wishlist and Referral:**
-    - Add products to the wishlist for future purchases.
-    - Share referral codes via email to earn rewards credited to the wallet.
-
-- **Address Management:**
-    - View, add, and delete addresses with soft delete functionality.
-
-- **Order Management:**
-    - View orders, download invoices, cancel, and return orders based on the order status.
-    - Purchase products using available coupons for discounts.
-    - Payment Methods: Choose between Cash on Delivery, Razorpay and Wallet for secure and convenient payments.
-
 ## Technologies Used
 - **Backend:** Spring Boot
 - **Database:** MySQL
@@ -68,6 +45,49 @@ This project relies on an `application.properties` file to manage various settin
 After configuring the `application.properties` file, you're ready to run the application. Follow the steps in the [Getting Started](#getting-started) section to clone the repository and launch the application.
 
 Feel free to reach out if you encounter any issues during the configuration process.
+
+### User-side Features
+- **Shop Products:**
+    - Explore and shop from a diverse collection of watches.
+
+- **Authentication:**
+    - Create an account with email OTP validation or log in using email/password or OTP.
+
+- **Password Management:**
+    - Forgot password? Reset it via OTP sent to the registered email ID.
+    - Change user details, including password, in the user profile section.
+
+- **Wishlist and Referral:**
+    - Add products to the wishlist for future purchases.
+    - Share referral codes via email to earn rewards credited to the wallet.
+
+- **Address Management:**
+    - View, add, and delete addresses with soft delete functionality.
+
+- **Order Management:**
+    - View orders, download invoices, cancel, and return orders based on the order status.
+    - Purchase products using available coupons for discounts.
+    - Payment Methods: Choose between Cash on Delivery, Razorpay and Wallet for secure and convenient payments.
+
+### Admin-side Features
+- **Order Details Report:**
+    - Download order details report for a specific time period in CSV and PDF formats.
+
+- **User Management:**
+    - Block users for administrative purposes.
+
+- **Product Management:**
+    - Add, edit, and remove products.
+    - Add product images stored in the MySQL database.
+
+- **Category Management:**
+    - Add, edit, and manage categories and sub-categories.
+
+- **Coupon Management:**
+    - Add coupons and manage them based on conditions like minimum purchase amount and coupon usage count.
+
+- **Offer Management:**
+    - Make product and category offers with priority given to category offers. Offers are applied on specified dates and removed at specified dates (implemented using task scheduler).
 
 ### User Learnings and Mistakes
 This project is part of my learning journey with Spring Boot, and I acknowledge that there might be areas for improvement. Here are some of the lessons learned and identified mistakes:
