@@ -110,26 +110,6 @@ This project is part of my learning journey with Spring Boot, and I acknowledge 
 6. **Branching Implementation:**
     - While implementing features, I've learned the importance of effective branching strategies. In retrospect, there might have been more efficient ways to organize and manage branches during feature development. I aim to implement improved branching practices in future updates.
 
-### Admin-side Features
-- **Order Details Report:**
-    - Download order details report for a specific time period in CSV and PDF formats.
-
-- **User Management:**
-    - Block users for administrative purposes.
-
-- **Product Management:**
-    - Add, edit, and remove products.
-    - Add product images stored in the MySQL database.
-
-- **Category Management:**
-    - Add, edit, and manage categories and sub-categories.
-
-- **Coupon Management:**
-    - Add coupons and manage them based on conditions like minimum purchase amount and coupon usage count.
-
-- **Offer Management:**
-    - Make product and category offers with priority given to category offers. Offers are applied on specified dates and removed at specified dates (implemented using task scheduler).
-
 Your feedback and contributions are highly welcome! Feel free to open issues or pull requests to help enhance the overall quality of this project.
 
 ---
