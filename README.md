@@ -16,7 +16,7 @@ TimesZone is an e-commerce web application for watch shopping. It is built on th
 ## Getting Started
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/TimesZone.git
+    git clone https://github.com/Samallll/TimesZone.git
     ```
 
 2. **Database Setup:**
@@ -36,7 +36,7 @@ This project relies on an `application.properties` file to manage various settin
 2. Open the `src/main/resources/application.properties` file.
 3. Update the following properties with your database credentials:
     ```properties
-    spring.datasource.url=jdbc:mysql://localhost:3306/your_database_name
+    spring.datasource.url=jdbc:mysql://localhost:3306/times
     spring.datasource.username=your_username
     spring.datasource.password=your_password
     ```
