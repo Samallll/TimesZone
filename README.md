@@ -89,7 +89,7 @@ Feel free to reach out if you encounter any issues during the configuration proc
 - **Offer Management:**
     - Make product and category offers with priority given to category offers. Offers are applied on specified dates and removed at specified dates (implemented using task scheduler).
 
-### User Learnings and Mistakes
+### Learnings and Mistakes
 This project is part of my learning journey with Spring Boot, and I acknowledge that there might be areas for improvement. Here are some of the lessons learned and identified mistakes:
 
 1. **Database Design:**
