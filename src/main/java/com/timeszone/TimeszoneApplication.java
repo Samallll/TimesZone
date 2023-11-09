@@ -42,7 +42,7 @@ public class TimeszoneApplication {
 			roles.add(adminRole);
 			roles.add(userRole);
 			
-			Customer admin = new Customer("root","root","root@example.com","+917907208032",encoder.encode("root"),roles);
+			Customer admin = new Customer("root","root","root@example.com","+91999999999",encoder.encode("root"),roles);
 			customerRepository.save(admin);
 			
 			
