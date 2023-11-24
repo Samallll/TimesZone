@@ -2,8 +2,6 @@
 
 TimesZone is an e-commerce web application for watch shopping. It is built on the Spring Boot framework for the backend, with MySQL as the database. The frontend is developed using HTML, CSS, and JavaScript, with Thymeleaf for templating.
 
-![SonarQube Quality Gate](src/main/resources/static/assets/img/quality_gate_passed_timeszone.svg)
-
 ## Features
 - Browse and explore a wide range of watches from various brands.
 - User-friendly interface for seamless navigation.
@@ -105,6 +103,7 @@ This project is part of my learning journey with Spring Boot, and I acknowledge 
 
 4. **Coding Standards:**
     - Adherence to coding standards is crucial for maintainability and collaboration. I've recognized instances where coding standards might not have been consistently followed, and I'm committed to improving this aspect.
+    - ![SonarQube Quality Gate](src/main/resources/static/assets/img/quality_gate_passed_timeszone.svg)
 
 5. **Secrets Handling:**
     - Managing secrets securely, especially during deployment, is paramount. In the current state, there might be room for improvement in how application secrets are handled. I'm exploring best practices and implementing enhanced security measures.
