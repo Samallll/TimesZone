@@ -2,6 +2,8 @@
 
 TimesZone is an e-commerce web application for watch shopping. It is built on the Spring Boot framework for the backend, with MySQL as the database. The frontend is developed using HTML, CSS, and JavaScript, with Thymeleaf for templating.
 
+[![Quality gate](http://localhost:9000/api/project_badges/quality_gate?project=TimesZone&token=sqb_9225548ec1382d80a0e9509cd1e5cfde166092c5)](http://localhost:9000/dashboard?id=TimesZone)
+
 ## Features
 - Browse and explore a wide range of watches from various brands.
 - User-friendly interface for seamless navigation.
