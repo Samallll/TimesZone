@@ -11,18 +11,29 @@ services:
       MYSQL_DATABASE: times
     volumes:
       - mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   app:
     container_name: times-zone-container
-    build: .
-    command:  []
-    entrypoint: ["./entrypoint.sh"]
+    image: samal024/timeszone
+    restart: always
     environment:
+      PROFILE: dev
+      EMAIL_ADDRESS: samal.anjukandiyil@gmail.com
+      EMAIL_PASSWORD: qyxc bauc
       DATABASE_HOST: db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: samal
+      RAZORPAY_ID: rpy_test
+      RAZORPAY_SECRET: rpy_secret
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
 
 volumes:
   mysql:

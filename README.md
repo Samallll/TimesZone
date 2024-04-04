@@ -35,16 +35,22 @@ This project relies on an `application.properties` file to manage various settin
 
 ### Database Configuration
 1. Create a MySQL database.
-2. Open the `src/main/resources/application.properties` file.
-3. Update the following properties with your database credentials:
+2. Create an application-dev.properties file.
+3. Open the `src/main/resources/application-dev.properties` file.
+4. Copy the content from application-prod file in the repository and paste in the newly created dev properties file.
+5. Update the following properties according to your requirements:
     ```properties
     spring.datasource.url=jdbc:mysql://localhost:3306/times
-    spring.datasource.username=your_username
-    spring.datasource.password=your_password
+    spring.datasource.username=mysql_username
+    spring.datasource.password=mysql_password
+    spring.mail.username=email_address
+    spring.mail.password=email_app_password
+    razorpay.keyId=razorpay_id
+    razorpay.keySecret=razorpay_secret
     ```
 
 ### Running the Application
-After configuring the `application.properties` file, you're ready to run the application. Follow the steps in the [Getting Started](#getting-started) section to clone the repository and launch the application.
+After configuring the `application-dev.properties` file, you're ready to run the application. Follow the steps in the [Getting Started](#getting-started) section to clone the repository and launch the application.
 
 Feel free to reach out if you encounter any issues during the configuration process.
 
